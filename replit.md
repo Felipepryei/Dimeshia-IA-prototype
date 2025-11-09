@@ -25,8 +25,9 @@ project/
 │   │   ├── Hero.tsx         # Landing section with animated logo
 │   │   ├── LogoShowcase.tsx # Logo variations
 │   │   ├── BrandEssence.tsx # Brand philosophy
-│   │   ├── StudioDemo.tsx   # Studio demonstration
+│   │   ├── StudioDemo.tsx   # Automated pipeline demo with 3D models
 │   │   ├── StudioEnvironment.tsx # Workspace simulation
+│   │   ├── PipelineModelViewer.tsx # 3D pipeline stage visualizer
 │   │   ├── AIOptimizationTool.tsx # Interactive 3D AI tool
 │   │   ├── ThreeDModelViewer.tsx # 3D model renderer
 │   │   ├── ColorSystem.tsx  # Color palette
@@ -53,17 +54,27 @@ The application is configured to run on port 5000 with proper Replit proxy suppo
 - Linting: `npm run lint`
 
 ### Key Features
-1. **AI 3D Optimization Tool**: Interactive demonstration of AI-powered 3D model optimization
+1. **Automated Studio Pipeline Demo**: Real-time demonstration of the complete 3D production workflow
+   - Interactive play/pause controls
+   - 4 distinct pipeline stages with unique 3D models for each stage:
+     * Stage 1: 3D Model Input (High-poly wireframe, 245K polygons)
+     * Stage 2: Pipeline Processing (Mid-poly with processing effects, 156K polygons)  
+     * Stage 3: Render Optimization (Optimized model, 45K polygons)
+     * Stage 4: Output Delivery (Final polished assets, 12K polygons)
+   - Live metrics showing polygon count reduction and quality improvement
+   - Animated transitions between stages
+   - Real 3D models using Three.js that rotate and scale
+2. **AI 3D Optimization Tool**: Interactive demonstration of AI-powered 3D model optimization
    - Real-time 3D model visualization using Three.js
    - Simulated file upload and processing
    - Before/after comparison with animated models
    - Metrics dashboard showing optimization statistics
    - Live progress tracking during AI processing
-2. **Demo Mode**: Accessible via `?demo=true` URL parameter
-3. **Interactive Color System**: Click-to-copy color values
-4. **Responsive Design**: Mobile-first approach
-5. **Smooth Animations**: Custom CSS keyframes and transitions
-6. **SVG Logo**: Programmatically generated hexagonal logo
+3. **Demo Mode**: Accessible via `?demo=true` URL parameter
+4. **Interactive Color System**: Click-to-copy color values
+5. **Responsive Design**: Mobile-first approach
+6. **Smooth Animations**: Custom CSS keyframes and transitions
+7. **SVG Logo**: Programmatically generated hexagonal logo
 
 ## Replit Configuration
 
@@ -97,6 +108,14 @@ The Vite server is configured to work with Replit's iframe proxy:
 - Gradient overlays and blur effects
 
 ## Recent Changes
+- **2024-11-09**: Enhanced Studio Demo with Real 3D Pipeline Visualization
+  - Created PipelineModelViewer component showing different 3D models for each pipeline stage
+  - Integrated real-time 3D models that change based on the active workflow step
+  - Added dynamic polygon count display (245K → 156K → 45K → 12K)
+  - Added quality score progression (65% → 78% → 92% → 98%)
+  - Enhanced visual feedback with stage-specific colors and effects
+  - Implemented smooth transitions between pipeline stages
+  
 - **2024-11-09**: Added Interactive 3D AI Optimization Tool
   - Installed Three.js, @react-three/fiber, and @react-three/drei
   - Created ThreeDModelViewer component with WebGL-based 3D rendering
