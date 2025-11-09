@@ -14,6 +14,7 @@ A high-end brand identity showcase for DIMESHIA - a next-generation AI automatio
 - **Language**: TypeScript 5.5.3
 - **Styling**: Tailwind CSS 3.4.1
 - **Icons**: Lucide React 0.344.0
+- **3D Graphics**: Three.js (via @react-three/fiber & @react-three/drei)
 - **Package Manager**: npm
 
 ## Project Structure
@@ -26,6 +27,8 @@ project/
 │   │   ├── BrandEssence.tsx # Brand philosophy
 │   │   ├── StudioDemo.tsx   # Studio demonstration
 │   │   ├── StudioEnvironment.tsx # Workspace simulation
+│   │   ├── AIOptimizationTool.tsx # Interactive 3D AI tool
+│   │   ├── ThreeDModelViewer.tsx # 3D model renderer
 │   │   ├── ColorSystem.tsx  # Color palette
 │   │   ├── Typography.tsx   # Typography system
 │   │   ├── Footer.tsx       # Footer section
@@ -50,11 +53,17 @@ The application is configured to run on port 5000 with proper Replit proxy suppo
 - Linting: `npm run lint`
 
 ### Key Features
-1. **Demo Mode**: Accessible via `?demo=true` URL parameter
-2. **Interactive Color System**: Click-to-copy color values
-3. **Responsive Design**: Mobile-first approach
-4. **Smooth Animations**: Custom CSS keyframes and transitions
-5. **SVG Logo**: Programmatically generated hexagonal logo
+1. **AI 3D Optimization Tool**: Interactive demonstration of AI-powered 3D model optimization
+   - Real-time 3D model visualization using Three.js
+   - Simulated file upload and processing
+   - Before/after comparison with animated models
+   - Metrics dashboard showing optimization statistics
+   - Live progress tracking during AI processing
+2. **Demo Mode**: Accessible via `?demo=true` URL parameter
+3. **Interactive Color System**: Click-to-copy color values
+4. **Responsive Design**: Mobile-first approach
+5. **Smooth Animations**: Custom CSS keyframes and transitions
+6. **SVG Logo**: Programmatically generated hexagonal logo
 
 ## Replit Configuration
 
@@ -88,6 +97,15 @@ The Vite server is configured to work with Replit's iframe proxy:
 - Gradient overlays and blur effects
 
 ## Recent Changes
+- **2024-11-09**: Added Interactive 3D AI Optimization Tool
+  - Installed Three.js, @react-three/fiber, and @react-three/drei
+  - Created ThreeDModelViewer component with WebGL-based 3D rendering
+  - Created AIOptimizationTool component with file upload simulation
+  - Implemented AI processing simulation with progress tracking
+  - Added metrics dashboard showing polygon reduction, file size optimization, quality score, and processing time
+  - Integrated interactive 3D models with rotation controls
+  - Added WebGL fallback handling for headless environments
+  
 - **2024-11-09**: Initial Replit setup
   - Configured Vite for port 5000 and 0.0.0.0 host
   - Installed all npm dependencies

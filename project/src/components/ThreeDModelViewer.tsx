@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface AnimatedMeshProps {
@@ -77,7 +77,20 @@ interface ThreeDModelViewerProps {
 const ThreeDModelViewer = ({ optimized }: ThreeDModelViewerProps) => {
   return (
     <div className="w-full h-full">
-      <Canvas shadows>
+      <Canvas
+        shadows
+        onCreated={({ gl }) => {
+          gl.setClearColor('#000000', 1);
+        }}
+        fallback={
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+            <div className="text-center p-8">
+              <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-400 text-sm">Loading 3D Model...</p>
+            </div>
+          </div>
+        }
+      >
         <PerspectiveCamera makeDefault position={[0, 0, 6]} />
         <AnimatedMesh optimized={optimized} />
         <OrbitControls

@@ -240,6 +240,9 @@ const AIOptimizationTool = () => {
                   setFile(null);
                   setIsOptimized(false);
                   setMetrics(null);
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                  }
                 }}
                 className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-medium transition-all"
               >
