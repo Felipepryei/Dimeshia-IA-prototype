@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Cpu, Layers, Zap, Network, Box, Binary, Globe, ChevronRight } from 'lucide-react';
 import Hero from './components/Hero';
 import LogoShowcase from './components/LogoShowcase';
 import BrandEssence from './components/BrandEssence';
