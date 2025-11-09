@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Play, Pause, RotateCw, Zap, Cpu, Layers } from 'lucide-react';
+import PipelineModelViewer from './PipelineModelViewer';
 
 export default function StudioDemo() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -150,47 +151,38 @@ export default function StudioDemo() {
 
             {/* Central 3D Object Visualization */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className={`relative ${isPlaying ? 'animate-float' : ''}`}>
-                {/* Main Logo Display */}
-                <div className="relative">
-                  <img
-                    src="/logo de dimeshia IA.jpg"
-                    alt="3D Object"
-                    className={`w-64 h-64 object-contain transition-all duration-1000 ${
-                      isPlaying ? 'scale-110' : 'scale-100'
-                    }`}
-                    style={{
-                      filter: isPlaying
-                        ? 'drop-shadow(0 0 40px rgba(59, 130, 246, 0.6)) brightness(1.2)'
-                        : 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.3))'
-                    }}
-                  />
-
-                  {/* Orbiting Particles */}
-                  {isPlaying && (
-                    <>
-                      {[0, 1, 2, 3, 4, 5].map((i) => (
-                        <div
-                          key={i}
-                          className="absolute w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-violet-400"
-                          style={{
-                            top: '50%',
-                            left: '50%',
-                            animation: `orbit ${3 + i}s linear infinite`,
-                            animationDelay: `${i * 0.5}s`,
-                            opacity: 0.6
-                          }}
-                        />
-                      ))}
-                    </>
-                  )}
+              <div className="relative w-full h-full">
+                {/* 3D Model Viewer */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className={`w-96 h-96 transition-all duration-1000 ${isPlaying ? 'scale-110' : 'scale-100'}`}>
+                    <PipelineModelViewer stage={activeStep} />
+                  </div>
                 </div>
+
+                {/* Orbiting Particles */}
+                {isPlaying && (
+                  <>
+                    {[0, 1, 2, 3, 4, 5].map((i) => (
+                      <div
+                        key={i}
+                        className="absolute w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-violet-400"
+                        style={{
+                          top: '50%',
+                          left: '50%',
+                          animation: `orbit ${3 + i}s linear infinite`,
+                          animationDelay: `${i * 0.5}s`,
+                          opacity: 0.6
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
 
                 {/* Processing Rings */}
                 {isPlaying && (
                   <>
-                    <div className="absolute inset-0 border-2 border-blue-500 rounded-full animate-ping opacity-20" style={{ width: '350px', height: '350px', top: '-43px', left: '-43px' }} />
-                    <div className="absolute inset-0 border-2 border-violet-500 rounded-full animate-ping opacity-20" style={{ width: '350px', height: '350px', top: '-43px', left: '-43px', animationDelay: '0.5s' }} />
+                    <div className="absolute inset-0 border-2 border-blue-500 rounded-full animate-ping opacity-20" style={{ width: '450px', height: '450px', top: '25px', left: '50%', transform: 'translateX(-50%)' }} />
+                    <div className="absolute inset-0 border-2 border-violet-500 rounded-full animate-ping opacity-20" style={{ width: '450px', height: '450px', top: '25px', left: '50%', transform: 'translateX(-50%)', animationDelay: '0.5s' }} />
                   </>
                 )}
               </div>
@@ -251,7 +243,7 @@ export default function StudioDemo() {
 
             {/* Stats Panel */}
             <div className="absolute bottom-6 left-6 bg-black/80 backdrop-blur-sm border border-gray-700 rounded-xl p-4">
-              <div className="grid grid-cols-3 gap-6 text-xs">
+              <div className="grid grid-cols-4 gap-4 text-xs">
                 <div>
                   <div className="text-gray-400 mb-1">Processing</div>
                   <div className="text-blue-400 font-mono font-bold">
@@ -259,15 +251,21 @@ export default function StudioDemo() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-gray-400 mb-1">GPU Usage</div>
+                  <div className="text-gray-400 mb-1">Polygons</div>
                   <div className="text-violet-400 font-mono font-bold">
+                    {activeStep === 0 ? '245K' : activeStep === 1 ? '156K' : activeStep === 2 ? '45K' : '12K'}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-400 mb-1">GPU Usage</div>
+                  <div className="text-cyan-400 font-mono font-bold">
                     {isPlaying ? '87%' : '12%'}
                   </div>
                 </div>
                 <div>
-                  <div className="text-gray-400 mb-1">FPS</div>
+                  <div className="text-gray-400 mb-1">Quality</div>
                   <div className="text-green-400 font-mono font-bold">
-                    {isPlaying ? '60' : '0'}
+                    {activeStep === 0 ? '65%' : activeStep === 1 ? '78%' : activeStep === 2 ? '92%' : '98%'}
                   </div>
                 </div>
               </div>
