@@ -6,6 +6,7 @@ import AmaoSection from './components/AmaoSection';
 import StudioDemo from './components/StudioDemo';
 import StudioEnvironment from './components/StudioEnvironment';
 import LivePipelineDemo from './components/LivePipelineDemo';
+import ModelComparison from './components/ModelComparison';
 import TechnologyExperience from './components/TechnologyExperience';
 import AIOptimizationTool from './components/AIOptimizationTool';
 import ClientBenefits from './components/ClientBenefits';
@@ -18,17 +19,14 @@ function App() {
   const [showDemo, setShowDemo] = useState(false);
 
   useEffect(() => {
-    // Show demo mode if ?demo=true in URL
     const params = new URLSearchParams(window.location.search);
     setShowDemo(params.get('demo') === 'true');
   }, []);
 
-  // If in demo mode, show the interactive demo viewer
   if (showDemo) {
     return <InteractiveDemo />;
   }
 
-  // Otherwise show the actual app
   return (
     <div className="min-h-screen bg-black text-white">
       <Hero />
@@ -42,6 +40,7 @@ function App() {
           <LivePipelineDemo />
         </div>
       </section>
+      <ModelComparison />
       <TechnologyExperience />
       <AIOptimizationTool />
       <ClientBenefits />
