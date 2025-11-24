@@ -2,8 +2,8 @@ import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Original complex model
-const OriginalModel = () => {
+// Professional High-Poly Blender-Style Model
+const BlenderHighPolyModel = () => {
   const groupRef = useRef<THREE.Group>(null);
   useFrame(() => {
     if (groupRef.current) {
@@ -13,53 +13,65 @@ const OriginalModel = () => {
 
   return (
     <group ref={groupRef}>
-      {/* Main cube body - high detail */}
-      <mesh scale={[1, 1, 1]}>
-        <boxGeometry args={[2, 2, 2, 32, 32, 32]} />
-        <meshStandardMaterial color="#3B82F6" metalness={0.6} roughness={0.4} />
+      {/* Main organic body - complex mesh */}
+      <mesh position={[0, 0, 0]}>
+        <icosahedronGeometry args={[1.2, 6]} />
+        <meshStandardMaterial color="#FF7F00" metalness={0.4} roughness={0.6} />
       </mesh>
 
-      {/* Multiple detail spheres - overdone */}
-      {[...Array(12)].map((_, i) => (
-        <mesh key={i} position={[
-          Math.cos((i / 12) * Math.PI * 2) * 1.8,
-          Math.sin((i / 12) * Math.PI * 2) * 1.8,
-          0
-        ]}>
-          <sphereGeometry args={[0.4, 32, 32]} />
-          <meshStandardMaterial color="#8B5CF6" metalness={0.5} roughness={0.5} />
-        </mesh>
-      ))}
-
-      {/* Dense corner details */}
-      {[...Array(8)].map((_, i) => {
-        const x = i % 2 === 0 ? -1 : 1;
-        const y = (i % 4) < 2 ? -1 : 1;
-        const z = i < 4 ? -1 : 1;
+      {/* Complex detail spheres */}
+      {[...Array(16)].map((_, i) => {
+        const phi = (i / 16) * Math.PI * 2;
+        const theta = (i % 4) * Math.PI / 4;
         return (
-          <mesh key={`corner-${i}`} position={[x * 1.2, y * 1.2, z * 1.2]}>
-            <boxGeometry args={[0.3, 0.3, 0.3, 16, 16, 16]} />
-            <meshStandardMaterial color="#06B6D4" metalness={0.7} roughness={0.3} />
+          <mesh key={i} position={[
+            Math.sin(theta) * Math.cos(phi) * 2.2,
+            Math.cos(theta) * 2,
+            Math.sin(theta) * Math.sin(phi) * 2.2
+          ]}>
+            <sphereGeometry args={[0.35, 24, 24]} />
+            <meshStandardMaterial color="#0066FF" metalness={0.5} roughness={0.4} />
           </mesh>
         );
       })}
 
-      {/* Decorative torus rings - unnecessary */}
-      {[...Array(4)].map((_, i) => (
-        <mesh key={`torus-${i}`} rotation={[Math.PI / 2 * (i % 2), 0, Math.PI / 4 * i]}>
-          <torusGeometry args={[1.2, 0.15, 32, 128]} />
-          <meshStandardMaterial color="#EC4899" metalness={0.4} roughness={0.6} />
-        </mesh>
-      ))}
+      {/* Dense edge details */}
+      {[...Array(24)].map((_, i) => {
+        const angle = (i / 24) * Math.PI * 2;
+        return (
+          <mesh key={`edge-${i}`} position={[
+            Math.cos(angle) * 1.8,
+            Math.sin(angle) * 0.8,
+            Math.sin(angle * 2) * 1.5
+          ]}>
+            <boxGeometry args={[0.25, 0.25, 0.25, 12, 12, 12]} />
+            <meshStandardMaterial color="#FF7F00" metalness={0.6} roughness={0.3} />
+          </mesh>
+        );
+      })}
 
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 5, 5]} intensity={1.2} />
+      {/* Decorative torus details */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.3, 0.12, 16, 100]} />
+        <meshStandardMaterial color="#FF00FF" metalness={0.5} roughness={0.5} />
+      </mesh>
+
+      <mesh rotation={[0, Math.PI / 2, 0]}>
+        <torusGeometry args={[1.1, 0.1, 16, 100]} />
+        <meshStandardMaterial color="#0066FF" metalness={0.4} roughness={0.6} />
+      </mesh>
+
+      {/* Professional lighting setup */}
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[5, 8, 5]} intensity={1.4} color="#FFFFFF" />
+      <directionalLight position={[-4, 4, -4]} intensity={0.8} color="#0066FF" />
+      <pointLight position={[0, 0, 3]} intensity={0.6} color="#FF7F00" distance={3} />
     </group>
   );
 };
 
-// Optimized model - simplified
-const OptimizedModel = () => {
+// Optimized ZBrush-Style Model
+const ZBrushOptimizedModel = () => {
   const groupRef = useRef<THREE.Group>(null);
   useFrame(() => {
     if (groupRef.current) {
@@ -69,39 +81,54 @@ const OptimizedModel = () => {
 
   return (
     <group ref={groupRef}>
-      {/* Main cube - reduced geometry */}
-      <mesh scale={[1, 1, 1]}>
-        <boxGeometry args={[2, 2, 2, 4, 4, 4]} />
-        <meshStandardMaterial color="#3B82F6" metalness={0.6} roughness={0.4} />
+      {/* Main organic body - simplified */}
+      <mesh position={[0, 0, 0]}>
+        <icosahedronGeometry args={[1.2, 2]} />
+        <meshStandardMaterial color="#FF7F00" metalness={0.4} roughness={0.6} />
       </mesh>
 
-      {/* Simplified spheres - reduced count */}
-      {[...Array(4)].map((_, i) => (
-        <mesh key={i} position={[
-          Math.cos((i / 4) * Math.PI * 2) * 1.8,
-          Math.sin((i / 4) * Math.PI * 2) * 1.8,
-          0
-        ]}>
-          <sphereGeometry args={[0.4, 8, 8]} />
-          <meshStandardMaterial color="#8B5CF6" metalness={0.5} roughness={0.5} />
-        </mesh>
-      ))}
-
-      {/* Corner details - optimized */}
-      {[...Array(8)].map((_, i) => {
-        const x = i % 2 === 0 ? -1 : 1;
-        const y = (i % 4) < 2 ? -1 : 1;
-        const z = i < 4 ? -1 : 1;
+      {/* Optimized detail spheres - fewer but strategic */}
+      {[...Array(6)].map((_, i) => {
+        const phi = (i / 6) * Math.PI * 2;
+        const theta = (i % 2) * Math.PI / 4;
         return (
-          <mesh key={`corner-${i}`} position={[x * 1.2, y * 1.2, z * 1.2]}>
-            <boxGeometry args={[0.3, 0.3, 0.3, 4, 4, 4]} />
-            <meshStandardMaterial color="#06B6D4" metalness={0.7} roughness={0.3} />
+          <mesh key={i} position={[
+            Math.sin(theta) * Math.cos(phi) * 2.2,
+            Math.cos(theta) * 2,
+            Math.sin(theta) * Math.sin(phi) * 2.2
+          ]}>
+            <sphereGeometry args={[0.35, 8, 8]} />
+            <meshStandardMaterial color="#0066FF" metalness={0.5} roughness={0.4} />
           </mesh>
         );
       })}
 
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 5, 5]} intensity={1.2} />
+      {/* Optimized edges - reduced geometry */}
+      {[...Array(8)].map((_, i) => {
+        const angle = (i / 8) * Math.PI * 2;
+        return (
+          <mesh key={`edge-${i}`} position={[
+            Math.cos(angle) * 1.8,
+            Math.sin(angle) * 0.8,
+            Math.sin(angle * 2) * 1.5
+          ]}>
+            <boxGeometry args={[0.25, 0.25, 0.25, 4, 4, 4]} />
+            <meshStandardMaterial color="#FF7F00" metalness={0.6} roughness={0.3} />
+          </mesh>
+        );
+      })}
+
+      {/* Simplified torus - single geometry */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.3, 0.12, 8, 32]} />
+        <meshStandardMaterial color="#FF00FF" metalness={0.5} roughness={0.5} />
+      </mesh>
+
+      {/* Professional lighting */}
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[5, 8, 5]} intensity={1.4} color="#FFFFFF" />
+      <directionalLight position={[-4, 4, -4]} intensity={0.8} color="#0066FF" />
+      <pointLight position={[0, 0, 3]} intensity={0.6} color="#FF7F00" distance={3} />
     </group>
   );
 };
@@ -111,12 +138,13 @@ export default function BeforeAfterComparison() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Header - Updated as requested */}
       <div className="text-center mb-12">
-        <h3 className="text-3xl md:text-4xl font-bold mb-4">
-          Before & After <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Optimization</span>
-        </h3>
-        <p className="text-gray-400 text-lg">AI-powered 3D model optimization in action</p>
+        <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <span className="bg-gradient-to-r from-blue-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent">AI-Powered 3D Optimization</span>
+        </h2>
+        <h3 className="text-2xl font-bold text-white mb-4">Experience Our Technology</h3>
+        <p className="text-lg text-gray-400">Upload a 3D model and watch our AI optimize it in real-time</p>
       </div>
 
       {/* Tabs */}
@@ -145,35 +173,43 @@ export default function BeforeAfterComparison() {
 
       {activeTab === 'comparison' ? (
         /* 3D Comparison Side-by-Side */
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Original */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Original - Blender High-Poly */}
           <div className="space-y-4">
-            <div className="bg-red-900/20 border border-red-800/50 rounded-xl p-4">
-              <h4 className="font-bold text-white mb-2">Original Model</h4>
-              <div className="text-sm text-gray-400 space-y-1">
-                <p>📊 Polygons: <span className="text-red-400 font-bold">245,680</span></p>
-                <p>💾 File Size: <span className="text-red-400 font-bold">124.5 MB</span></p>
+            <div className="bg-orange-900/30 border border-orange-700/50 rounded-xl p-4">
+              <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                <span className="text-2xl">📦</span>
+                Original Model (Blender Export)
+              </h4>
+              <div className="text-sm text-gray-400 space-y-2 mt-4">
+                <p>📊 Polygons: <span className="text-orange-400 font-bold text-lg">645,920</span></p>
+                <p>💾 File Size: <span className="text-orange-400 font-bold text-lg">358.2 MB</span></p>
+                <p>🔧 Render Time: <span className="text-orange-400 font-bold">45 seconds/frame</span></p>
               </div>
             </div>
-            <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden" style={{ height: '400px' }}>
-              <Canvas>
-                <OriginalModel />
+            <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden" style={{ height: '450px' }}>
+              <Canvas camera={{ position: [0, 0, 3.5] }}>
+                <BlenderHighPolyModel />
               </Canvas>
             </div>
           </div>
 
-          {/* Optimized */}
+          {/* Optimized - AI Enhanced */}
           <div className="space-y-4">
-            <div className="bg-green-900/20 border border-green-800/50 rounded-xl p-4">
-              <h4 className="font-bold text-white mb-2">AI Optimized</h4>
-              <div className="text-sm text-gray-400 space-y-1">
-                <p>📊 Polygons: <span className="text-green-400 font-bold">12,284</span></p>
-                <p>💾 File Size: <span className="text-green-400 font-bold">6.2 MB</span></p>
+            <div className="bg-green-900/30 border border-green-700/50 rounded-xl p-4">
+              <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                <span className="text-2xl">⚡</span>
+                AI Optimized Result
+              </h4>
+              <div className="text-sm text-gray-400 space-y-2 mt-4">
+                <p>📊 Polygons: <span className="text-green-400 font-bold text-lg">28,340</span></p>
+                <p>💾 File Size: <span className="text-green-400 font-bold text-lg">12.8 MB</span></p>
+                <p>🔧 Render Time: <span className="text-green-400 font-bold">1.2 seconds/frame</span></p>
               </div>
             </div>
-            <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden" style={{ height: '400px' }}>
-              <Canvas>
-                <OptimizedModel />
+            <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden" style={{ height: '450px' }}>
+              <Canvas camera={{ position: [0, 0, 3.5] }}>
+                <ZBrushOptimizedModel />
               </Canvas>
             </div>
           </div>
@@ -182,25 +218,25 @@ export default function BeforeAfterComparison() {
         /* Statistics */
         <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border border-blue-800/50 rounded-2xl p-6">
-            <div className="text-4xl font-bold text-blue-400 mb-2">95%</div>
+            <div className="text-4xl font-bold text-blue-400 mb-2">95.6%</div>
             <p className="text-gray-300 font-semibold">Polygon Reduction</p>
-            <p className="text-sm text-gray-500 mt-2">245K → 12K polygons</p>
+            <p className="text-sm text-gray-500 mt-2">645K → 28K polygons</p>
           </div>
 
           <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 border border-green-800/50 rounded-2xl p-6">
-            <div className="text-4xl font-bold text-green-400 mb-2">95%</div>
+            <div className="text-4xl font-bold text-green-400 mb-2">96.4%</div>
             <p className="text-gray-300 font-semibold">File Size Reduction</p>
-            <p className="text-sm text-gray-500 mt-2">124.5 MB → 6.2 MB</p>
+            <p className="text-sm text-gray-500 mt-2">358.2 MB → 12.8 MB</p>
           </div>
 
           <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border border-purple-800/50 rounded-2xl p-6">
-            <div className="text-4xl font-bold text-purple-400 mb-2">20x</div>
+            <div className="text-4xl font-bold text-purple-400 mb-2">37x</div>
             <p className="text-gray-300 font-semibold">Faster Rendering</p>
-            <p className="text-sm text-gray-500 mt-2">Real-time performance gain</p>
+            <p className="text-sm text-gray-500 mt-2">45s → 1.2s per frame</p>
           </div>
 
           <div className="bg-gradient-to-br from-cyan-900/30 to-blue-900/30 border border-cyan-800/50 rounded-2xl p-6">
-            <div className="text-4xl font-bold text-cyan-400 mb-2">98%</div>
+            <div className="text-4xl font-bold text-cyan-400 mb-2">99%</div>
             <p className="text-gray-300 font-semibold">Quality Preservation</p>
             <p className="text-sm text-gray-500 mt-2">Visually identical output</p>
           </div>
@@ -212,7 +248,7 @@ export default function BeforeAfterComparison() {
           </div>
 
           <div className="bg-gradient-to-br from-red-900/30 to-pink-900/30 border border-red-800/50 rounded-2xl p-6">
-            <div className="text-4xl font-bold text-red-400 mb-2">2.3s</div>
+            <div className="text-4xl font-bold text-red-400 mb-2">3.2s</div>
             <p className="text-gray-300 font-semibold">Processing Time</p>
             <p className="text-sm text-gray-500 mt-2">AI analysis & optimization</p>
           </div>
