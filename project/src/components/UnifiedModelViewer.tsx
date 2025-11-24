@@ -4,7 +4,7 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 import { Eye, EyeOff, Grid3x3 } from 'lucide-react';
 
-// Preset character model
+// Preset character model - Simplified and guaranteed visible
 const CharacterModel = ({ optimized = false, wireframe = false }) => {
   const groupRef = useRef<THREE.Group>(null);
   useFrame(() => {
@@ -14,68 +14,69 @@ const CharacterModel = ({ optimized = false, wireframe = false }) => {
   });
 
   return (
-    <group ref={groupRef}>
-      <mesh position={[0, 1.7, 0]}>
-        <icosahedronGeometry args={[0.45, optimized ? 3 : 7]} />
-        <meshStandardMaterial color="#E8B8A0" wireframe={wireframe} metalness={0.05} roughness={0.85} />
+    <group ref={groupRef} position={[0, 0, 0]}>
+      {/* Head */}
+      <mesh position={[0, 0.6, 0]} scale={1}>
+        <sphereGeometry args={[0.35, optimized ? 8 : 32, optimized ? 8 : 32]} />
+        <meshStandardMaterial color="#E8B8A0" wireframe={wireframe} metalness={0.1} roughness={0.8} />
       </mesh>
-      <mesh position={[0, 1.8, 0.08]}>
-        <sphereGeometry args={[0.48, optimized ? 12 : 40, optimized ? 12 : 40]} />
-        <meshStandardMaterial color="#2D1810" wireframe={wireframe} metalness={0.15} roughness={0.85} side={THREE.BackSide} />
+
+      {/* Torso */}
+      <mesh position={[0, 0, 0]} scale={[0.4, 0.8, 0.3]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#2563EB" wireframe={wireframe} metalness={0.15} roughness={0.75} />
       </mesh>
-      <mesh position={[-0.16, 1.82, 0.4]}>
-        <sphereGeometry args={[0.1, optimized ? 8 : 20, optimized ? 8 : 20]} />
-        <meshStandardMaterial color="#FFFFFF" wireframe={wireframe} metalness={0.2} roughness={0.3} />
+
+      {/* Left Arm */}
+      <mesh position={[-0.5, 0.2, 0]} scale={[0.15, 0.6, 0.15]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#D4A574" wireframe={wireframe} metalness={0.1} roughness={0.8} />
       </mesh>
-      <mesh position={[0.16, 1.82, 0.4]}>
-        <sphereGeometry args={[0.1, optimized ? 8 : 20, optimized ? 8 : 20]} />
-        <meshStandardMaterial color="#FFFFFF" wireframe={wireframe} metalness={0.2} roughness={0.3} />
+
+      {/* Right Arm */}
+      <mesh position={[0.5, 0.2, 0]} scale={[0.15, 0.6, 0.15]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#D4A574" wireframe={wireframe} metalness={0.1} roughness={0.8} />
       </mesh>
-      <mesh position={[0, 0.8, 0]}>
-        <capsuleGeometry args={[0.4, 1.4, optimized ? 6 : 18, optimized ? 24 : 80]} />
-        <meshStandardMaterial color="#2563EB" wireframe={wireframe} metalness={0.2} roughness={0.7} />
-      </mesh>
-      <mesh position={[-0.75, 1.05, 0]} rotation={[0, 0, Math.PI / 6]}>
-        <capsuleGeometry args={[0.15, 1.15, optimized ? 6 : 16, optimized ? 24 : 60]} />
-        <meshStandardMaterial color="#E8B8A0" wireframe={wireframe} metalness={0.08} roughness={0.85} />
-      </mesh>
-      <mesh position={[0.75, 1.05, 0]} rotation={[0, 0, -Math.PI / 6]}>
-        <capsuleGeometry args={[0.15, 1.15, optimized ? 6 : 16, optimized ? 24 : 60]} />
-        <meshStandardMaterial color="#E8B8A0" wireframe={wireframe} metalness={0.08} roughness={0.85} />
-      </mesh>
-      <mesh position={[-0.32, -0.55, 0]}>
-        <capsuleGeometry args={[0.17, 1.35, optimized ? 6 : 16, optimized ? 24 : 72]} />
+
+      {/* Left Leg */}
+      <mesh position={[-0.25, -0.6, 0]} scale={[0.15, 0.5, 0.15]}>
+        <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="#1F1F1F" wireframe={wireframe} metalness={0.1} roughness={0.85} />
       </mesh>
-      <mesh position={[0.32, -0.55, 0]}>
-        <capsuleGeometry args={[0.17, 1.35, optimized ? 6 : 16, optimized ? 24 : 72]} />
+
+      {/* Right Leg */}
+      <mesh position={[0.25, -0.6, 0]} scale={[0.15, 0.5, 0.15]}>
+        <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="#1F1F1F" wireframe={wireframe} metalness={0.1} roughness={0.85} />
       </mesh>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 14, 10]} intensity={1.4} />
-      <pointLight position={[-10, 10, -10]} intensity={0.9} color="#8B5CF6" />
+
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[5, 5, 5]} intensity={1} />
+      <directionalLight position={[-5, 5, 5]} intensity={0.6} color="#06B6D4" />
     </group>
   );
 };
 
-// Generic uploaded model placeholder
+// Generic uploaded model placeholder - Simple and visible
 const UploadedModel = ({ wireframe = false }) => {
-  const groupRef = useRef<THREE.Group>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
   useFrame(() => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += 0.01;
+    if (meshRef.current) {
+      meshRef.current.rotation.x += 0.005;
+      meshRef.current.rotation.y += 0.01;
     }
   });
 
   return (
-    <group ref={groupRef}>
-      <mesh>
-        <icosahedronGeometry args={[0.8, 5]} />
-        <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.3} roughness={0.6} />
+    <group position={[0, 0, 0]}>
+      <mesh ref={meshRef}>
+        <dodecahedronGeometry args={[0.8]} />
+        <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.4} roughness={0.5} />
       </mesh>
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[10, 10, 10]} intensity={1.2} />
-      <pointLight position={[-10, -10, -10]} intensity={0.8} color="#06B6D4" />
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[4, 4, 4]} intensity={1.2} />
+      <directionalLight position={[-4, 4, 4]} intensity={0.6} color="#06B6D4" />
     </group>
   );
 };
@@ -89,6 +90,7 @@ interface UnifiedModelViewerProps {
 export default function UnifiedModelViewer({ modelType, optimized = false, polygons = 0 }: UnifiedModelViewerProps) {
   const [wireframe, setWireframe] = useState(false);
   const [showInfo, setShowInfo] = useState(true);
+  const [canvasReady, setCanvasReady] = useState(true);
 
   const renderModel = () => {
     switch (modelType) {
@@ -102,16 +104,42 @@ export default function UnifiedModelViewer({ modelType, optimized = false, polyg
   };
 
   return (
-    <div className="relative w-full h-full">
-      <Canvas style={{ width: '100%', height: '100%' }} gl={{ preserveDrawingBuffer: true }}>
-        <PerspectiveCamera makeDefault position={[0, 0, 3.5]} />
-        <OrbitControls enableZoom enablePan enableRotate autoRotate autoRotateSpeed={2} />
-        {renderModel()}
-        <color attach="background" args={['#000000']} />
-      </Canvas>
+    <div className="relative w-full h-full bg-black" style={{ width: '100%', height: '100%' }}>
+      {canvasReady ? (
+        <Canvas 
+          style={{ width: '100%', height: '100%', display: 'block' }} 
+          gl={{ 
+            preserveDrawingBuffer: true,
+            antialias: true,
+            powerPreference: 'high-performance',
+            alpha: true
+          }}
+          camera={{ position: [0, 0, 2.5], fov: 50 }}
+        >
+          <PerspectiveCamera makeDefault position={[0, 0, 2.5]} fov={50} />
+          <OrbitControls 
+            enableZoom 
+            enablePan 
+            enableRotate 
+            autoRotate 
+            autoRotateSpeed={2}
+            minDistance={1}
+            maxDistance={6}
+          />
+          {renderModel()}
+          <color attach="background" args={['#000000']} />
+        </Canvas>
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-black">
+          <div className="text-center">
+            <p className="text-gray-400 text-sm mb-2">3D Model Viewer</p>
+            <p className="text-gray-500 text-xs">WebGL unavailable</p>
+          </div>
+        </div>
+      )}
 
-      {/* Controls */}
-      <div className="absolute top-4 right-4 flex gap-2">
+      {/* Controls - Outside Canvas */}
+      <div className="absolute top-4 right-4 flex gap-2 z-10">
         <button
           onClick={() => setWireframe(!wireframe)}
           className="p-2 bg-gray-900/80 hover:bg-gray-800 rounded-lg border border-gray-700 transition-all"
@@ -130,7 +158,7 @@ export default function UnifiedModelViewer({ modelType, optimized = false, polyg
 
       {/* Info Panel */}
       {showInfo && (
-        <div className="absolute bottom-4 left-4 bg-gray-900/90 border border-gray-700 rounded-lg p-4 text-xs space-y-2 max-w-xs">
+        <div className="absolute bottom-4 left-4 bg-gray-900/90 border border-gray-700 rounded-lg p-4 text-xs space-y-2 max-w-xs z-10">
           <div className="flex justify-between">
             <span className="text-gray-400">Polygons:</span>
             <span className="text-cyan-400 font-bold">{polygons > 0 ? (polygons / 1000).toFixed(0) : 'N/A'}K</span>
