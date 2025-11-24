@@ -13,73 +13,119 @@ const CityModel = ({ stage }: { stage: number }) => {
   });
 
   // Polygon complexity progression - dramatic reduction from stage 1 to 5
-  const detailLevels = [6, 5, 3, 2, 1];
+  const detailLevels = [8, 6, 4, 2, 1];
   const detail = detailLevels[stage - 1];
   const wireframe = stage === 1;
 
-  // Building generator
-  const Building = ({ x, z, width, depth, height, color, segmentsX, segmentsZ }: any) => (
-    <>
+  // Enhanced Building generator with architectural details
+  const Building = ({ x, z, width, depth, height, color, segmentsX, segmentsZ, windowRows = 4 }: any) => (
+    <group>
       {/* Main structure */}
       <mesh position={[x, height / 2, z]}>
-        <boxGeometry args={[width, height, depth, segmentsX * detail, 2, segmentsZ * detail]} />
+        <boxGeometry args={[width, height, depth, segmentsX * detail, Math.max(2, Math.floor(4 * detail)), segmentsZ * detail]} />
         <meshStandardMaterial
           color={color}
-          metalness={0.3}
-          roughness={0.5}
+          metalness={0.35}
+          roughness={0.45}
           wireframe={wireframe}
         />
       </mesh>
-      {/* Windows */}
-      <mesh position={[x, height / 2, z + depth / 2 + 0.05]}>
-        <planeGeometry args={[width, height, segmentsX * detail, 8 * detail]} />
+
+      {/* Detailed window grid */}
+      <mesh position={[x, height / 2, z + depth / 2 + 0.06]}>
+        <planeGeometry args={[width * 0.9, height * 0.85, Math.max(6, 8 * detail), Math.max(4, windowRows * detail)]} />
         <meshStandardMaterial
           color="#fbbf24"
           emissive="#fbbf24"
-          emissiveIntensity={stage > 2 ? 0.5 : 0.2}
+          emissiveIntensity={stage > 2 ? 0.6 : 0.25}
         />
       </mesh>
-    </>
+
+      {/* Building accent/roof details - only on high detail stages */}
+      {detail >= 4 && (
+        <mesh position={[x, height + 0.3, z]}>
+          <boxGeometry args={[width + 0.2, 0.3, depth + 0.2, segmentsX * (detail - 1), 1, segmentsZ * (detail - 1)]} />
+          <meshStandardMaterial
+            color="#1a1a2e"
+            metalness={0.6}
+            roughness={0.3}
+          />
+        </mesh>
+      )}
+
+      {/* Side detail planes - architectural elements */}
+      {detail >= 5 && (
+        <>
+          <mesh position={[x + width / 2 + 0.05, height / 2, z]}>
+            <planeGeometry args={[0.15, height, segmentsX * (detail - 1), 4 * detail]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.4} roughness={0.6} />
+          </mesh>
+          <mesh position={[x - width / 2 - 0.05, height / 2, z]}>
+            <planeGeometry args={[0.15, height, segmentsX * (detail - 1), 4 * detail]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.4} roughness={0.6} />
+          </mesh>
+        </>
+      )}
+    </group>
   );
 
-  return (
-    <group ref={groupRef} scale={1.2}>
-      {/* Tall central tower */}
-      <Building x={0} z={0} width={1.5} depth={1.5} height={4} color="#3b82f6" segmentsX={16} segmentsZ={16} />
-
-      {/* Left tower */}
-      <Building x={-4} z={-2} width={1.8} depth={1.8} height={3.5} color="#06b6d4" segmentsX={14} segmentsZ={14} />
-
-      {/* Right tower */}
-      <Building x={4} z={-2} width={1.8} depth={1.8} height={3.2} color="#8b5cf6" segmentsX={14} segmentsZ={14} />
-
-      {/* Back left building */}
-      <Building x={-3} z={3} width={2} depth={1.5} height={2.5} color="#ec4899" segmentsX={12} segmentsZ={12} />
-
-      {/* Back right building */}
-      <Building x={3} z={3} width={2} depth={1.5} height={2.8} color="#06b6d4" segmentsX={12} segmentsZ={12} />
-
-      {/* Front low structures */}
-      <Building x={-2} z={-4} width={1.2} depth={1.2} height={1.5} color="#10b981" segmentsX={10} segmentsZ={10} />
-      <Building x={2} z={-4} width={1.2} depth={1.2} height={1.8} color="#f59e0b" segmentsX={10} segmentsZ={10} />
-
-      {/* Ground plane */}
-      <mesh position={[0, -0.1, 0]} scale={1.5}>
-        <planeGeometry args={[12, 12, 16 * detail, 16 * detail]} />
+  // Detailed ground with segments
+  const GroundPlane = () => {
+    const groundSegments = Math.max(8, 16 * detail);
+    return (
+      <mesh position={[0, -0.1, 0]}>
+        <planeGeometry args={[14, 14, groundSegments, groundSegments]} />
         <meshStandardMaterial
           color="#1f2937"
-          metalness={0.1}
-          roughness={0.9}
+          metalness={0.05}
+          roughness={0.95}
           wireframe={wireframe}
         />
       </mesh>
+    );
+  };
+
+  return (
+    <group ref={groupRef} scale={1.2}>
+      {/* Tall central tower - high detail */}
+      <Building x={0} z={0} width={1.5} depth={1.5} height={4} color="#3b82f6" segmentsX={18} segmentsZ={18} windowRows={6} />
+
+      {/* Left tower - medium-high detail */}
+      <Building x={-4} z={-2} width={1.8} depth={1.8} height={3.5} color="#06b6d4" segmentsX={16} segmentsZ={16} windowRows={5} />
+
+      {/* Right tower - medium-high detail */}
+      <Building x={4} z={-2} width={1.8} depth={1.8} height={3.2} color="#8b5cf6" segmentsX={16} segmentsZ={16} windowRows={5} />
+
+      {/* Back left building */}
+      <Building x={-3} z={3} width={2} depth={1.5} height={2.5} color="#ec4899" segmentsX={14} segmentsZ={14} windowRows={4} />
+
+      {/* Back right building */}
+      <Building x={3} z={3} width={2} depth={1.5} height={2.8} color="#06b6d4" segmentsX={14} segmentsZ={14} windowRows={4} />
+
+      {/* Front left structure */}
+      <Building x={-2} z={-4} width={1.2} depth={1.2} height={1.5} color="#10b981" segmentsX={12} segmentsZ={12} windowRows={3} />
+
+      {/* Front right structure */}
+      <Building x={2} z={-4} width={1.2} depth={1.2} height={1.8} color="#f59e0b" segmentsX={12} segmentsZ={12} windowRows={3} />
+
+      {/* Additional detail buildings for more complexity */}
+      {detail >= 5 && (
+        <>
+          <Building x={-5} z={0} width={1} depth={1} height={2} color="#14b8a6" segmentsX={10} segmentsZ={10} windowRows={2} />
+          <Building x={5} z={0} width={1} depth={1} height={2.2} color="#a855f7" segmentsX={10} segmentsZ={10} windowRows={2} />
+        </>
+      )}
+
+      {/* Ground plane */}
+      <GroundPlane />
 
       {/* Lighting system */}
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 5, 3]} intensity={1} />
-      <pointLight position={[-4, 3, -3]} intensity={0.8} color="#0ea5e9" />
-      <pointLight position={[4, 3, 3]} intensity={0.8} color="#d946ef" />
-      <pointLight position={[0, 4, 4]} intensity={0.5} color="#fbbf24" />
+      <ambientLight intensity={0.65} />
+      <directionalLight position={[5, 5, 3]} intensity={1.1} />
+      <pointLight position={[-4, 3, -3]} intensity={0.9} color="#0ea5e9" />
+      <pointLight position={[4, 3, 3]} intensity={0.9} color="#d946ef" />
+      <pointLight position={[0, 4, 4]} intensity={0.6} color="#fbbf24" />
+      <pointLight position={[-4, 2, 4]} intensity={0.4} color="#14b8a6" />
     </group>
   );
 };
