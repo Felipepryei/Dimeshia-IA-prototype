@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
-import { Upload, RotateCcw } from 'lucide-react';
+import { Upload, RotateCcw, Zap } from 'lucide-react';
+import { createCharacterModel, createProductModel, createSceneModel, createOptimizedModel } from './SampleModels';
 
 const OriginalModel = ({ model }: { model: THREE.Group | null }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -72,6 +73,11 @@ export default function ModelUploadViewer() {
     fileName: '',
     isProcessing: false,
   });
+
+  // Load sample model on mount
+  useEffect(() => {
+    loadSampleModel('character');
+  }, []);
 
   const calculatePolygonCount = (object: THREE.Object3D): number => {
     let count = 0;
@@ -229,6 +235,54 @@ export default function ModelUploadViewer() {
     }
   };
 
+  const loadSampleModel = (type: 'character' | 'product' | 'scene') => {
+    setModelData((prev) => ({ ...prev, isProcessing: true }));
+
+    setTimeout(() => {
+      let originalGroup: THREE.Group;
+
+      if (type === 'character') {
+        originalGroup = createCharacterModel();
+        setModelData((prev) => ({
+          ...prev,
+          fileName: '3d_character_hero.blend',
+        }));
+      } else if (type === 'product') {
+        originalGroup = createProductModel();
+        setModelData((prev) => ({
+          ...prev,
+          fileName: 'product_device.blend',
+        }));
+      } else {
+        originalGroup = createSceneModel();
+        setModelData((prev) => ({
+          ...prev,
+          fileName: 'architectural_scene.blend',
+        }));
+      }
+
+      setOriginalModel(originalGroup);
+
+      // Calculate metrics
+      const originalPolygons = calculatePolygonCount(originalGroup);
+      const optimizedGroup = createOptimizedModel(originalGroup);
+      setOptimizedModel(optimizedGroup);
+      const optimizedPolygons = calculatePolygonCount(optimizedGroup);
+
+      // Simulate file size based on polygon count
+      const fileSize = (originalPolygons / 1000) * 5; // Rough estimate: 5KB per 1K polys
+
+      setModelData((prev) => ({
+        ...prev,
+        originalPolygons,
+        optimizedPolygons,
+        originalSize: parseFloat(fileSize.toFixed(1)),
+        optimizedSize: parseFloat((fileSize * 0.15).toFixed(1)),
+        isProcessing: false,
+      }));
+    }, 1000); // Simulate processing delay
+  };
+
   const handleReset = () => {
     setOriginalModel(null);
     setOptimizedModel(null);
@@ -272,7 +326,7 @@ export default function ModelUploadViewer() {
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={modelData.isProcessing}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mx-auto"
+              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mx-auto mb-4"
             >
               <Upload className="w-5 h-5" />
               {modelData.isProcessing ? 'Processing...' : 'Upload Model'}
@@ -287,9 +341,30 @@ export default function ModelUploadViewer() {
               disabled={modelData.isProcessing}
             />
 
-            <p className="text-xs text-gray-500 mt-4">
-              Demo: Click upload and select a model file, or we'll show you a sample optimization
-            </p>
+            <p className="text-sm text-gray-400 mb-4">Or try a sample model:</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => loadSampleModel('character')}
+                disabled={modelData.isProcessing}
+                className="px-6 py-2 bg-violet-600/30 border border-violet-500 text-violet-300 rounded-lg text-sm font-medium hover:bg-violet-600/50 transition-all"
+              >
+                Character Model
+              </button>
+              <button
+                onClick={() => loadSampleModel('product')}
+                disabled={modelData.isProcessing}
+                className="px-6 py-2 bg-cyan-600/30 border border-cyan-500 text-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-600/50 transition-all"
+              >
+                Product Device
+              </button>
+              <button
+                onClick={() => loadSampleModel('scene')}
+                disabled={modelData.isProcessing}
+                className="px-6 py-2 bg-pink-600/30 border border-pink-500 text-pink-300 rounded-lg text-sm font-medium hover:bg-pink-600/50 transition-all"
+              >
+                Scene/Building
+              </button>
+            </div>
           </div>
         </div>
       ) : (
@@ -393,21 +468,45 @@ export default function ModelUploadViewer() {
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all flex items-center gap-2"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
             >
               <Upload className="w-5 h-5" />
               Upload Another
             </button>
 
+            <div className="flex gap-2 justify-center">
+              <button
+                onClick={() => loadSampleModel('character')}
+                className="px-4 py-3 bg-violet-600/30 border border-violet-500 text-violet-300 rounded-xl text-sm font-semibold hover:bg-violet-600/50 transition-all flex items-center gap-2"
+              >
+                <Zap className="w-4 h-4" />
+                Character
+              </button>
+              <button
+                onClick={() => loadSampleModel('product')}
+                className="px-4 py-3 bg-cyan-600/30 border border-cyan-500 text-cyan-300 rounded-xl text-sm font-semibold hover:bg-cyan-600/50 transition-all flex items-center gap-2"
+              >
+                <Zap className="w-4 h-4" />
+                Product
+              </button>
+              <button
+                onClick={() => loadSampleModel('scene')}
+                className="px-4 py-3 bg-pink-600/30 border border-pink-500 text-pink-300 rounded-xl text-sm font-semibold hover:bg-pink-600/50 transition-all flex items-center gap-2"
+              >
+                <Zap className="w-4 h-4" />
+                Scene
+              </button>
+            </div>
+
             <button
               onClick={handleReset}
-              className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-semibold transition-all flex items-center gap-2"
+              className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
             >
               <RotateCcw className="w-5 h-5" />
-              Reset
+              Clear
             </button>
 
             <input
