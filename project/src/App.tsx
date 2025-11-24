@@ -7,7 +7,6 @@ import StudioEnvironment from './components/StudioEnvironment';
 import TechnologyExperience from './components/TechnologyExperience';
 import AIOptimizationTool from './components/AIOptimizationTool';
 import ClientBenefits from './components/ClientBenefits';
-import Typography from './components/Typography';
 import Footer from './components/Footer';
 import InteractiveDemo from './components/InteractiveDemo';
 
@@ -36,7 +35,6 @@ function App() {
       <TechnologyExperience />
       <AIOptimizationTool />
       <ClientBenefits />
-      <Typography />
       <Footer />
     </div>
   );
