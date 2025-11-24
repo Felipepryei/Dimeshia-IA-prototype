@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import LivePipelineDemo from './LivePipelineDemo' with { type: 'css' };
+import LivePipelineDemo from './LivePipelineDemo';
 
 // Blender Logo/Icon - 3D Model
 const BlenderModel = () => {
