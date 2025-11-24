@@ -371,48 +371,57 @@ export default function AmaoDemo() {
 
           {isComplete ? (
             <div className="space-y-6">
+              {/* AI Recommendation Header - Final Stage */}
+              <div className="bg-gradient-to-r from-purple-900/60 via-blue-900/60 to-cyan-900/60 border border-cyan-500/50 rounded-xl p-6 animate-pulse">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">AI Recommendation Complete</span>
+                </div>
+                <p className="text-lg font-bold text-white">Analysis Summary & Optimization Strategy</p>
+              </div>
+
               {/* Health Score */}
-              <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+              <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 hover:border-green-700/50 transition-all">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-bold text-gray-300">Overall Health Score</span>
-                  <span className="text-4xl font-bold text-green-400">{currentResult.healthScore}</span>
+                  <span className="text-4xl font-bold text-green-400">{currentResult.healthScore}%</span>
                 </div>
-                <div className="w-full bg-gray-800 rounded-full h-3">
+                <div className="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-green-500 via-emerald-400 to-cyan-400 rounded-full transition-all duration-1000 ease-out"
                     style={{ width: `${currentResult.healthScore}%` }}
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
                   {currentResult.healthScore >= 85
-                    ? '✅ Excellent topology'
+                    ? '✅ Excellent topology - Ready for production'
                     : currentResult.healthScore >= 75
-                    ? '⚠️ Good with minor issues'
-                    : '🔴 Needs optimization'}
+                    ? '⚠️ Good with minor issues - Recommended fixes below'
+                    : '🔴 Needs optimization - Follow AI recommendations'}
                 </p>
               </div>
 
-              {/* Key Metrics Grid */}
+              {/* Key Metrics Grid - Analysis Results */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4">
+                <div className={`bg-gray-900/50 border rounded-xl p-4 transition-all hover:border-yellow-600/50 ${currentResult.ngonCount > 15 ? 'border-yellow-800/50' : currentResult.ngonCount > 5 ? 'border-yellow-700/50' : 'border-gray-800'}`}>
                   <div className="text-xs text-gray-400 uppercase">Ngon Count</div>
-                  <div className="text-2xl font-bold text-yellow-400 mt-1">{currentResult.ngonCount}</div>
-                  <div className="text-xs text-gray-500 mt-2">N-sided polygons</div>
+                  <div className={`text-2xl font-bold mt-1 ${currentResult.ngonCount > 15 ? 'text-red-400' : currentResult.ngonCount > 5 ? 'text-yellow-400' : 'text-green-400'}`}>{currentResult.ngonCount}</div>
+                  <div className="text-xs text-gray-500 mt-2">{currentResult.ngonCount > 0 ? 'N-sided polygons found' : 'No N-gons detected'}</div>
                 </div>
-                <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4">
+                <div className="bg-gray-900/50 border border-cyan-800/50 rounded-xl p-4 hover:border-cyan-600/50 transition-all">
                   <div className="text-xs text-gray-400 uppercase">UV Coverage</div>
                   <div className="text-2xl font-bold text-cyan-400 mt-1">{currentResult.uvCoverage}%</div>
-                  <div className="text-xs text-gray-500 mt-2">Texture mapping</div>
+                  <div className="text-xs text-gray-500 mt-2">{currentResult.uvCoverage > 95 ? '✓ Optimal mapping' : 'Texture mapping'}</div>
                 </div>
-                <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4">
+                <div className={`bg-gray-900/50 border rounded-xl p-4 transition-all hover:border-orange-600/50 ${currentResult.densityIssues > 3 ? 'border-orange-800/50' : 'border-gray-800'}`}>
                   <div className="text-xs text-gray-400 uppercase">Density Issues</div>
-                  <div className="text-2xl font-bold text-orange-400 mt-1">{currentResult.densityIssues}</div>
-                  <div className="text-xs text-gray-500 mt-2">Over-poly areas</div>
+                  <div className={`text-2xl font-bold mt-1 ${currentResult.densityIssues > 3 ? 'text-orange-400' : currentResult.densityIssues > 0 ? 'text-yellow-400' : 'text-green-400'}`}>{currentResult.densityIssues}</div>
+                  <div className="text-xs text-gray-500 mt-2">{currentResult.densityIssues === 0 ? 'No over-poly areas' : 'Over-poly areas found'}</div>
                 </div>
-                <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4">
+                <div className={`bg-gray-900/50 border rounded-xl p-4 transition-all hover:border-pink-600/50 ${currentResult.invertedNormals > 0 ? 'border-pink-800/50' : 'border-gray-800'}`}>
                   <div className="text-xs text-gray-400 uppercase">Bad Normals</div>
-                  <div className="text-2xl font-bold text-pink-400 mt-1">{currentResult.invertedNormals}</div>
-                  <div className="text-xs text-gray-500 mt-2">Flipped faces</div>
+                  <div className={`text-2xl font-bold mt-1 ${currentResult.invertedNormals > 0 ? 'text-pink-400' : 'text-green-400'}`}>{currentResult.invertedNormals}</div>
+                  <div className="text-xs text-gray-500 mt-2">{currentResult.invertedNormals === 0 ? 'All normals valid' : 'Flipped faces found'}</div>
                 </div>
               </div>
 
@@ -459,36 +468,76 @@ export default function AmaoDemo() {
                 </div>
               </div>
 
-              {/* Issues & Fixes */}
+              {/* Issues & Fixes - AI Recommendations */}
               <div className="space-y-3">
                 <h5 className="font-bold text-white flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-yellow-400" />
-                  Detected Issues & AI Fixes
+                  🤖 AI-Generated Optimization Fixes
                 </h5>
-                {currentResult.issues.map((issue, i) => (
-                  <div
-                    key={i}
-                    className={`p-4 rounded-xl border-l-4 ${
-                      issue.severity === 'high'
-                        ? 'border-l-red-500 bg-red-900/20'
-                        : issue.severity === 'medium'
-                        ? 'border-l-yellow-500 bg-yellow-900/20'
-                        : 'border-l-blue-500 bg-blue-900/20'
-                    }`}
-                  >
-                    <div className="font-bold text-white text-sm mb-1">{issue.issue}</div>
-                    <div className="text-xs text-gray-400">
-                      <span className="text-green-400">✓ Fix: </span>
-                      {issue.fix}
-                    </div>
+                {currentResult.issues.length === 0 ? (
+                  <div className="p-4 rounded-xl border border-green-800/50 bg-green-900/20">
+                    <div className="text-green-400 font-bold">✅ No issues detected</div>
+                    <div className="text-xs text-green-300 mt-1">Model is optimized and ready for production</div>
                   </div>
-                ))}
+                ) : (
+                  currentResult.issues.map((issue, i) => (
+                    <div
+                      key={i}
+                      className={`p-4 rounded-xl border-l-4 transition-all transform hover:translate-x-1 ${
+                        issue.severity === 'high'
+                          ? 'border-l-red-500 bg-red-900/20 hover:bg-red-900/30'
+                          : issue.severity === 'medium'
+                          ? 'border-l-yellow-500 bg-yellow-900/20 hover:bg-yellow-900/30'
+                          : 'border-l-blue-500 bg-blue-900/20 hover:bg-blue-900/30'
+                      }`}
+                    >
+                      <div className="flex items-start gap-2">
+                        <span className={`text-xs font-bold uppercase mt-0.5 ${
+                          issue.severity === 'high' ? 'text-red-400' : issue.severity === 'medium' ? 'text-yellow-400' : 'text-blue-400'
+                        }`}>
+                          {issue.severity === 'high' ? '🔴' : issue.severity === 'medium' ? '🟡' : '🔵'} {issue.severity}
+                        </span>
+                      </div>
+                      <div className="font-bold text-white text-sm mb-2 mt-1">{issue.issue}</div>
+                      <div className="text-xs text-gray-300">
+                        <span className="text-green-400 font-bold">✓ AI Fix: </span>
+                        <span>{issue.fix}</span>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
 
-              {/* Export CTA */}
-              <button className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold rounded-xl transition-all mt-6">
-                Export Optimized Model
-              </button>
+              {/* Final Recommendation Section */}
+              <div className="bg-gradient-to-br from-cyan-900/30 to-blue-900/30 border border-cyan-700/50 rounded-xl p-6">
+                <h5 className="font-bold text-white mb-3 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-cyan-400" />
+                  Final AI Recommendation
+                </h5>
+                <div className="text-sm text-gray-300 space-y-2">
+                  <p className="leading-relaxed">
+                    {currentResult.healthScore >= 85
+                      ? `This model has excellent topology and is production-ready. No critical issues detected. Apply the minor optimizations above to achieve even better performance.`
+                      : currentResult.healthScore >= 75
+                      ? `This model is in good condition but has ${currentResult.issues.length} issues that should be addressed before production use. Follow the AI-generated fixes above to optimize.`
+                      : `This model needs optimization before production use. ${currentResult.issues.length} issues detected. Priority: fix all high-severity issues first using the AI recommendations above.`
+                    }
+                  </p>
+                  <p className="text-cyan-300 font-semibold pt-2">
+                    Expected Results: {currentResult.polyReduction}% polygon reduction + {currentResult.estimatedRenderSpeedup}x faster rendering
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 gap-4 pt-2">
+                <button className="py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold rounded-xl transition-all transform hover:scale-105">
+                  📥 Import Fixes
+                </button>
+                <button className="py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl transition-all transform hover:scale-105">
+                  ⬇️ Export Report
+                </button>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-96 text-center">
