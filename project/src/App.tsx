@@ -5,7 +5,7 @@ import BrandEssence from './components/BrandEssence';
 import StudioDemo from './components/StudioDemo';
 import StudioEnvironment from './components/StudioEnvironment';
 import AIOptimizationTool from './components/AIOptimizationTool';
-import ColorSystem from './components/ColorSystem';
+import ClientBenefits from './components/ClientBenefits';
 import Typography from './components/Typography';
 import Footer from './components/Footer';
 import InteractiveDemo from './components/InteractiveDemo';
@@ -33,7 +33,7 @@ function App() {
       <StudioDemo />
       <StudioEnvironment />
       <AIOptimizationTool />
-      <ColorSystem />
+      <ClientBenefits />
       <Typography />
       <Footer />
     </div>
