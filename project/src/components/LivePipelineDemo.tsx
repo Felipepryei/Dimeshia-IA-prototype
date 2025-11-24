@@ -1,4 +1,71 @@
 import { useState, useEffect, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
+
+// High-Quality 3D City/Environment Model
+const CityModel = ({ stage }: { stage: number }) => {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += 0.005;
+      groupRef.current.rotation.x = Math.sin(Date.now() * 0.0005) * 0.1;
+    }
+  });
+
+  // Polygon complexity decreases per stage
+  const detailLevels = [5, 4, 3, 2, 1];
+  const detail = detailLevels[stage - 1];
+
+  return (
+    <group ref={groupRef} scale={1.5}>
+      {/* Main building structure */}
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[2, 3, 2, 32 * detail, 32 * detail, 32 * detail]} />
+        <meshStandardMaterial
+          color="#4f46e5"
+          metalness={0.5}
+          roughness={0.4}
+          wireframe={stage < 2}
+        />
+      </mesh>
+
+      {/* Windows layer */}
+      <mesh position={[0, 0, 1.05]}>
+        <planeGeometry args={[2, 3, 8 * detail, 12 * detail]} />
+        <meshStandardMaterial
+          color="#fbbf24"
+          emissive="#fbbf24"
+          emissiveIntensity={stage > 2 ? 0.6 : 0.3}
+        />
+      </mesh>
+
+      {/* Side building */}
+      <mesh position={[-3, 0.5, -1]}>
+        <cylinderGeometry args={[0.8, 0.8, 2.5, 16 * detail, 8 * detail]} />
+        <meshStandardMaterial color="#06b6d4" metalness={0.3} roughness={0.6} />
+      </mesh>
+
+      {/* Right building */}
+      <mesh position={[3, 0, 0]}>
+        <coneGeometry args={[1.2, 2.5, 12 * detail, 8 * detail]} />
+        <meshStandardMaterial color="#8b5cf6" metalness={0.4} roughness={0.5} />
+      </mesh>
+
+      {/* City base platform */}
+      <mesh position={[0, -1.7, 0]}>
+        <planeGeometry args={[10, 10, 20 * detail, 20 * detail]} />
+        <meshStandardMaterial color="#1f2937" metalness={0.2} roughness={0.8} />
+      </mesh>
+
+      {/* Lighting */}
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[5, 5, 5]} intensity={1.2} />
+      <pointLight position={[-5, 3, -5]} intensity={0.6} color="#0ea5e9" />
+      <pointLight position={[5, 3, 5]} intensity={0.6} color="#d946ef" />
+    </group>
+  );
+};
 
 export default function LivePipelineDemo() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -48,9 +115,19 @@ export default function LivePipelineDemo() {
         </button>
       </div>
 
-      {/* Demo Stats Panel */}
+      {/* 3D Model Viewer & Stats Panel */}
       <div className="grid md:grid-cols-2 gap-8">
-        {/* Decimation & Remeshing */}
+        {/* 3D Model Viewer */}
+        <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-700 overflow-hidden shadow-2xl" style={{ height: '500px' }}>
+          <Canvas camera={{ position: [0, 2, 5], fov: 45 }}>
+            <CityModel stage={currentStep} />
+          </Canvas>
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+            <p className="text-xs text-gray-300 text-center">Stage {currentStep}: {steps[currentStep - 1].polygons}</p>
+          </div>
+        </div>
+
+        {/* Decimation & Remeshing Stats */}
         <div className="space-y-4">
           <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border border-blue-700/30 rounded-xl p-4">
             <h4 className="text-white font-semibold mb-1">Decimation & Remeshing</h4>
