@@ -12,58 +12,170 @@ const DetailedCharacterModel = ({ optimized = false }: { optimized?: boolean }) 
     }
   });
 
+  // Create advanced high-poly geometry similar to Blender/Maya
+  const createHighPolyHead = () => {
+    const geometry = new THREE.IcosahedronGeometry(0.45, optimized ? 3 : 6);
+    return geometry;
+  };
+
+  const createHighPolyTorso = () => {
+    const geometry = new THREE.CapsuleGeometry(0.38, 1.3, optimized ? 6 : 16, optimized ? 16 : 64);
+    return geometry;
+  };
+
+  const createHighPolyArm = () => {
+    const geometry = new THREE.CapsuleGeometry(0.14, 1.1, optimized ? 6 : 14, optimized ? 16 : 48);
+    return geometry;
+  };
+
+  const createHighPolyLeg = () => {
+    const geometry = new THREE.CapsuleGeometry(0.16, 1.3, optimized ? 6 : 14, optimized ? 16 : 56);
+    return geometry;
+  };
+
   return (
     <group ref={groupRef}>
-      {/* Head - High detail or optimized */}
-      <mesh position={[0, 1.6, 0]}>
-        <sphereGeometry args={[0.4, optimized ? 16 : 32, optimized ? 16 : 32]} />
-        <meshStandardMaterial color="#FFB6C1" metalness={0.1} roughness={0.8} />
+      {/* Hair Volume - Complex shape */}
+      <mesh position={[0, 1.75, 0.1]}>
+        <sphereGeometry args={[0.42, optimized ? 12 : 32, optimized ? 12 : 32]} />
+        <meshStandardMaterial 
+          color="#2D1810" 
+          metalness={0.15} 
+          roughness={0.85}
+          side={THREE.BackSide}
+        />
       </mesh>
 
-      {/* Eyes - High detail */}
-      <mesh position={[-0.15, 1.75, 0.35]}>
-        <sphereGeometry args={[0.1, optimized ? 8 : 16, optimized ? 8 : 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.5} roughness={0.3} />
-      </mesh>
-      <mesh position={[0.15, 1.75, 0.35]}>
-        <sphereGeometry args={[0.1, optimized ? 8 : 16, optimized ? 8 : 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.5} roughness={0.3} />
+      {/* Head - High poly isosphere */}
+      <mesh position={[0, 1.65, 0]}>
+        <primitive object={createHighPolyHead()} />
+        <meshStandardMaterial 
+          color="#E8B8A0" 
+          metalness={0.05} 
+          roughness={0.85}
+        />
       </mesh>
 
-      {/* Torso - Main body */}
+      {/* Eye whites - Detailed */}
+      <mesh position={[-0.16, 1.8, 0.38]}>
+        <sphereGeometry args={[0.095, optimized ? 8 : 16, optimized ? 8 : 16]} />
+        <meshStandardMaterial color="#FFFFFF" metalness={0.2} roughness={0.3} />
+      </mesh>
+      <mesh position={[0.16, 1.8, 0.38]}>
+        <sphereGeometry args={[0.095, optimized ? 8 : 16, optimized ? 8 : 16]} />
+        <meshStandardMaterial color="#FFFFFF" metalness={0.2} roughness={0.3} />
+      </mesh>
+
+      {/* Pupils */}
+      <mesh position={[-0.16, 1.8, 0.42]}>
+        <sphereGeometry args={[0.05, optimized ? 6 : 12, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#1A1A1A" metalness={0.8} roughness={0.2} />
+      </mesh>
+      <mesh position={[0.16, 1.8, 0.42]}>
+        <sphereGeometry args={[0.05, optimized ? 6 : 12, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#1A1A1A" metalness={0.8} roughness={0.2} />
+      </mesh>
+
+      {/* Nose - Stylized */}
+      <mesh position={[0, 1.6, 0.35]}>
+        <coneGeometry args={[0.06, 0.12, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#D4A590" metalness={0.05} roughness={0.8} />
+      </mesh>
+
+      {/* Mouth line */}
+      <mesh position={[0, 1.45, 0.32]}>
+        <boxGeometry args={[0.2, 0.04, 0.08]} />
+        <meshStandardMaterial color="#A0725E" metalness={0.1} roughness={0.6} />
+      </mesh>
+
+      {/* Torso - Professional subdivision surface quality */}
       <mesh position={[0, 0.8, 0]}>
-        <capsuleGeometry args={[0.35, 1.2, optimized ? 8 : 16, optimized ? 16 : 32]} />
+        <primitive object={createHighPolyTorso()} />
+        <meshStandardMaterial 
+          color="#2563EB" 
+          metalness={0.2} 
+          roughness={0.7}
+          side={THREE.FrontSide}
+        />
+      </mesh>
+
+      {/* Shirt collar details */}
+      <mesh position={[0, 1.35, 0.05]}>
+        <boxGeometry args={[0.45, 0.15, 0.12]} />
+        <meshStandardMaterial color="#1E40AF" metalness={0.25} roughness={0.65} />
+      </mesh>
+
+      {/* Left Shoulder */}
+      <mesh position={[-0.5, 1.25, 0]}>
+        <sphereGeometry args={[0.18, optimized ? 8 : 16, optimized ? 8 : 16]} />
         <meshStandardMaterial color="#2563EB" metalness={0.2} roughness={0.7} />
       </mesh>
 
-      {/* Left Arm */}
-      <mesh position={[-0.65, 1.1, 0]} rotation={[0, 0, Math.PI / 6]}>
-        <capsuleGeometry args={[0.12, 1, optimized ? 6 : 16, optimized ? 16 : 32]} />
-        <meshStandardMaterial color="#FFB6C1" metalness={0.1} roughness={0.8} />
+      {/* Right Shoulder */}
+      <mesh position={[0.5, 1.25, 0]}>
+        <sphereGeometry args={[0.18, optimized ? 8 : 16, optimized ? 8 : 16]} />
+        <meshStandardMaterial color="#2563EB" metalness={0.2} roughness={0.7} />
       </mesh>
 
-      {/* Right Arm */}
-      <mesh position={[0.65, 1.1, 0]} rotation={[0, 0, -Math.PI / 6]}>
-        <capsuleGeometry args={[0.12, 1, optimized ? 6 : 16, optimized ? 16 : 32]} />
-        <meshStandardMaterial color="#FFB6C1" metalness={0.1} roughness={0.8} />
+      {/* Left Arm - High poly */}
+      <mesh position={[-0.72, 1.0, 0]} rotation={[0, 0, Math.PI / 6]}>
+        <primitive object={createHighPolyArm()} />
+        <meshStandardMaterial color="#E8B8A0" metalness={0.08} roughness={0.85} />
       </mesh>
 
-      {/* Left Leg */}
-      <mesh position={[-0.25, -0.3, 0]}>
-        <capsuleGeometry args={[0.15, 1.2, optimized ? 6 : 16, optimized ? 16 : 32]} />
-        <meshStandardMaterial color="#1F1F1F" metalness={0.1} roughness={0.8} />
+      {/* Left Hand */}
+      <mesh position={[-1.15, 0.35, 0.05]}>
+        <sphereGeometry args={[0.12, optimized ? 8 : 14, optimized ? 8 : 14]} />
+        <meshStandardMaterial color="#E8B8A0" metalness={0.08} roughness={0.85} />
       </mesh>
 
-      {/* Right Leg */}
-      <mesh position={[0.25, -0.3, 0]}>
-        <capsuleGeometry args={[0.15, 1.2, optimized ? 6 : 16, optimized ? 16 : 32]} />
-        <meshStandardMaterial color="#1F1F1F" metalness={0.1} roughness={0.8} />
+      {/* Right Arm - High poly */}
+      <mesh position={[0.72, 1.0, 0]} rotation={[0, 0, -Math.PI / 6]}>
+        <primitive object={createHighPolyArm()} />
+        <meshStandardMaterial color="#E8B8A0" metalness={0.08} roughness={0.85} />
       </mesh>
 
-      {/* Lighting */}
-      <ambientLight intensity={0.6} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8B5CF6" />
+      {/* Right Hand */}
+      <mesh position={[1.15, 0.35, 0.05]}>
+        <sphereGeometry args={[0.12, optimized ? 8 : 14, optimized ? 8 : 14]} />
+        <meshStandardMaterial color="#E8B8A0" metalness={0.08} roughness={0.85} />
+      </mesh>
+
+      {/* Belt */}
+      <mesh position={[0, 0.35, 0.08]}>
+        <boxGeometry args={[0.5, 0.12, 0.2]} />
+        <meshStandardMaterial color="#1F1F1F" metalness={0.6} roughness={0.4} />
+      </mesh>
+
+      {/* Left Leg - High poly */}
+      <mesh position={[-0.3, -0.5, 0]}>
+        <primitive object={createHighPolyLeg()} />
+        <meshStandardMaterial color="#1F1F1F" metalness={0.1} roughness={0.85} />
+      </mesh>
+
+      {/* Left Foot */}
+      <mesh position={[-0.3, -1.6, 0.15]}>
+        <boxGeometry args={[0.2, 0.2, 0.35]} />
+        <meshStandardMaterial color="#1A1A1A" metalness={0.4} roughness={0.6} />
+      </mesh>
+
+      {/* Right Leg - High poly */}
+      <mesh position={[0.3, -0.5, 0]}>
+        <primitive object={createHighPolyLeg()} />
+        <meshStandardMaterial color="#1F1F1F" metalness={0.1} roughness={0.85} />
+      </mesh>
+
+      {/* Right Foot */}
+      <mesh position={[0.3, -1.6, 0.15]}>
+        <boxGeometry args={[0.2, 0.2, 0.35]} />
+        <meshStandardMaterial color="#1A1A1A" metalness={0.4} roughness={0.6} />
+      </mesh>
+
+      {/* Professional Lighting Setup */}
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[8, 12, 8]} intensity={1.2} color="#FFFFFF" />
+      <pointLight position={[-8, 8, -8]} intensity={0.8} color="#8B5CF6" />
+      <pointLight position={[0, 0, 10]} intensity={0.6} color="#06B6D4" />
     </group>
   );
 };
