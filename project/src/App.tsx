@@ -6,7 +6,6 @@ import AmaoSection from './components/AmaoSection';
 import StudioDemo from './components/StudioDemo';
 import StudioEnvironment from './components/StudioEnvironment';
 import LivePipelineDemo from './components/LivePipelineDemo';
-import ModelComparison from './components/ModelComparison';
 import TechnologyExperience from './components/TechnologyExperience';
 import AIOptimizationTool from './components/AIOptimizationTool';
 import ClientBenefits from './components/ClientBenefits';
@@ -40,7 +39,6 @@ function App() {
           <LivePipelineDemo />
         </div>
       </section>
-      <ModelComparison />
       <TechnologyExperience />
       <AIOptimizationTool />
       <ClientBenefits />
