@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Play, RotateCcw, CheckCircle, AlertCircle, TrendingDown } from 'lucide-react';
-import AmaoModelViewer from './AmaoModelViewer';
+import { Play, RotateCcw, CheckCircle, AlertCircle, TrendingDown, Zap } from 'lucide-react';
+import AdvancedModelViewer from './AdvancedModelViewer';
 
 export default function AmaoDemo() {
   const [stage, setStage] = useState(0);
@@ -148,28 +148,48 @@ export default function AmaoDemo() {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left: 3D Models Display */}
         <div className="space-y-6">
-          {/* Original Model */}
-          <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-4 overflow-hidden">
-            <h5 className="text-sm font-bold text-gray-300 mb-3">Original High-Poly Model</h5>
-            <div className="bg-black rounded-xl h-64 border border-gray-700">
-              <AmaoModelViewer modelType={selectedModel as 'character' | 'scene' | 'product'} optimized={false} />
+          {/* Original High-Poly Model */}
+          <div className="bg-gray-900/50 border border-yellow-800/50 rounded-2xl p-4 overflow-hidden">
+            <h5 className="text-sm font-bold text-yellow-400 mb-3 flex items-center gap-2">
+              <span>📦</span> Original High-Poly Model
+            </h5>
+            <div className="bg-black rounded-xl h-72 border border-gray-700">
+              <AdvancedModelViewer modelType={selectedModel as 'character' | 'scene' | 'product'} optimized={false} />
             </div>
-            <div className="mt-3 text-xs text-gray-500 flex justify-between">
-              <span>Polygons: <span className="text-yellow-400 font-bold">{models.find(m => m.id === selectedModel)?.polygons.toLocaleString() || 0}</span></span>
-              <span>Quality: <span className="text-green-400 font-bold">100%</span></span>
+            <div className="mt-3 text-xs text-gray-500 space-y-1">
+              <div className="flex justify-between">
+                <span>Polygons:</span>
+                <span className="text-yellow-400 font-bold">{models.find(m => m.id === selectedModel)?.polygons.toLocaleString() || 0}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Quality:</span>
+                <span className="text-green-400 font-bold">100% Full Detail</span>
+              </div>
             </div>
           </div>
 
-          {/* Optimized Model */}
+          {/* Optimized AI Model - Shows at end */}
           {isComplete && (
-            <div className="bg-gray-900/50 border border-green-800/50 rounded-2xl p-4 overflow-hidden">
-              <h5 className="text-sm font-bold text-green-400 mb-3">✨ AI-Optimized Model</h5>
-              <div className="bg-black rounded-xl h-64 border border-gray-700">
-                <AmaoModelViewer modelType={selectedModel as 'character' | 'scene' | 'product'} optimized={true} />
+            <div className="bg-gray-900/50 border border-green-800/50 rounded-2xl p-4 overflow-hidden animate-pulse">
+              <h5 className="text-sm font-bold text-green-400 mb-3 flex items-center gap-2">
+                <Zap className="w-4 h-4" /> ✨ AI-Optimized Result
+              </h5>
+              <div className="bg-black rounded-xl h-72 border border-gray-700">
+                <AdvancedModelViewer modelType={selectedModel as 'character' | 'scene' | 'product'} optimized={true} />
               </div>
-              <div className="mt-3 text-xs text-gray-500 flex justify-between">
-                <span>Polygons: <span className="text-cyan-400 font-bold">{Math.round((models.find(m => m.id === selectedModel)?.polygons || 0) * (1 - currentResult.polyReduction / 100)).toLocaleString()}</span></span>
-                <span>Quality: <span className="text-green-400 font-bold">{currentResult.healthScore}%</span></span>
+              <div className="mt-3 text-xs text-gray-500 space-y-1">
+                <div className="flex justify-between">
+                  <span>Optimized Polygons:</span>
+                  <span className="text-cyan-400 font-bold">{Math.round((models.find(m => m.id === selectedModel)?.polygons || 0) * (1 - currentResult.polyReduction / 100)).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Reduction:</span>
+                  <span className="text-green-400 font-bold">{currentResult.polyReduction}% Smaller</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Quality Maintained:</span>
+                  <span className="text-green-400 font-bold">{currentResult.healthScore}%</span>
+                </div>
               </div>
             </div>
           )}
