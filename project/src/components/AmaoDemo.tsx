@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Play, RotateCcw, CheckCircle, AlertCircle, TrendingDown } from 'lucide-react';
+import AmaoModelViewer from './AmaoModelViewer';
 
 export default function AmaoDemo() {
   const [stage, setStage] = useState(0);
@@ -144,8 +145,37 @@ export default function AmaoDemo() {
       </div>
 
       {/* Main Demo Container */}
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Left: Processing Pipeline */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Left: 3D Models Display */}
+        <div className="space-y-6">
+          {/* Original Model */}
+          <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-4 overflow-hidden">
+            <h5 className="text-sm font-bold text-gray-300 mb-3">Original High-Poly Model</h5>
+            <div className="bg-black rounded-xl h-64 border border-gray-700">
+              <AmaoModelViewer modelType={selectedModel as 'character' | 'scene' | 'product'} optimized={false} />
+            </div>
+            <div className="mt-3 text-xs text-gray-500 flex justify-between">
+              <span>Polygons: <span className="text-yellow-400 font-bold">{models.find(m => m.id === selectedModel)?.polygons.toLocaleString() || 0}</span></span>
+              <span>Quality: <span className="text-green-400 font-bold">100%</span></span>
+            </div>
+          </div>
+
+          {/* Optimized Model */}
+          {isComplete && (
+            <div className="bg-gray-900/50 border border-green-800/50 rounded-2xl p-4 overflow-hidden">
+              <h5 className="text-sm font-bold text-green-400 mb-3">✨ AI-Optimized Model</h5>
+              <div className="bg-black rounded-xl h-64 border border-gray-700">
+                <AmaoModelViewer modelType={selectedModel as 'character' | 'scene' | 'product'} optimized={true} />
+              </div>
+              <div className="mt-3 text-xs text-gray-500 flex justify-between">
+                <span>Polygons: <span className="text-cyan-400 font-bold">{Math.round((models.find(m => m.id === selectedModel)?.polygons || 0) * (1 - currentResult.polyReduction / 100)).toLocaleString()}</span></span>
+                <span>Quality: <span className="text-green-400 font-bold">{currentResult.healthScore}%</span></span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Middle: Processing Pipeline */}
         <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-gray-800 rounded-2xl p-8">
           <div className="flex items-center justify-between mb-8">
             <h4 className="font-bold text-xl text-white">AMAO Analysis Pipeline</h4>
@@ -228,8 +258,8 @@ export default function AmaoDemo() {
         </div>
 
         {/* Right: Results Dashboard */}
-        <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-gray-800 rounded-2xl p-8">
-          <h4 className="font-bold text-xl text-white mb-6">AI Analysis Results</h4>
+        <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-gray-800 rounded-2xl p-6">
+          <h4 className="font-bold text-lg text-white mb-6">AI Analysis Results</h4>
 
           {isComplete ? (
             <div className="space-y-6">
