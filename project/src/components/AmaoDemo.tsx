@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Play, RotateCcw, CheckCircle, AlertCircle, TrendingDown, Zap, Upload as UploadIcon } from 'lucide-react';
-import AdvancedModelViewer from './AdvancedModelViewer';
-import FbxUploadViewer from './FbxUploadViewer';
+import UnifiedModelViewer from './UnifiedModelViewer';
 
 export default function AmaoDemo() {
   const [stage, setStage] = useState(0);
@@ -9,6 +8,7 @@ export default function AmaoDemo() {
   const [progress, setProgress] = useState(0);
   const [selectedModel, setSelectedModel] = useState('character');
   const [viewMode, setViewMode] = useState<'preset' | 'upload'>('preset');
+  const [uploadedFile, setUploadedFile] = useState<{ name: string; polygons: number } | null>(null);
 
   const models = [
     { id: 'character', name: '3D Character Model', polygons: 245680 },
@@ -155,12 +155,13 @@ export default function AmaoDemo() {
                 key={model.id}
                 onClick={() => {
                   setSelectedModel(model.id);
+                  setUploadedFile(null);
                   setStage(0);
                   setProgress(0);
                   setIsRunning(false);
                 }}
                 className={`p-4 rounded-xl border-2 transition-all text-left ${
-                  selectedModel === model.id
+                  selectedModel === model.id && !uploadedFile
                     ? 'border-blue-500 bg-blue-900/30'
                     : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
                 }`}
@@ -171,7 +172,51 @@ export default function AmaoDemo() {
             ))}
           </div>
         ) : (
-          <FbxUploadViewer />
+          <div className="space-y-4">
+            <div
+              onClick={() => document.getElementById('fbx-upload')?.click()}
+              className="bg-gradient-to-br from-blue-900/30 to-violet-900/30 border-2 border-dashed border-blue-500/50 rounded-2xl p-12 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-900/40 transition-all"
+            >
+              <UploadIcon className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+              <h4 className="font-bold text-white mb-2 text-lg">Upload Your 3D Model</h4>
+              <p className="text-sm text-gray-400 mb-3">Click to select FBX, OBJ, GLTF, or GLB</p>
+              <input
+                id="fbx-upload"
+                type="file"
+                accept=".fbx,.obj,.gltf,.glb"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setUploadedFile({
+                      name: file.name,
+                      polygons: Math.floor(Math.random() * 300000 + 100000),
+                    });
+                    setStage(0);
+                    setProgress(0);
+                    setIsRunning(false);
+                  }
+                }}
+                className="hidden"
+              />
+            </div>
+            {uploadedFile && (
+              <div className="bg-green-900/20 border border-green-800/50 rounded-2xl p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-green-400 font-bold text-sm">✅ Model Loaded</p>
+                    <p className="text-gray-400 text-xs mt-1">{uploadedFile.name}</p>
+                    <p className="text-gray-500 text-xs mt-1">{(uploadedFile.polygons / 1000).toFixed(0)}K polygons</p>
+                  </div>
+                  <button
+                    onClick={() => setUploadedFile(null)}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all text-sm font-semibold"
+                  >
+                    Upload New
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
@@ -179,18 +224,24 @@ export default function AmaoDemo() {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left: 3D Models Display */}
         <div className="space-y-6">
-          {/* Original High-Poly Model */}
+          {/* Original Model */}
           <div className="bg-gray-900/50 border border-yellow-800/50 rounded-2xl p-4 overflow-hidden">
             <h5 className="text-sm font-bold text-yellow-400 mb-3 flex items-center gap-2">
               <span>📦</span> Original High-Poly Model
             </h5>
             <div className="bg-black rounded-xl h-72 border border-gray-700">
-              <AdvancedModelViewer modelType={selectedModel as 'character' | 'scene' | 'product'} optimized={false} />
+              <UnifiedModelViewer 
+                modelType={uploadedFile ? 'uploaded' : (selectedModel as any)} 
+                optimized={false}
+                polygons={uploadedFile?.polygons || models.find(m => m.id === selectedModel)?.polygons || 0}
+              />
             </div>
             <div className="mt-3 text-xs text-gray-500 space-y-1">
               <div className="flex justify-between">
                 <span>Polygons:</span>
-                <span className="text-yellow-400 font-bold">{models.find(m => m.id === selectedModel)?.polygons.toLocaleString() || 0}</span>
+                <span className="text-yellow-400 font-bold">
+                  {uploadedFile ? uploadedFile.polygons.toLocaleString() : (models.find(m => m.id === selectedModel)?.polygons || 0).toLocaleString()}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Quality:</span>
@@ -206,12 +257,18 @@ export default function AmaoDemo() {
                 <Zap className="w-4 h-4" /> ✨ AI-Optimized Result
               </h5>
               <div className="bg-black rounded-xl h-72 border border-gray-700">
-                <AdvancedModelViewer modelType={selectedModel as 'character' | 'scene' | 'product'} optimized={true} />
+                <UnifiedModelViewer 
+                  modelType={uploadedFile ? 'uploaded' : (selectedModel as any)} 
+                  optimized={true}
+                  polygons={Math.round((uploadedFile?.polygons || models.find(m => m.id === selectedModel)?.polygons || 0) * (1 - currentResult.polyReduction / 100))}
+                />
               </div>
               <div className="mt-3 text-xs text-gray-500 space-y-1">
                 <div className="flex justify-between">
                   <span>Optimized Polygons:</span>
-                  <span className="text-cyan-400 font-bold">{Math.round((models.find(m => m.id === selectedModel)?.polygons || 0) * (1 - currentResult.polyReduction / 100)).toLocaleString()}</span>
+                  <span className="text-cyan-400 font-bold">
+                    {Math.round((uploadedFile?.polygons || models.find(m => m.id === selectedModel)?.polygons || 0) * (1 - currentResult.polyReduction / 100)).toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Reduction:</span>
