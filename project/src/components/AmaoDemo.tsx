@@ -86,8 +86,8 @@ export default function AmaoDemo() {
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          if (stage < stages.length - 1) {
-            setStage(stage + 1);
+          if (stage < stages.length) {
+            setStage((s) => s + 1);
             return 0;
           } else {
             setIsRunning(false);
