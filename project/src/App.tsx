@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Hero from './components/Hero';
 import LogoShowcase from './components/LogoShowcase';
 import BrandEssence from './components/BrandEssence';
+import AmaoSection from './components/AmaoSection';
 import StudioDemo from './components/StudioDemo';
 import StudioEnvironment from './components/StudioEnvironment';
 import TechnologyExperience from './components/TechnologyExperience';
@@ -32,6 +33,7 @@ function App() {
       <Hero />
       <LogoShowcase />
       <BrandEssence />
+      <AmaoSection />
       <StudioDemo />
       <StudioEnvironment />
       <TechnologyExperience />

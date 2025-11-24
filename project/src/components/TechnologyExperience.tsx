@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { ArrowRight, Upload } from 'lucide-react';
+import { useState } from 'react';
+import { Upload } from 'lucide-react';
 import AutoPlayTechDemo from './AutoPlayTechDemo';
 import ModelUploadViewer from './ModelUploadViewer';
 

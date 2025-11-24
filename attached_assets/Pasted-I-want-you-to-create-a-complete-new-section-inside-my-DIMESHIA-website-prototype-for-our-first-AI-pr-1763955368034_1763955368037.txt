@@ -1,0 +1,96 @@
+I want you to create a complete new section inside my DIMESHIA website prototype for our first AI product:
+
+DIMESHIA AMAO – Automated Model Analysis & Optimization
+
+This section must look ultra-modern, premium, and professional — like a real AI startup website.
+Use clean layout, soft shadows, gradients, rounded corners, and a minimal futuristic 3D-tech style.
+
+Add this entire section as a NEW part of the website without deleting existing content. It must be easy to edit later.
+
+1. Hero Section (Header Block)
+
+Create a hero block with:
+
+Title:
+AMAO – Automated Model Analysis & Optimization
+
+Subtitle:
+Let AI instantly detect modeling issues, optimize topology, and clean your 3D files.
+
+Button:
+"Try the Simulation"
+
+This hero must look visually impressive.
+
+2. Feature Grid (4 Premium Feature Cards)
+
+Create a responsive grid with 4 cards, each with an icon placeholder:
+
+⭕ Model Health Score
+
+AI rates your model from 0–100 and highlights structural problems.
+
+🔺 Ngon & Topology Detection
+
+Detects ngons, bad geometry, dense areas, flipped normals, and mesh errors.
+
+🧩 Polygon Optimization
+
+Suggests optimized poly counts while preserving silhouette and animation readiness.
+
+📦 Clean Pipeline Export
+
+Auto-prepares the model for Blender, Maya, Unreal, Unity, and more.
+
+Each card should have:
+
+icon placeholder
+
+title
+
+short description
+
+clean UI (rounded corners, shadow, hover effect)
+
+3. Simulation Preview (Fake Demo UI)
+
+Add a section titled:
+
+“See AMAO in Action”
+
+With this description:
+
+Upload a 3D model and let AMAO automatically analyze topology health, UVs, ngons, and optimization opportunities. See an instant report powered by AI.
+
+Include a visual mockup with simple UI boxes:
+
+Box: “Upload .fbx / .obj”
+
+Box: “Analyzing your model…” with animated placeholder
+
+Box: “Results Preview”
+
+Health Score mockup (ex: 82/100)
+
+Ngon count mockup
+
+UV coverage mockup
+
+Suggested optimization steps mockup
+
+Make this section look like a real AI product preview.
+
+4. Call-to-Action Footer
+
+Add a full-width CTA:
+
+Title:
+Launch AMAO Beta — Join the Waitlist
+
+Include:
+
+an email input field
+
+a “Join Waitlist” button
+
+Make it visually strong and centere
