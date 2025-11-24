@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Play, Pause, RotateCw, ArrowRight, Zap } from 'lucide-react';
+import { Play, Pause, RotateCw, ArrowRight, Zap, Upload } from 'lucide-react';
 import PipelineModelViewer from './PipelineModelViewer';
+import ModelUploadViewer from './ModelUploadViewer';
 
 export default function TechnologyExperience() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStage, setCurrentStage] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [viewMode, setViewMode] = useState<'demo' | 'upload'>('demo');
 
   const stages = [
     {
@@ -120,10 +122,39 @@ export default function TechnologyExperience() {
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Watch how DIMESHIA's AI optimizes your 3D assets through every stage of the pipeline
           </p>
+
+          {/* View Mode Toggle */}
+          <div className="mt-8 flex gap-4 justify-center">
+            <button
+              onClick={() => setViewMode('demo')}
+              className={`px-6 py-3 rounded-xl font-semibold transition-all ${
+                viewMode === 'demo'
+                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              }`}
+            >
+              Automated Demo
+            </button>
+            <button
+              onClick={() => setViewMode('upload')}
+              className={`px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 ${
+                viewMode === 'upload'
+                  ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              }`}
+            >
+              <Upload className="w-5 h-5" />
+              Upload Your Model
+            </button>
+          </div>
         </div>
 
         {/* Main Demo Container */}
         <div className="bg-gradient-to-br from-gray-900/30 to-gray-800/20 border border-gray-800 rounded-3xl p-8 mb-12">
+          {viewMode === 'upload' ? (
+            <ModelUploadViewer />
+          ) : (
+            <>
           {/* Controls */}
           <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-800">
             <div>
@@ -246,6 +277,8 @@ export default function TechnologyExperience() {
               </div>
             </div>
           </div>
+            </>
+          )}
         </div>
 
         {/* Stage Timeline */}
