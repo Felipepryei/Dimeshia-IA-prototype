@@ -13,7 +13,8 @@ export default function AmaoDemo() {
   const models = [
     { id: 'character', name: '3D Character Model', polygons: 245680 },
     { id: 'scene', name: 'Environment Scene', polygons: 189420 },
-    { id: 'product', name: 'Product Design', polygons: 156890 }
+    { id: 'product', name: 'Product Design', polygons: 156890 },
+    { id: 'mug', name: 'Coffee Mug', polygons: 48950 }
   ];
 
   const stages = [
@@ -77,6 +78,19 @@ export default function AmaoDemo() {
         { severity: 'low', issue: '5 N-gons on rounded edges', fix: 'Convert to quads' },
         { severity: 'low', issue: 'Minor density optimization possible', fix: 'Smart polygon reduction' }
       ]
+    },
+    mug: {
+      healthScore: 95,
+      ngonCount: 0,
+      uvCoverage: 100,
+      polyReduction: 35,
+      densityIssues: 0,
+      invertedNormals: 0,
+      originalPolys: 48950,
+      optimizedPolys: 31818,
+      fileSizeReduction: 98.2,
+      estimatedRenderSpeedup: 2.4,
+      issues: []
     }
   };
 

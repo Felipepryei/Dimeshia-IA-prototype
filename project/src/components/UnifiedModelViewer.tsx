@@ -148,6 +148,70 @@ const SceneModel = ({ optimized = false, wireframe = false }) => {
   );
 };
 
+// Simple coffee mug product - High quality
+const SimpleMugModel = ({ optimized = false, wireframe = false }) => {
+  const groupRef = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += 0.007;
+    }
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 0, 0]}>
+      {/* Main mug body - ceramic */}
+      <mesh position={[0, 0.1, 0]} scale={[0.6, 0.9, 0.6]}>
+        <cylinderGeometry args={[1, 1, 1, optimized ? 8 : 24, optimized ? 4 : 12]} />
+        <meshStandardMaterial color="#E8D5C4" wireframe={wireframe} metalness={0.15} roughness={0.6} />
+      </mesh>
+
+      {/* Mug rim - top edge */}
+      <mesh position={[0, 0.52, 0]} scale={[0.58, 0.08, 0.58]}>
+        <cylinderGeometry args={[1, 1, 1, optimized ? 8 : 20]} />
+        <meshStandardMaterial color="#D4C4B8" wireframe={wireframe} metalness={0.2} roughness={0.55} />
+      </mesh>
+
+      {/* Coffee inside - dark liquid */}
+      <mesh position={[0, 0.15, 0]} scale={[0.52, 0.7, 0.52]}>
+        <cylinderGeometry args={[1, 1, 1, optimized ? 8 : 20]} />
+        <meshStandardMaterial color="#3D2817" wireframe={wireframe} metalness={0.3} roughness={0.4} emissive="#1A0E08" emissiveIntensity={0.1} />
+      </mesh>
+
+      {/* Liquid surface - subtle shine */}
+      <mesh position={[0, 0.5, 0]} scale={[0.5, 0.02, 0.5]}>
+        <cylinderGeometry args={[1, 1, 1, optimized ? 8 : 20]} />
+        <meshStandardMaterial color="#4A3320" wireframe={wireframe} metalness={0.6} roughness={0.3} />
+      </mesh>
+
+      {/* Mug handle - torus shape */}
+      <mesh position={[0.55, 0.15, 0]} rotation={[0, 0, Math.PI / 2]} scale={[1, 1, 1]}>
+        <torusGeometry args={[0.25, 0.08, optimized ? 6 : 12, optimized ? 8 : 24]} />
+        <meshStandardMaterial color="#E8D5C4" wireframe={wireframe} metalness={0.15} roughness={0.6} />
+      </mesh>
+
+      {/* Base - bottom of mug */}
+      <mesh position={[0, -0.48, 0]} scale={[0.62, 0.08, 0.62]}>
+        <cylinderGeometry args={[1, 0.95, 1, optimized ? 8 : 20]} />
+        <meshStandardMaterial color="#D4C4B8" wireframe={wireframe} metalness={0.2} roughness={0.65} />
+      </mesh>
+
+      {/* Decorative band - brand detail */}
+      {!optimized && (
+        <mesh position={[0, 0.05, 0]} scale={[0.58, 0.12, 0.58]}>
+          <cylinderGeometry args={[1, 1, 1, optimized ? 8 : 20]} />
+          <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.3} roughness={0.5} />
+        </mesh>
+      )}
+
+      {/* Studio lighting - warm */}
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[4, 4, 4]} intensity={1.2} color="#FFFFFF" />
+      <directionalLight position={[-3, 2, -3]} intensity={0.8} color="#FFD700" />
+      <pointLight position={[0.5, 0.3, 0.5]} intensity={0.6} color="#FFFFFF" distance={1.5} />
+    </group>
+  );
+};
+
 // Premium product design model - Realistic
 const ProductModel = ({ optimized = false, wireframe = false }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -283,7 +347,7 @@ const UploadedModel = ({ wireframe = false }) => {
 };
 
 interface UnifiedModelViewerProps {
-  modelType: 'character' | 'scene' | 'product' | 'uploaded';
+  modelType: 'character' | 'scene' | 'product' | 'mug' | 'uploaded';
   optimized?: boolean;
   polygons?: number;
 }
@@ -300,6 +364,8 @@ export default function UnifiedModelViewer({ modelType, optimized = false, polyg
         return <SceneModel optimized={optimized} wireframe={wireframe} />;
       case 'product':
         return <ProductModel optimized={optimized} wireframe={wireframe} />;
+      case 'mug':
+        return <SimpleMugModel optimized={optimized} wireframe={wireframe} />;
       case 'uploaded':
         return <UploadedModel wireframe={wireframe} />;
       default:
