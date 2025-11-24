@@ -1,51 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
-
-// Animated 3D Model for Pipeline Demo
-const PipelineModel = ({ stage }: { stage: number }) => {
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame(() => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += 0.01;
-      groupRef.current.rotation.x = Math.sin(Date.now() * 0.001) * 0.3;
-    }
-  });
-
-  // Polygon count decreases per stage
-  const polygonCounts = [246, 200, 120, 45, 12];
-
-  return (
-    <group ref={groupRef}>
-      {/* Main mesh that changes based on stage */}
-      <mesh scale={[1, 1, 1]}>
-        <icosahedronGeometry args={[1, polygonCounts[stage - 1] / 50]} />
-        <meshStandardMaterial
-          color={`hsl(${200 + stage * 20}, 70%, 50%)`}
-          metalness={0.6}
-          roughness={0.3}
-          wireframe={stage < 3}
-        />
-      </mesh>
-
-      {/* Optimization glow effect */}
-      <mesh scale={[1.3, 1.3, 1.3]}>
-        <icosahedronGeometry args={[1, polygonCounts[stage - 1] / 50]} />
-        <meshStandardMaterial
-          color={`hsl(${200 + stage * 20}, 100%, 60%)`}
-          transparent
-          opacity={0.2}
-          wireframe={true}
-        />
-      </mesh>
-
-      <ambientLight intensity={0.8} />
-      <directionalLight position={[5, 5, 5]} intensity={1.5} />
-      <pointLight position={[-5, -5, 5]} intensity={0.8} color="#00FFFF" />
-    </group>
-  );
-};
 
 export default function LivePipelineDemo() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -95,18 +48,10 @@ export default function LivePipelineDemo() {
         </button>
       </div>
 
-      {/* Main Demo Container */}
+      {/* Demo Stats Panel */}
       <div className="grid md:grid-cols-2 gap-8">
-        {/* 3D Model Viewer */}
-        <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-700 overflow-hidden" style={{ height: '400px' }}>
-          <Canvas>
-            <PipelineModel stage={currentStep} />
-          </Canvas>
-        </div>
-
-        {/* Stats Panel */}
+        {/* Decimation & Remeshing */}
         <div className="space-y-4">
-          {/* Decimation & Remeshing */}
           <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border border-blue-700/30 rounded-xl p-4">
             <h4 className="text-white font-semibold mb-1">Decimation & Remeshing</h4>
             <p className="text-sm text-gray-400">Smart reduction without losing visual quality</p>
@@ -114,28 +59,24 @@ export default function LivePipelineDemo() {
 
           {/* Key Metrics */}
           <div className="grid grid-cols-2 gap-3">
-            {/* Polygons */}
             <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-700/30 rounded-xl p-3">
               <p className="text-xs text-gray-400 uppercase">Polygons</p>
               <p className="text-lg font-bold text-white">120K</p>
               <p className="text-xs text-green-400">51.2% reduced</p>
             </div>
 
-            {/* File Size */}
             <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/20 border border-blue-700/30 rounded-xl p-3">
               <p className="text-xs text-gray-400 uppercase">File Size</p>
               <p className="text-lg font-bold text-white">58.3 MB</p>
               <p className="text-xs text-green-400">53.2% smaller</p>
             </div>
 
-            {/* Quality Score */}
             <div className="bg-gradient-to-br from-green-900/20 to-emerald-900/20 border border-green-700/30 rounded-xl p-3">
               <p className="text-xs text-gray-400 uppercase">Quality Score</p>
               <p className="text-lg font-bold text-white">84%</p>
               <p className="text-xs text-green-400">Very Good</p>
             </div>
 
-            {/* Processing Step */}
             <div className="bg-gradient-to-br from-orange-900/20 to-yellow-900/20 border border-orange-700/30 rounded-xl p-3">
               <p className="text-xs text-gray-400 uppercase">Processing Step</p>
               <p className="text-lg font-bold text-white">3/5</p>
@@ -157,23 +98,23 @@ export default function LivePipelineDemo() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Overall Improvement */}
-      <div className="bg-gradient-to-r from-blue-900/20 to-violet-900/20 border border-blue-700/30 rounded-2xl p-6">
-        <h4 className="text-white font-bold mb-4">Overall Improvement</h4>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div>
-            <p className="text-sm text-gray-400 mb-1">From Original:</p>
-            <p className="text-2xl font-bold text-green-400">51.2% smaller</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Quality Maintained:</p>
-            <p className="text-2xl font-bold text-green-400">84%</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Rendering Speed:</p>
-            <p className="text-2xl font-bold text-green-400">205% faster</p>
+        {/* Overall Improvement */}
+        <div className="bg-gradient-to-r from-blue-900/20 to-violet-900/20 border border-blue-700/30 rounded-2xl p-6 h-fit">
+          <h4 className="text-white font-bold mb-4">Overall Improvement</h4>
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-gray-400 mb-1">From Original:</p>
+              <p className="text-2xl font-bold text-green-400">51.2% smaller</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-400 mb-1">Quality Maintained:</p>
+              <p className="text-2xl font-bold text-green-400">84%</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-400 mb-1">Rendering Speed:</p>
+              <p className="text-2xl font-bold text-green-400">205% faster</p>
+            </div>
           </div>
         </div>
       </div>
@@ -208,14 +149,12 @@ export default function LivePipelineDemo() {
 
       {/* Auto-Loop Status & Key Stats */}
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Auto Loop Info */}
         <div className="bg-gradient-to-br from-cyan-900/20 to-blue-900/20 border border-cyan-700/30 rounded-2xl p-6 text-center">
           <p className="text-2xl mb-2">🔄</p>
           <h4 className="text-white font-bold mb-2">Auto Loop: ON</h4>
           <p className="text-sm text-gray-400">Watch the complete optimization cycle in under 5 minutes</p>
         </div>
 
-        {/* Key Stats Grid */}
         <div className="space-y-3">
           <div className="bg-gradient-to-br from-red-900/20 to-orange-900/20 border border-red-700/30 rounded-xl p-4">
             <p className="text-xl font-bold text-white">📉 95% Size Reduction</p>
