@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle } from 'lucide-react';
+import AmaoDemo from './AmaoDemo';
 
 export default function AmaoSection() {
   const [email, setEmail] = useState('');
@@ -85,113 +86,18 @@ export default function AmaoSection() {
           ))}
         </div>
 
-        {/* Simulation Preview Section */}
+        {/* Interactive AMAO Demo Section */}
         <div className="mb-20">
           <div className="text-center mb-12">
             <h3 className="text-3xl md:text-4xl font-bold mb-4">See AMAO in Action</h3>
             <p className="text-gray-400 max-w-2xl mx-auto">
-              Upload a 3D model and let AMAO automatically analyze topology health, UVs, ngons, and optimization opportunities. See an instant report powered by AI.
+              Watch AMAO analyze your 3D model step-by-step, detecting issues and recommending optimizations in real-time.
             </p>
           </div>
 
-          {/* Simulation UI Mockup */}
+          {/* Live Demo Component */}
           <div className="bg-gradient-to-br from-gray-900/40 to-gray-800/20 border border-gray-800 rounded-3xl p-8 md:p-12">
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              {/* Upload Box */}
-              <div className="bg-gray-900/50 border-2 border-dashed border-gray-700 rounded-2xl p-8 text-center hover:border-blue-500/50 transition-all cursor-pointer">
-                <div className="text-4xl mb-4">📁</div>
-                <h4 className="font-bold text-gray-200 mb-2">Upload Model</h4>
-                <p className="text-sm text-gray-400">Drag & drop or click to upload .fbx / .obj</p>
-              </div>
-
-              {/* Processing Box */}
-              <div className="bg-gradient-to-br from-blue-900/30 to-violet-900/30 border border-blue-800/50 rounded-2xl p-8 text-center">
-                <div className="inline-block mb-4">
-                  <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                </div>
-                <h4 className="font-bold text-gray-200 mb-2">Analyzing Model…</h4>
-                <p className="text-sm text-gray-400">AI scanning topology & geometry</p>
-              </div>
-
-              {/* Results Box */}
-              <div className="bg-gray-900/50 border border-green-800/50 rounded-2xl p-8 text-center">
-                <div className="text-4xl mb-4">✅</div>
-                <h4 className="font-bold text-gray-200 mb-2">Results Ready</h4>
-                <p className="text-sm text-gray-400">Detailed analysis report generated</p>
-              </div>
-            </div>
-
-            {/* Results Dashboard */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-gray-400 uppercase">Health Score</span>
-                  <span className="text-2xl font-bold text-green-400">82</span>
-                </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div className="h-full w-4/5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" />
-                </div>
-                <p className="text-xs text-gray-500 mt-2">Good topology structure</p>
-              </div>
-
-              <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-gray-400 uppercase">Ngon Count</span>
-                  <span className="text-2xl font-bold text-yellow-400">12</span>
-                </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div className="h-full w-3/5 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full" />
-                </div>
-                <p className="text-xs text-gray-500 mt-2">Moderate issues detected</p>
-              </div>
-
-              <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-gray-400 uppercase">UV Coverage</span>
-                  <span className="text-2xl font-bold text-cyan-400">94%</span>
-                </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
-                </div>
-                <p className="text-xs text-gray-500 mt-2">Excellent coverage</p>
-              </div>
-
-              <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-gray-400 uppercase">Poly Reduction</span>
-                  <span className="text-2xl font-bold text-violet-400">48%</span>
-                </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div className="h-full bg-gradient-to-r from-violet-500 to-pink-500 rounded-full" />
-                </div>
-                <p className="text-xs text-gray-500 mt-2">Optimization ready</p>
-              </div>
-            </div>
-
-            {/* Suggested Optimization Steps */}
-            <div className="mt-8 bg-gradient-to-r from-blue-900/20 to-violet-900/20 border border-blue-800/30 rounded-2xl p-6">
-              <h4 className="font-bold text-white mb-4 flex items-center gap-2">
-                <span>💡</span> Suggested Optimization Steps
-              </h4>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-300">Remove detected ngons and rebuild clean geometry</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-300">Merge duplicate vertices and clean topology</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-300">Reduce poly count in low-detail areas by 48%</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-300">Export optimized model for Blender/Maya/Unreal</span>
-                </li>
-              </ul>
-            </div>
+            <AmaoDemo />
           </div>
         </div>
 
