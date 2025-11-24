@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Play, RotateCcw, CheckCircle, AlertCircle, TrendingDown, Zap } from 'lucide-react';
+import { Play, RotateCcw, CheckCircle, AlertCircle, TrendingDown, Zap, Upload as UploadIcon } from 'lucide-react';
 import AdvancedModelViewer from './AdvancedModelViewer';
+import FbxUploadViewer from './FbxUploadViewer';
 
 export default function AmaoDemo() {
   const [stage, setStage] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [selectedModel, setSelectedModel] = useState('character');
+  const [viewMode, setViewMode] = useState<'preset' | 'upload'>('preset');
 
   const models = [
     { id: 'character', name: '3D Character Model', polygons: 245680 },
@@ -118,30 +120,59 @@ export default function AmaoDemo() {
 
   return (
     <div className="space-y-8">
-      {/* Model Selection */}
+      {/* Model Selection & Upload Mode */}
       <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
-        <h4 className="font-bold text-white mb-4">Select 3D Model to Analyze</h4>
-        <div className="grid md:grid-cols-3 gap-4">
-          {models.map((model) => (
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="font-bold text-white">Select 3D Model to Analyze</h4>
+          <div className="flex gap-2">
             <button
-              key={model.id}
-              onClick={() => {
-                setSelectedModel(model.id);
-                setStage(0);
-                setProgress(0);
-                setIsRunning(false);
-              }}
-              className={`p-4 rounded-xl border-2 transition-all text-left ${
-                selectedModel === model.id
-                  ? 'border-blue-500 bg-blue-900/30'
-                  : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+              onClick={() => setViewMode('preset')}
+              className={`px-3 py-1 rounded-lg text-sm font-semibold transition-all ${
+                viewMode === 'preset'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
-              <div className="font-bold text-white">{model.name}</div>
-              <div className="text-sm text-gray-400 mt-2">{(model.polygons / 1000).toFixed(0)}K polygons</div>
+              Presets
             </button>
-          ))}
+            <button
+              onClick={() => setViewMode('upload')}
+              className={`px-3 py-1 rounded-lg text-sm font-semibold transition-all flex items-center gap-1 ${
+                viewMode === 'upload'
+                  ? 'bg-violet-600 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+              }`}
+            >
+              <UploadIcon className="w-4 h-4" /> Upload
+            </button>
+          </div>
         </div>
+
+        {viewMode === 'preset' ? (
+          <div className="grid md:grid-cols-3 gap-4">
+            {models.map((model) => (
+              <button
+                key={model.id}
+                onClick={() => {
+                  setSelectedModel(model.id);
+                  setStage(0);
+                  setProgress(0);
+                  setIsRunning(false);
+                }}
+                className={`p-4 rounded-xl border-2 transition-all text-left ${
+                  selectedModel === model.id
+                    ? 'border-blue-500 bg-blue-900/30'
+                    : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                }`}
+              >
+                <div className="font-bold text-white">{model.name}</div>
+                <div className="text-sm text-gray-400 mt-2">{(model.polygons / 1000).toFixed(0)}K polygons</div>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <FbxUploadViewer />
+        )}
       </div>
 
       {/* Main Demo Container */}

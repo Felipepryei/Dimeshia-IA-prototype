@@ -365,7 +365,7 @@ export default function AdvancedModelViewer({ modelType, optimized = false }: Ad
 
   return (
     <div className="relative w-full h-full">
-      <Canvas>
+      <Canvas style={{ width: '100%', height: '100%' }} gl={{ preserveDrawingBuffer: true }} fallback={<div className="w-full h-full bg-black flex items-center justify-center text-gray-400">3D Model (WebGL not available)</div>}>
         <PerspectiveCamera makeDefault position={[0, 0, 3.5]} />
         <OrbitControls
           enableZoom={true}
