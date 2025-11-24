@@ -58,7 +58,7 @@ const CharacterModel = ({ optimized = false, wireframe = false }) => {
   );
 };
 
-// Environment scene model
+// Volcano environment model - High quality
 const SceneModel = ({ optimized = false, wireframe = false }) => {
   const groupRef = useRef<THREE.Group>(null);
   useFrame(() => {
@@ -68,83 +68,87 @@ const SceneModel = ({ optimized = false, wireframe = false }) => {
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, 0]}>
-      {/* Ground */}
-      <mesh position={[0, -0.8, 0]} scale={[2, 0.2, 2]}>
+    <group ref={groupRef} position={[0, -0.3, 0]}>
+      {/* Volcanic base - rocky ground */}
+      <mesh position={[0, -0.8, 0]} scale={[2.5, 0.15, 2.5]}>
+        <cylinderGeometry args={[1, 1, 1, optimized ? 16 : 32]} />
+        <meshStandardMaterial color="#3F3F3F" wireframe={wireframe} metalness={0.1} roughness={0.95} />
+      </mesh>
+
+      {/* Main volcano cone - Large */}
+      <mesh position={[0, 0, 0]}>
+        <coneGeometry args={[1, 2.2, optimized ? 12 : 32, optimized ? 4 : 8]} />
+        <meshStandardMaterial color="#5C3D2E" wireframe={wireframe} metalness={0.15} roughness={0.85} />
+      </mesh>
+
+      {/* Darker volcanic rock texture overlay */}
+      <mesh position={[0, 0.3, 0]} scale={[0.95, 2.2, 0.95]}>
+        <coneGeometry args={[1, 1, optimized ? 12 : 28]} />
+        <meshStandardMaterial color="#4A2F24" wireframe={wireframe} metalness={0.12} roughness={0.88} />
+      </mesh>
+
+      {/* Crater rim - outer */}
+      <mesh position={[0, 1.15, 0]} scale={[0.6, 0.08, 0.6]}>
+        <cylinderGeometry args={[1, 0.9, 1, optimized ? 16 : 32]} />
+        <meshStandardMaterial color="#2D2D2D" wireframe={wireframe} metalness={0.2} roughness={0.75} />
+      </mesh>
+
+      {/* Crater - inner glow */}
+      <mesh position={[0, 1.18, 0]} scale={[0.4, 0.05, 0.4]}>
+        <cylinderGeometry args={[1, 1, 1, optimized ? 12 : 24]} />
+        <meshStandardMaterial color="#FF4500" wireframe={wireframe} metalness={0.8} roughness={0.3} emissive="#FF3300" emissiveIntensity={0.6} />
+      </mesh>
+
+      {/* Lava flow 1 - right side */}
+      <mesh position={[0.6, 0.2, 0]} rotation={[0, 0, Math.PI / 8]} scale={[0.25, 0.8, 0.15]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#4B5563" wireframe={wireframe} metalness={0.2} roughness={0.8} />
+        <meshStandardMaterial color="#D84500" wireframe={wireframe} metalness={0.85} roughness={0.25} emissive="#FF6600" emissiveIntensity={0.3} />
       </mesh>
 
-      {/* Main building */}
-      <mesh position={[0, 0.2, 0]} scale={[0.8, 1, 0.8]}>
+      {/* Lava flow 2 - left side */}
+      <mesh position={[-0.55, 0.25, 0]} rotation={[0, 0, -Math.PI / 8]} scale={[0.25, 0.85, 0.15]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#1F2937" wireframe={wireframe} metalness={0.3} roughness={0.6} />
+        <meshStandardMaterial color="#D84500" wireframe={wireframe} metalness={0.85} roughness={0.25} emissive="#FF6600" emissiveIntensity={0.3} />
       </mesh>
 
-      {/* Roof */}
-      <mesh position={[0, 0.7, 0]}>
-        <coneGeometry args={[0.6, 0.6, optimized ? 6 : 16]} />
-        <meshStandardMaterial color="#DC2626" wireframe={wireframe} metalness={0.35} roughness={0.5} />
-      </mesh>
-
-      {/* Windows - Front */}
-      <mesh position={[-0.25, 0.3, 0.42]}>
-        <boxGeometry args={[0.2, 0.2, 0.05]} />
-        <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.7} emissive="#06B6D4" emissiveIntensity={0.4} />
-      </mesh>
-      <mesh position={[0, 0.3, 0.42]}>
-        <boxGeometry args={[0.2, 0.2, 0.05]} />
-        <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.7} emissive="#06B6D4" emissiveIntensity={0.4} />
-      </mesh>
-      <mesh position={[0.25, 0.3, 0.42]}>
-        <boxGeometry args={[0.2, 0.2, 0.05]} />
-        <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.7} emissive="#06B6D4" emissiveIntensity={0.4} />
-      </mesh>
-
-      {/* Windows - Left side */}
-      <mesh position={[-0.42, 0.3, 0]}>
-        <boxGeometry args={[0.05, 0.2, 0.2]} />
-        <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.7} emissive="#06B6D4" emissiveIntensity={0.4} />
-      </mesh>
-
-      {/* Door */}
-      <mesh position={[0, 0, 0.42]}>
-        <boxGeometry args={[0.2, 0.4, 0.05]} />
-        <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.5} roughness={0.4} />
-      </mesh>
-
-      {/* Door handle */}
-      <mesh position={[0.08, 0, 0.46]}>
-        <cylinderGeometry args={[0.03, 0.03, 0.1, optimized ? 6 : 12]} />
-        <meshStandardMaterial color="#FFD700" wireframe={wireframe} metalness={0.9} roughness={0.2} />
-      </mesh>
-
-      {/* Left tower */}
-      <mesh position={[-0.65, 0.15, 0]} scale={[0.4, 0.7, 0.4]}>
+      {/* Lava flow 3 - front */}
+      <mesh position={[0, 0.1, 0.65]} scale={[0.3, 0.7, 0.2]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#4B5563" wireframe={wireframe} metalness={0.2} roughness={0.7} />
+        <meshStandardMaterial color="#D84500" wireframe={wireframe} metalness={0.85} roughness={0.25} emissive="#FF6600" emissiveIntensity={0.3} />
       </mesh>
 
-      {/* Right tower */}
-      <mesh position={[0.65, 0.15, 0]} scale={[0.4, 0.7, 0.4]}>
+      {/* Rocky outcrops - variation */}
+      <mesh position={[0.8, -0.4, 0.6]} scale={[0.35, 0.4, 0.3]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#4B5563" wireframe={wireframe} metalness={0.2} roughness={0.7} />
+        <meshStandardMaterial color="#4A3A2A" wireframe={wireframe} metalness={0.1} roughness={0.9} />
       </mesh>
 
-      {/* Chimney */}
-      <mesh position={[-0.25, 0.7, -0.2]} scale={[0.1, 0.5, 0.1]}>
-        <cylinderGeometry args={[1, 1, 1, optimized ? 6 : 12]} />
-        <meshStandardMaterial color="#8B4513" wireframe={wireframe} metalness={0.1} roughness={0.8} />
+      <mesh position={[-0.85, -0.35, -0.7]} scale={[0.4, 0.45, 0.35]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#4A3A2A" wireframe={wireframe} metalness={0.1} roughness={0.9} />
       </mesh>
 
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[4, 4, 4]} intensity={1.1} />
-      <directionalLight position={[-4, 4, 4]} intensity={0.7} color="#8B5CF6" />
+      {/* Smoke/steam particles - cyan glow */}
+      <mesh position={[0.1, 1.3, 0.1]} scale={[0.3, 0.4, 0.3]}>
+        <sphereGeometry args={[1, optimized ? 6 : 12, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#AAAAAA" wireframe={wireframe} metalness={0.05} roughness={0.9} emissive="#06B6D4" emissiveIntensity={0.2} transparent opacity={0.4} />
+      </mesh>
+
+      <mesh position={[-0.15, 1.25, -0.1]} scale={[0.25, 0.35, 0.25]}>
+        <sphereGeometry args={[1, optimized ? 6 : 12, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#AAAAAA" wireframe={wireframe} metalness={0.05} roughness={0.9} emissive="#06B6D4" emissiveIntensity={0.2} transparent opacity={0.35} />
+      </mesh>
+
+      {/* Ambient and volcanic lighting */}
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[3, 4, 3]} intensity={1} color="#FFFFFF" />
+      <pointLight position={[0, 1.1, 0]} intensity={1.5} color="#FF6600" distance={2} />
+      <pointLight position={[0.5, 0, 0.5]} intensity={0.8} color="#FF4500" distance={1.5} />
     </group>
   );
 };
 
-// Product design model
+// Premium product design model - Realistic
 const ProductModel = ({ optimized = false, wireframe = false }) => {
   const groupRef = useRef<THREE.Group>(null);
   useFrame(() => {
@@ -155,71 +159,102 @@ const ProductModel = ({ optimized = false, wireframe = false }) => {
 
   return (
     <group ref={groupRef} position={[0, 0, 0]}>
-      {/* Main chassis */}
-      <mesh scale={[1, 0.7, 0.6]}>
+      {/* Main chassis - Premium aluminum */}
+      <mesh scale={[1, 0.65, 0.55]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#1F2937" wireframe={wireframe} metalness={0.9} roughness={0.08} />
+        <meshStandardMaterial color="#0F172A" wireframe={wireframe} metalness={0.95} roughness={0.05} />
       </mesh>
 
-      {/* Top accent */}
-      <mesh position={[0, 0.38, 0]} scale={[0.9, 0.15, 0.55]}>
+      {/* Top surface - Polished aluminum */}
+      <mesh position={[0, 0.345, 0]} scale={[0.96, 0.05, 0.5]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#3B82F6" wireframe={wireframe} metalness={0.95} roughness={0.04} />
+        <meshStandardMaterial color="#1E293B" wireframe={wireframe} metalness={0.98} roughness={0.03} />
       </mesh>
 
-      {/* Display panel */}
-      <mesh position={[0, -0.05, 0.32]} scale={[0.8, 0.5, 0.1]}>
+      {/* Premium curved edges - chamfered */}
+      <mesh position={[0, 0.32, -0.28]} scale={[0.98, 0.06, 0.08]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#111827" wireframe={wireframe} metalness={0.3} roughness={0.2} emissive="#1E40AF" emissiveIntensity={0.2} />
+        <meshStandardMaterial color="#1F2937" wireframe={wireframe} metalness={0.92} roughness={0.06} />
       </mesh>
 
-      {/* Screen bezel */}
-      <mesh position={[0, -0.05, 0.35]} scale={[0.7, 0.4, 0.05]}>
+      {/* Display - OLED screen */}
+      <mesh position={[0, 0, 0.3]} scale={[0.75, 0.5, 0.08]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#000000" wireframe={wireframe} metalness={0.6} roughness={0.15} />
+        <meshStandardMaterial color="#000000" wireframe={wireframe} metalness={0.4} roughness={0.15} emissive="#1E3A8A" emissiveIntensity={0.25} />
       </mesh>
 
-      {/* Left panel - Metallic */}
-      <mesh position={[-0.52, 0, 0]} scale={[0.12, 0.6, 0.5]}>
+      {/* Screen bezel - Minimal */}
+      <mesh position={[0, 0, 0.34]} scale={[0.8, 0.55, 0.02]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.85} roughness={0.15} />
+        <meshStandardMaterial color="#0F0F0F" wireframe={wireframe} metalness={0.7} roughness={0.1} />
       </mesh>
 
-      {/* Right panel - Metallic */}
-      <mesh position={[0.52, 0, 0]} scale={[0.12, 0.6, 0.5]}>
+      {/* Left side panel - Anodized */}
+      <mesh position={[-0.505, 0, 0]} scale={[0.04, 0.65, 0.55]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.85} roughness={0.15} />
+        <meshStandardMaterial color="#1F2937" wireframe={wireframe} metalness={0.92} roughness={0.08} />
       </mesh>
 
-      {/* Display accent line 1 */}
+      {/* Right side panel - Anodized */}
+      <mesh position={[0.505, 0, 0]} scale={[0.04, 0.65, 0.55]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#1F2937" wireframe={wireframe} metalness={0.92} roughness={0.08} />
+      </mesh>
+
+      {/* LED indicators - Top right */}
+      <mesh position={[0.35, 0.28, 0.3]}>
+        <cylinderGeometry args={[0.025, 0.025, 0.04, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.7} roughness={0.2} emissive="#06B6D4" emissiveIntensity={0.6} />
+      </mesh>
+
+      <mesh position={[0.42, 0.28, 0.3]}>
+        <cylinderGeometry args={[0.025, 0.025, 0.04, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.7} roughness={0.2} emissive="#8B5CF6" emissiveIntensity={0.5} />
+      </mesh>
+
+      {/* Control buttons - Front edge */}
       {!optimized && (
         <>
-          <mesh position={[0, 0.15, 0.36]} scale={[0.7, 0.08, 0.08]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.75} roughness={0.25} emissive="#06B6D4" emissiveIntensity={0.3} />
+          <mesh position={[-0.35, -0.25, 0.3]}>
+            <cylinderGeometry args={[0.04, 0.04, 0.06, optimized ? 6 : 12]} />
+            <meshStandardMaterial color="#2D2D2D" wireframe={wireframe} metalness={0.6} roughness={0.25} />
           </mesh>
-          <mesh position={[0, -0.05, 0.36]} scale={[0.7, 0.08, 0.08]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.75} roughness={0.25} emissive="#06B6D4" emissiveIntensity={0.3} />
+          <mesh position={[-0.15, -0.25, 0.3]}>
+            <cylinderGeometry args={[0.04, 0.04, 0.06, optimized ? 6 : 12]} />
+            <meshStandardMaterial color="#2D2D2D" wireframe={wireframe} metalness={0.6} roughness={0.25} />
           </mesh>
         </>
       )}
 
-      {/* Ventilation bottom */}
-      <mesh position={[0, -0.35, 0]} scale={[0.85, 0.12, 0.45]}>
+      {/* Power button - Premium */}
+      <mesh position={[0.38, -0.15, 0.3]}>
+        <cylinderGeometry args={[0.06, 0.06, 0.08, optimized ? 6 : 14]} />
+        <meshStandardMaterial color="#1F1F1F" wireframe={wireframe} metalness={0.75} roughness={0.2} />
+      </mesh>
+
+      {/* Power button accent ring */}
+      <mesh position={[0.38, -0.17, 0.31]}>
+        <torusGeometry args={[0.065, 0.01, optimized ? 6 : 12, optimized ? 6 : 24]} />
+        <meshStandardMaterial color="#FF6B35" wireframe={wireframe} metalness={0.85} roughness={0.15} emissive="#FF6B35" emissiveIntensity={0.4} />
+      </mesh>
+
+      {/* Ventilation grille - bottom */}
+      <mesh position={[0, -0.335, 0]} scale={[0.8, 0.06, 0.4]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#0F172A" wireframe={wireframe} metalness={0.35} roughness={0.6} />
+        <meshStandardMaterial color="#0A0A0A" wireframe={wireframe} metalness={0.5} roughness={0.5} />
       </mesh>
 
-      {/* Power button */}
-      <mesh position={[0.35, -0.2, 0.32]}>
-        <cylinderGeometry args={[0.07, 0.07, 0.08, optimized ? 6 : 12]} />
-        <meshStandardMaterial color="#FF6B35" wireframe={wireframe} metalness={0.6} roughness={0.3} emissive="#FF6B35" emissiveIntensity={0.2} />
+      {/* Branding plate - subtle */}
+      <mesh position={[0, -0.32, -0.275]} scale={[0.4, 0.03, 0.08]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#2D2D2D" wireframe={wireframe} metalness={0.9} roughness={0.05} />
       </mesh>
 
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[4, 4, 4]} intensity={1.3} />
-      <directionalLight position={[-4, 4, 4]} intensity={0.8} color="#8B5CF6" />
+      {/* Professional studio lighting */}
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[5, 5, 5]} intensity={1.4} color="#FFFFFF" />
+      <directionalLight position={[-4, 3, -4]} intensity={0.9} color="#06B6D4" />
+      <pointLight position={[0.3, 0.2, 0.5]} intensity={0.7} color="#FF6B35" distance={2} />
     </group>
   );
 };
