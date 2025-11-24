@@ -58,6 +58,172 @@ const CharacterModel = ({ optimized = false, wireframe = false }) => {
   );
 };
 
+// Environment scene model
+const SceneModel = ({ optimized = false, wireframe = false }) => {
+  const groupRef = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += 0.005;
+    }
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 0, 0]}>
+      {/* Ground */}
+      <mesh position={[0, -0.8, 0]} scale={[2, 0.2, 2]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#4B5563" wireframe={wireframe} metalness={0.2} roughness={0.8} />
+      </mesh>
+
+      {/* Main building */}
+      <mesh position={[0, 0.2, 0]} scale={[0.8, 1, 0.8]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#1F2937" wireframe={wireframe} metalness={0.3} roughness={0.6} />
+      </mesh>
+
+      {/* Roof */}
+      <mesh position={[0, 0.7, 0]}>
+        <coneGeometry args={[0.6, 0.6, optimized ? 6 : 16]} />
+        <meshStandardMaterial color="#DC2626" wireframe={wireframe} metalness={0.35} roughness={0.5} />
+      </mesh>
+
+      {/* Windows - Front */}
+      <mesh position={[-0.25, 0.3, 0.42]}>
+        <boxGeometry args={[0.2, 0.2, 0.05]} />
+        <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.7} emissive="#06B6D4" emissiveIntensity={0.4} />
+      </mesh>
+      <mesh position={[0, 0.3, 0.42]}>
+        <boxGeometry args={[0.2, 0.2, 0.05]} />
+        <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.7} emissive="#06B6D4" emissiveIntensity={0.4} />
+      </mesh>
+      <mesh position={[0.25, 0.3, 0.42]}>
+        <boxGeometry args={[0.2, 0.2, 0.05]} />
+        <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.7} emissive="#06B6D4" emissiveIntensity={0.4} />
+      </mesh>
+
+      {/* Windows - Left side */}
+      <mesh position={[-0.42, 0.3, 0]}>
+        <boxGeometry args={[0.05, 0.2, 0.2]} />
+        <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.7} emissive="#06B6D4" emissiveIntensity={0.4} />
+      </mesh>
+
+      {/* Door */}
+      <mesh position={[0, 0, 0.42]}>
+        <boxGeometry args={[0.2, 0.4, 0.05]} />
+        <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.5} roughness={0.4} />
+      </mesh>
+
+      {/* Door handle */}
+      <mesh position={[0.08, 0, 0.46]}>
+        <cylinderGeometry args={[0.03, 0.03, 0.1, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#FFD700" wireframe={wireframe} metalness={0.9} roughness={0.2} />
+      </mesh>
+
+      {/* Left tower */}
+      <mesh position={[-0.65, 0.15, 0]} scale={[0.4, 0.7, 0.4]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#4B5563" wireframe={wireframe} metalness={0.2} roughness={0.7} />
+      </mesh>
+
+      {/* Right tower */}
+      <mesh position={[0.65, 0.15, 0]} scale={[0.4, 0.7, 0.4]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#4B5563" wireframe={wireframe} metalness={0.2} roughness={0.7} />
+      </mesh>
+
+      {/* Chimney */}
+      <mesh position={[-0.25, 0.7, -0.2]} scale={[0.1, 0.5, 0.1]}>
+        <cylinderGeometry args={[1, 1, 1, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#8B4513" wireframe={wireframe} metalness={0.1} roughness={0.8} />
+      </mesh>
+
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[4, 4, 4]} intensity={1.1} />
+      <directionalLight position={[-4, 4, 4]} intensity={0.7} color="#8B5CF6" />
+    </group>
+  );
+};
+
+// Product design model
+const ProductModel = ({ optimized = false, wireframe = false }) => {
+  const groupRef = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += 0.008;
+    }
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 0, 0]}>
+      {/* Main chassis */}
+      <mesh scale={[1, 0.7, 0.6]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#1F2937" wireframe={wireframe} metalness={0.9} roughness={0.08} />
+      </mesh>
+
+      {/* Top accent */}
+      <mesh position={[0, 0.38, 0]} scale={[0.9, 0.15, 0.55]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#3B82F6" wireframe={wireframe} metalness={0.95} roughness={0.04} />
+      </mesh>
+
+      {/* Display panel */}
+      <mesh position={[0, -0.05, 0.32]} scale={[0.8, 0.5, 0.1]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#111827" wireframe={wireframe} metalness={0.3} roughness={0.2} emissive="#1E40AF" emissiveIntensity={0.2} />
+      </mesh>
+
+      {/* Screen bezel */}
+      <mesh position={[0, -0.05, 0.35]} scale={[0.7, 0.4, 0.05]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#000000" wireframe={wireframe} metalness={0.6} roughness={0.15} />
+      </mesh>
+
+      {/* Left panel - Metallic */}
+      <mesh position={[-0.52, 0, 0]} scale={[0.12, 0.6, 0.5]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.85} roughness={0.15} />
+      </mesh>
+
+      {/* Right panel - Metallic */}
+      <mesh position={[0.52, 0, 0]} scale={[0.12, 0.6, 0.5]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#8B5CF6" wireframe={wireframe} metalness={0.85} roughness={0.15} />
+      </mesh>
+
+      {/* Display accent line 1 */}
+      {!optimized && (
+        <>
+          <mesh position={[0, 0.15, 0.36]} scale={[0.7, 0.08, 0.08]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.75} roughness={0.25} emissive="#06B6D4" emissiveIntensity={0.3} />
+          </mesh>
+          <mesh position={[0, -0.05, 0.36]} scale={[0.7, 0.08, 0.08]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#06B6D4" wireframe={wireframe} metalness={0.75} roughness={0.25} emissive="#06B6D4" emissiveIntensity={0.3} />
+          </mesh>
+        </>
+      )}
+
+      {/* Ventilation bottom */}
+      <mesh position={[0, -0.35, 0]} scale={[0.85, 0.12, 0.45]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#0F172A" wireframe={wireframe} metalness={0.35} roughness={0.6} />
+      </mesh>
+
+      {/* Power button */}
+      <mesh position={[0.35, -0.2, 0.32]}>
+        <cylinderGeometry args={[0.07, 0.07, 0.08, optimized ? 6 : 12]} />
+        <meshStandardMaterial color="#FF6B35" wireframe={wireframe} metalness={0.6} roughness={0.3} emissive="#FF6B35" emissiveIntensity={0.2} />
+      </mesh>
+
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[4, 4, 4]} intensity={1.3} />
+      <directionalLight position={[-4, 4, 4]} intensity={0.8} color="#8B5CF6" />
+    </group>
+  );
+};
+
 // Generic uploaded model placeholder - Simple and visible
 const UploadedModel = ({ wireframe = false }) => {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -90,12 +256,15 @@ interface UnifiedModelViewerProps {
 export default function UnifiedModelViewer({ modelType, optimized = false, polygons = 0 }: UnifiedModelViewerProps) {
   const [wireframe, setWireframe] = useState(false);
   const [showInfo, setShowInfo] = useState(true);
-  const [canvasReady, setCanvasReady] = useState(true);
 
   const renderModel = () => {
     switch (modelType) {
       case 'character':
         return <CharacterModel optimized={optimized} wireframe={wireframe} />;
+      case 'scene':
+        return <SceneModel optimized={optimized} wireframe={wireframe} />;
+      case 'product':
+        return <ProductModel optimized={optimized} wireframe={wireframe} />;
       case 'uploaded':
         return <UploadedModel wireframe={wireframe} />;
       default:
@@ -105,8 +274,7 @@ export default function UnifiedModelViewer({ modelType, optimized = false, polyg
 
   return (
     <div className="relative w-full h-full bg-black" style={{ width: '100%', height: '100%' }}>
-      {canvasReady ? (
-        <Canvas 
+      <Canvas 
           style={{ width: '100%', height: '100%', display: 'block' }} 
           gl={{ 
             preserveDrawingBuffer: true,
@@ -129,14 +297,6 @@ export default function UnifiedModelViewer({ modelType, optimized = false, polyg
           {renderModel()}
           <color attach="background" args={['#000000']} />
         </Canvas>
-      ) : (
-        <div className="w-full h-full flex items-center justify-center bg-black">
-          <div className="text-center">
-            <p className="text-gray-400 text-sm mb-2">3D Model Viewer</p>
-            <p className="text-gray-500 text-xs">WebGL unavailable</p>
-          </div>
-        </div>
-      )}
 
       {/* Controls - Outside Canvas */}
       <div className="absolute top-4 right-4 flex gap-2 z-10">
