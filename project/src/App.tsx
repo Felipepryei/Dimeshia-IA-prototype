@@ -7,6 +7,7 @@ import StudioEnvironment from './components/StudioEnvironment';
 import TechnologyExperience from './components/TechnologyExperience';
 import AIOptimizationTool from './components/AIOptimizationTool';
 import ClientBenefits from './components/ClientBenefits';
+import DimeshiaServices from './components/DimeshiaServices';
 import ImplementationGuide from './components/ImplementationGuide';
 import Footer from './components/Footer';
 import InteractiveDemo from './components/InteractiveDemo';
@@ -36,6 +37,7 @@ function App() {
       <TechnologyExperience />
       <AIOptimizationTool />
       <ClientBenefits />
+      <DimeshiaServices />
       <ImplementationGuide />
       <Footer />
     </div>
