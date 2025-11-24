@@ -98,19 +98,6 @@ export default function TechnologyExperience() {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-20">
-          <span className="text-sm uppercase tracking-widest text-blue-400 font-medium mb-4 block">
-            Real Results
-          </span>
-          <h2 className="text-5xl md:text-6xl font-bold mb-6">
-            Experience Our <span className="bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">Technology</span>
-          </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Real data from actual 3D assets. See how our AI optimizes complex models while maintaining visual quality.
-          </p>
-        </div>
-
         {/* Real Model Comparison Data */}
         <div className="grid md:grid-cols-2 gap-6 mb-16">
           {modelData.map((model, index) => (
