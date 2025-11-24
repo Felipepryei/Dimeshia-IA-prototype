@@ -1,4 +1,4 @@
-import { Code, Zap, Award, Users, Workflow, Download } from 'lucide-react';
+import { Code, Zap, Award, Users, Workflow } from 'lucide-react';
 
 export default function ImplementationGuide() {
   const implementations = [
@@ -204,28 +204,6 @@ export default function ImplementationGuide() {
           </div>
         </div>
 
-        {/* ROI Metrics */}
-        <div className="bg-gradient-to-br from-violet-900/30 to-cyan-900/30 border border-violet-800/50 rounded-3xl p-8 md:p-12">
-          <h3 className="text-2xl font-bold mb-12 text-center">Expected ROI for Your Studio</h3>
-          <div className="grid md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-4xl font-bold text-green-400 mb-2">85%</div>
-              <p className="text-sm text-gray-400">Faster Rendering Times</p>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-blue-400 mb-2">$50K+</div>
-              <p className="text-sm text-gray-400">Annual Server Cost Savings</p>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-violet-400 mb-2">40%</div>
-              <p className="text-sm text-gray-400">Reduce Development Time</p>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-cyan-400 mb-2">100%</div>
-              <p className="text-sm text-gray-400">Quality Preservation</p>
-            </div>
-          </div>
-        </div>
 
       </div>
     </section>
