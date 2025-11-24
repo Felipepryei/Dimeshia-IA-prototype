@@ -5,7 +5,6 @@ import * as THREE from 'three';
 // Animated 3D Model for Pipeline Demo
 const PipelineModel = ({ stage }: { stage: number }) => {
   const groupRef = useRef<THREE.Group>(null);
-  const scaleRef = useRef(1);
 
   useFrame(() => {
     if (groupRef.current) {
@@ -16,7 +15,6 @@ const PipelineModel = ({ stage }: { stage: number }) => {
 
   // Polygon count decreases per stage
   const polygonCounts = [246, 200, 120, 45, 12];
-  const polygonFraction = (5 - (stage - 1)) / 5;
 
   return (
     <group ref={groupRef}>
@@ -62,14 +60,6 @@ export default function LivePipelineDemo() {
     { number: 4, name: 'Texture', polygons: '45K' },
     { number: 5, name: 'Final', polygons: '12K' },
   ];
-
-  const metrics = {
-    polygons: { current: 120000, original: 246000, reduction: 51.2 },
-    fileSize: { current: 58.3, original: 124.5, reduction: 53.2 },
-    quality: 84,
-    processingStep: 3,
-    stageProgress: 80,
-  };
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -192,7 +182,7 @@ export default function LivePipelineDemo() {
       <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
         <h4 className="text-white font-bold mb-6">Real-Time Pipeline Stages</h4>
         <div className="grid grid-cols-5 gap-3">
-          {steps.map((step, idx) => (
+          {steps.map((step) => (
             <div
               key={step.number}
               className={`rounded-lg p-3 text-center transition-all cursor-pointer ${
