@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Upload } from 'lucide-react';
 import AutoPlayTechDemo from './AutoPlayTechDemo';
 import ModelUploadViewer from './ModelUploadViewer';
+import BeforeAfterComparison from './BeforeAfterComparison';
 
 export default function TechnologyExperience() {
   const [viewMode, setViewMode] = useState<'demo' | 'upload'>('demo');
@@ -64,6 +65,11 @@ export default function TechnologyExperience() {
           ) : (
             <AutoPlayTechDemo />
           )}
+        </div>
+
+        {/* Before/After Comparison */}
+        <div className="bg-gradient-to-br from-gray-900/30 to-gray-800/20 border border-gray-800 rounded-3xl p-8 mb-12">
+          <BeforeAfterComparison />
         </div>
 
         {/* Key Insights */}
