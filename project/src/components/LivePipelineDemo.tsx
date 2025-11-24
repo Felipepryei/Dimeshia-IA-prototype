@@ -2,67 +2,84 @@ import { useState, useEffect, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// High-Quality 3D City/Environment Model
+// High-Quality Detailed 3D City Model with Dramatic Polygon Reduction
 const CityModel = ({ stage }: { stage: number }) => {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.005;
-      groupRef.current.rotation.x = Math.sin(Date.now() * 0.0005) * 0.1;
+      groupRef.current.rotation.y += 0.003;
     }
   });
 
-  // Polygon complexity decreases per stage
-  const detailLevels = [5, 4, 3, 2, 1];
+  // Polygon complexity progression - dramatic reduction from stage 1 to 5
+  const detailLevels = [6, 5, 3, 2, 1];
   const detail = detailLevels[stage - 1];
+  const wireframe = stage === 1;
 
-  return (
-    <group ref={groupRef} scale={1.5}>
-      {/* Main building structure */}
-      <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[2, 3, 2, 32 * detail, 32 * detail, 32 * detail]} />
+  // Building generator
+  const Building = ({ x, z, width, depth, height, color, segmentsX, segmentsZ }: any) => (
+    <>
+      {/* Main structure */}
+      <mesh position={[x, height / 2, z]}>
+        <boxGeometry args={[width, height, depth, segmentsX * detail, 2, segmentsZ * detail]} />
         <meshStandardMaterial
-          color="#4f46e5"
-          metalness={0.5}
-          roughness={0.4}
-          wireframe={stage < 2}
+          color={color}
+          metalness={0.3}
+          roughness={0.5}
+          wireframe={wireframe}
         />
       </mesh>
-
-      {/* Windows layer */}
-      <mesh position={[0, 0, 1.05]}>
-        <planeGeometry args={[2, 3, 8 * detail, 12 * detail]} />
+      {/* Windows */}
+      <mesh position={[x, height / 2, z + depth / 2 + 0.05]}>
+        <planeGeometry args={[width, height, segmentsX * detail, 8 * detail]} />
         <meshStandardMaterial
           color="#fbbf24"
           emissive="#fbbf24"
-          emissiveIntensity={stage > 2 ? 0.6 : 0.3}
+          emissiveIntensity={stage > 2 ? 0.5 : 0.2}
+        />
+      </mesh>
+    </>
+  );
+
+  return (
+    <group ref={groupRef} scale={1.2}>
+      {/* Tall central tower */}
+      <Building x={0} z={0} width={1.5} depth={1.5} height={4} color="#3b82f6" segmentsX={16} segmentsZ={16} />
+
+      {/* Left tower */}
+      <Building x={-4} z={-2} width={1.8} depth={1.8} height={3.5} color="#06b6d4" segmentsX={14} segmentsZ={14} />
+
+      {/* Right tower */}
+      <Building x={4} z={-2} width={1.8} depth={1.8} height={3.2} color="#8b5cf6" segmentsX={14} segmentsZ={14} />
+
+      {/* Back left building */}
+      <Building x={-3} z={3} width={2} depth={1.5} height={2.5} color="#ec4899" segmentsX={12} segmentsZ={12} />
+
+      {/* Back right building */}
+      <Building x={3} z={3} width={2} depth={1.5} height={2.8} color="#06b6d4" segmentsX={12} segmentsZ={12} />
+
+      {/* Front low structures */}
+      <Building x={-2} z={-4} width={1.2} depth={1.2} height={1.5} color="#10b981" segmentsX={10} segmentsZ={10} />
+      <Building x={2} z={-4} width={1.2} depth={1.2} height={1.8} color="#f59e0b" segmentsX={10} segmentsZ={10} />
+
+      {/* Ground plane */}
+      <mesh position={[0, -0.1, 0]} scale={1.5}>
+        <planeGeometry args={[12, 12, 16 * detail, 16 * detail]} />
+        <meshStandardMaterial
+          color="#1f2937"
+          metalness={0.1}
+          roughness={0.9}
+          wireframe={wireframe}
         />
       </mesh>
 
-      {/* Side building */}
-      <mesh position={[-3, 0.5, -1]}>
-        <cylinderGeometry args={[0.8, 0.8, 2.5, 16 * detail, 8 * detail]} />
-        <meshStandardMaterial color="#06b6d4" metalness={0.3} roughness={0.6} />
-      </mesh>
-
-      {/* Right building */}
-      <mesh position={[3, 0, 0]}>
-        <coneGeometry args={[1.2, 2.5, 12 * detail, 8 * detail]} />
-        <meshStandardMaterial color="#8b5cf6" metalness={0.4} roughness={0.5} />
-      </mesh>
-
-      {/* City base platform */}
-      <mesh position={[0, -1.7, 0]}>
-        <planeGeometry args={[10, 10, 20 * detail, 20 * detail]} />
-        <meshStandardMaterial color="#1f2937" metalness={0.2} roughness={0.8} />
-      </mesh>
-
-      {/* Lighting */}
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[5, 5, 5]} intensity={1.2} />
-      <pointLight position={[-5, 3, -5]} intensity={0.6} color="#0ea5e9" />
-      <pointLight position={[5, 3, 5]} intensity={0.6} color="#d946ef" />
+      {/* Lighting system */}
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[5, 5, 3]} intensity={1} />
+      <pointLight position={[-4, 3, -3]} intensity={0.8} color="#0ea5e9" />
+      <pointLight position={[4, 3, 3]} intensity={0.8} color="#d946ef" />
+      <pointLight position={[0, 4, 4]} intensity={0.5} color="#fbbf24" />
     </group>
   );
 };
