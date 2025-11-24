@@ -4,6 +4,7 @@ import LogoShowcase from './components/LogoShowcase';
 import BrandEssence from './components/BrandEssence';
 import StudioDemo from './components/StudioDemo';
 import StudioEnvironment from './components/StudioEnvironment';
+import TechnologyExperience from './components/TechnologyExperience';
 import AIOptimizationTool from './components/AIOptimizationTool';
 import ClientBenefits from './components/ClientBenefits';
 import Typography from './components/Typography';
@@ -32,6 +33,7 @@ function App() {
       <BrandEssence />
       <StudioDemo />
       <StudioEnvironment />
+      <TechnologyExperience />
       <AIOptimizationTool />
       <ClientBenefits />
       <Typography />
