@@ -5,6 +5,7 @@ import BrandEssence from './components/BrandEssence';
 import AmaoSection from './components/AmaoSection';
 import StudioDemo from './components/StudioDemo';
 import StudioEnvironment from './components/StudioEnvironment';
+import LivePipelineDemo from './components/LivePipelineDemo';
 import TechnologyExperience from './components/TechnologyExperience';
 import AIOptimizationTool from './components/AIOptimizationTool';
 import ClientBenefits from './components/ClientBenefits';
@@ -36,6 +37,11 @@ function App() {
       <AmaoSection />
       <StudioDemo />
       <StudioEnvironment />
+      <section className="py-32 px-6 relative overflow-hidden bg-gradient-to-b from-black via-gray-950 to-black">
+        <div className="max-w-7xl mx-auto">
+          <LivePipelineDemo />
+        </div>
+      </section>
       <TechnologyExperience />
       <AIOptimizationTool />
       <ClientBenefits />
