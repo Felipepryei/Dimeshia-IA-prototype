@@ -1,7 +1,6 @@
-import BeforeAfterComparison from './BeforeAfterComparison';
+import DCCToolsShowcase from './DCCToolsShowcase';
 
 export default function TechnologyExperience() {
-
   return (
     <section className="py-32 px-6 relative overflow-hidden bg-gradient-to-b from-black via-gray-950 to-black">
       {/* Background decoration */}
@@ -15,16 +14,16 @@ export default function TechnologyExperience() {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header - Combined */}
+        {/* Header */}
         <div className="text-center mb-16">
           <span className="text-sm uppercase tracking-widest text-cyan-400 font-medium mb-4 block animate-pulse">
             Experience Our Technology
           </span>
         </div>
 
-        {/* Main Demo Container - With Before/After Comparison */}
+        {/* Main Demo Container - DCC Tools Showcase */}
         <div className="bg-gradient-to-br from-gray-900/30 to-gray-800/20 border border-gray-800 rounded-3xl p-8 mb-12">
-          <BeforeAfterComparison />
+          <DCCToolsShowcase />
         </div>
 
         {/* Key Insights */}
