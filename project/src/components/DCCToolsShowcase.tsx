@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import LivePipelineDemo from './LivePipelineDemo';
 
 // Blender Logo/Icon - 3D Model
 const BlenderModel = () => {
@@ -231,6 +232,13 @@ export default function DCCToolsShowcase() {
             <h3 className="font-bold text-white text-lg">3ds Max</h3>
             <p className="text-sm text-gray-400 mt-2">Professional 3D modeling & rendering</p>
           </div>
+        </div>
+      </div>
+
+      {/* Live Pipeline Demo Section */}
+      <div className="mt-16 pt-16 border-t border-gray-800">
+        <div className="bg-gradient-to-br from-gray-900/40 to-gray-800/30 border border-gray-700 rounded-3xl p-12">
+          <LivePipelineDemo />
         </div>
       </div>
 
