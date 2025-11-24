@@ -227,13 +227,6 @@ export default function ImplementationGuide() {
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="mt-16 text-center">
-          <button className="bg-gradient-to-r from-blue-500 to-violet-600 hover:from-blue-600 hover:to-violet-700 text-white font-bold py-4 px-8 rounded-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2 mx-auto">
-            <Download className="w-5 h-5" />
-            Start Optimizing Your Assets Today
-          </button>
-        </div>
       </div>
     </section>
   );
