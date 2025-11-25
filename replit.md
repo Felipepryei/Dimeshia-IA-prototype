@@ -111,12 +111,11 @@ The Vite server is configured to work with Replit's iframe proxy:
 - **2024-11-25**: Complete Workflow Automation Demo - DIMESHIA AI Pipeline
   - Created comprehensive LiveTechShowcase component showcasing real 3D production workflow automation
   - NOT mesh optimization - showcases actual workflow automation for artists and studios
-  - **5-Phase Pipeline Visualization:**
+  - **4-Phase Pipeline Visualization:**
     1. Model Intake & Validation (topology, naming conventions, scale normalization)
     2. Automatic Mesh Cleanup (remove n-gons, rebuild geometry, auto-retopology)
     3. UV & Texture Workflow Automation (auto unwrap, UDIM layout, UV packing)
     4. Pipeline Integration (folder structure, file renaming, format conversion FBX→GLB→USDZ)
-    5. Render Pipeline Preparation (light rigs, camera presets, scene organization)
   - **Interactive Flowchart View** with animated task boxes that highlight as pipeline runs
   - **Smart Progress Tracking:**
     - Individual task progress bars

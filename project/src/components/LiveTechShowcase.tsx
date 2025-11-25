@@ -42,14 +42,6 @@ export default function LiveTechShowcase() {
         { name: 'Checking Textures', duration: 7 },
       ],
     },
-    {
-      category: 'Render Preparation',
-      tasks: [
-        { name: 'Setting Up Light Rigs', duration: 10 },
-        { name: 'Creating Camera Presets', duration: 8 },
-        { name: 'Organizing Scene', duration: 6 },
-      ],
-    },
   ];
 
   const flatSteps = allSteps.flatMap(cat =>
