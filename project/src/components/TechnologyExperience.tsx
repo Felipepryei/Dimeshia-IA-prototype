@@ -442,7 +442,7 @@ export default function TechnologyExperience() {
               <label htmlFor="file-upload" className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
                 <div className="text-5xl mb-4">📤</div>
                 <p className="text-white font-semibold mb-2">Upload 3D Model</p>
-                <p className="text-sm text-gray-400 text-center">FBX, OBJ, GLTF, GLB</p>
+                <p className="text-sm text-gray-400 text-center">OBJ, GLB, GLTF, FBX, Blend, Max</p>
                 <p className="text-xs text-gray-500 mt-3">Max 1GB</p>
               </label>
             </div>
