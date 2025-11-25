@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Play, Pause, RotateCcw, Download } from 'lucide-react';
 
 export default function LiveTechShowcase() {
   const [isRunning, setIsRunning] = useState(false);
@@ -60,13 +60,11 @@ export default function LiveTechShowcase() {
         const currentStepDuration = flatSteps[currentStepIndex]?.duration || 1;
 
         if (nextProgress >= currentStepDuration * 1000 / 30) {
-          // Move to next step
           if (currentStepIndex < flatSteps.length - 1) {
             setCompletedSteps(prev => [...prev, currentStepIndex]);
             setCurrentStepIndex(prev => prev + 1);
             setStepProgress(0);
           } else {
-            // All steps complete
             setCompletedSteps(prev => [...prev, currentStepIndex]);
             setIsRunning(false);
             setPhase('complete');
@@ -87,6 +85,10 @@ export default function LiveTechShowcase() {
     setCurrentStepIndex(0);
     setCompletedSteps([]);
     setStepProgress(0);
+  };
+
+  const handlePause = () => {
+    setIsRunning(false);
   };
 
   const handleReset = () => {
@@ -135,23 +137,21 @@ export default function LiveTechShowcase() {
         </div>
 
         {/* Main Container */}
-        <div className="max-w-7xl mx-auto w-full flex-1">
-          {/* Flowchart View */}
-          <div className="space-y-4">
+        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-3 gap-6 flex-1">
+          {/* Left: Flowchart View */}
+          <div className="lg:col-span-2 space-y-4">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-3xl blur opacity-50" />
               <div className="relative bg-black/40 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-6 overflow-hidden">
                 <h2 className="text-xl font-bold text-white mb-6">Pipeline Flowchart</h2>
 
-                <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                <div className="space-y-4 max-h-[500px] overflow-y-auto">
                   {allSteps.map((category, catIdx) => (
                     <div key={catIdx} className="space-y-2">
-                      {/* Category Label */}
                       <div className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">
                         {category.category}
                       </div>
 
-                      {/* Tasks */}
                       <div className="flex flex-wrap gap-2">
                         {category.tasks.map((task, taskIdx) => {
                           const globalIdx = allSteps
@@ -175,13 +175,9 @@ export default function LiveTechShowcase() {
                                   : 'bg-gray-800/50 border border-gray-700 text-gray-400'
                               }`}
                             >
-                              {isCompleted && (
-                                <span className="mr-2">✓</span>
-                              )}
+                              {isCompleted && <span className="mr-2">✓</span>}
                               {task.name}
-                              {isActive && (
-                                <div className="absolute inset-0 animate-pulse bg-blue-400/20" />
-                              )}
+                              {isActive && <div className="absolute inset-0 animate-pulse bg-blue-400/20" />}
                             </div>
                           );
                         })}
@@ -190,7 +186,6 @@ export default function LiveTechShowcase() {
                   ))}
                 </div>
 
-                {/* Scrollbar hint */}
                 <div className="mt-4 text-xs text-gray-500 text-center">
                   {completedSteps.length}/{totalSteps} steps completed
                 </div>
@@ -202,7 +197,7 @@ export default function LiveTechShowcase() {
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-2xl blur opacity-50" />
               <div className="relative bg-black/40 backdrop-blur-xl border border-cyan-500/50 rounded-2xl p-6">
                 <div className="flex justify-between items-center mb-3">
-                  <p className="text-sm font-semibold text-gray-300">Overall Progress</p>
+                  <p className="text-sm font-semibold text-gray-300">Overall Pipeline Progress</p>
                   <p className="text-2xl font-bold text-cyan-400">{Math.round(overallProgress)}%</p>
                 </div>
                 <div className="h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-700">
@@ -219,7 +214,7 @@ export default function LiveTechShowcase() {
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-2xl blur opacity-50" />
                 <div className="relative bg-black/40 backdrop-blur-xl border border-blue-500/50 rounded-2xl p-6">
-                  <p className="text-xs uppercase text-blue-400 font-bold tracking-wider mb-2">Current Task</p>
+                  <p className="text-xs uppercase text-blue-400 font-bold tracking-wider mb-2">Currently Processing</p>
                   <p className="text-lg font-bold text-white mb-4">
                     {flatSteps[currentStepIndex].name}
                   </p>
@@ -235,6 +230,146 @@ export default function LiveTechShowcase() {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Right: Sidebar */}
+          <div className="space-y-4">
+            {/* Stats */}
+            {phase === 'idle' && (
+              <>
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-2xl blur opacity-50 group-hover:opacity-75 transition-opacity" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-blue-500/50 rounded-2xl p-6 text-center">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-semibold">Total Tasks</p>
+                    <p className="text-4xl font-bold text-blue-400">{totalSteps}</p>
+                    <p className="text-xs text-gray-500 mt-2">Automated Pipeline Steps</p>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-violet-600/20 rounded-2xl blur opacity-50 group-hover:opacity-75 transition-opacity" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-purple-500/50 rounded-2xl p-6 text-center">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-semibold">Est. Time Saved</p>
+                    <p className="text-4xl font-bold text-purple-400">63%</p>
+                    <p className="text-xs text-gray-500 mt-2">vs Manual Process</p>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-cyan-600/20 rounded-2xl blur opacity-50 group-hover:opacity-75 transition-opacity" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-cyan-500/50 rounded-2xl p-6 text-center">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-semibold">Est. Duration</p>
+                    <p className="text-3xl font-bold text-cyan-400">{Math.round(totalDuration / 60)}m</p>
+                    <p className="text-xs text-gray-500 mt-2">{totalDuration % 60}s remaining</p>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {phase === 'running' && (
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl blur opacity-50" />
+                <div className="relative bg-black/40 backdrop-blur-xl border border-yellow-500/50 rounded-2xl p-6 text-center">
+                  <p className="text-xs text-yellow-400 uppercase font-bold tracking-wider mb-3">Pipeline Running</p>
+                  <div className="flex justify-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+                  </div>
+                  <p className="text-sm text-gray-300 font-semibold">
+                    Step {currentStepIndex + 1} of {totalSteps}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {phase === 'complete' && (
+              <>
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 rounded-2xl blur opacity-50" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-emerald-500/50 rounded-2xl p-6 text-center">
+                    <p className="text-4xl mb-3">✨</p>
+                    <p className="text-sm font-bold text-emerald-400 mb-2">Pipeline Complete!</p>
+                    <p className="text-xs text-gray-400">All {totalSteps} tasks automated</p>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-cyan-600/20 rounded-2xl blur opacity-50" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-cyan-500/50 rounded-2xl p-6 text-center">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-semibold">Workflow Acceleration</p>
+                    <p className="text-4xl font-bold text-cyan-400">{timeSaved}%</p>
+                    <p className="text-xs text-gray-500 mt-2">Time saved vs manual</p>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-violet-600/20 rounded-2xl blur opacity-50" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-violet-500/50 rounded-2xl p-6 text-center">
+                    <p className="text-4xl font-bold text-violet-400 mb-2">{totalSteps}</p>
+                    <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold">Tasks Automated</p>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Control Buttons */}
+            <div className="space-y-3 pt-4 border-t border-gray-700/50">
+              {phase === 'idle' && (
+                <button
+                  onClick={handleStart}
+                  className="w-full group relative px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl font-bold text-white overflow-hidden hover:shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center justify-center gap-2"
+                >
+                  <Play className="w-5 h-5" />
+                  Start Pipeline
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
+                </button>
+              )}
+
+              {phase === 'running' && (
+                <>
+                  <button
+                    onClick={handlePause}
+                    className="w-full group relative px-6 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl font-bold text-white overflow-hidden hover:shadow-2xl hover:shadow-yellow-500/50 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Pause className="w-5 h-5" />
+                    Pause Pipeline
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
+                  </button>
+                  <button
+                    onClick={handleReset}
+                    className="w-full px-6 py-3 bg-gray-800 border-2 border-gray-700 rounded-xl font-semibold text-gray-300 hover:border-gray-600 hover:bg-gray-900 transition-all flex items-center justify-center gap-2"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    Reset
+                  </button>
+                </>
+              )}
+
+              {phase === 'complete' && (
+                <>
+                  <button className="w-full group relative px-6 py-4 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl font-bold text-white overflow-hidden hover:shadow-2xl hover:shadow-emerald-500/50 transition-all flex items-center justify-center gap-2">
+                    <Download className="w-5 h-5" />
+                    Download Report
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
+                  </button>
+                  <button
+                    onClick={handleReset}
+                    className="w-full px-6 py-3 bg-gray-800 border-2 border-gray-700 rounded-xl font-semibold text-gray-300 hover:border-gray-600 hover:bg-gray-900 transition-all flex items-center justify-center gap-2"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    Run Again
+                  </button>
+                </>
+              )}
+
+              <button
+                onClick={() => window.history.back()}
+                className="w-full px-6 py-3 bg-gray-800/50 border border-gray-700 rounded-xl font-semibold text-gray-300 hover:bg-gray-800 hover:border-gray-600 transition-all"
+              >
+                Back Home
+              </button>
+            </div>
           </div>
         </div>
       </div>

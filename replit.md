@@ -108,7 +108,7 @@ The Vite server is configured to work with Replit's iframe proxy:
 - Gradient overlays and blur effects
 
 ## Recent Changes
-- **2024-11-25**: Complete Workflow Automation Demo - DIMESHIA AI Pipeline
+- **2024-11-25**: Complete Workflow Automation Demo - DIMESHIA AI Pipeline (v2 Enhanced)
   - Created comprehensive LiveTechShowcase component showcasing real 3D production workflow automation
   - NOT mesh optimization - showcases actual workflow automation for artists and studios
   - **4-Phase Pipeline Visualization:**
@@ -116,29 +116,31 @@ The Vite server is configured to work with Replit's iframe proxy:
     2. Automatic Mesh Cleanup (remove n-gons, rebuild geometry, auto-retopology)
     3. UV & Texture Workflow Automation (auto unwrap, UDIM layout, UV packing)
     4. Pipeline Integration (folder structure, file renaming, format conversion FBX→GLB→USDZ)
-  - **Interactive Flowchart View** with animated task boxes that highlight as pipeline runs
+  - **Interactive Flowchart View** (left side) with animated task boxes that highlight as pipeline runs
   - **Smart Progress Tracking:**
     - Individual task progress bars
-    - Overall pipeline progress (0-100%)
-    - Current task display with live metrics
-    - Step-by-step completion indicators
-  - **Results Screen:**
-    - Workflow acceleration percentage (63% time saved calculation)
-    - Total tasks automated counter
-    - Download Pipeline Report button (simulated)
-  - **Design Elements:**
-    - Dark futuristic UI with glassmorphism cards
-    - Blue + purple neon accents with glow effects
+    - Overall pipeline progress (0-100%) with animated bar
+    - Current task display with real-time progress indicator
+    - Step-by-step completion indicators with checkmarks
+  - **Dynamic Sidebar Stats (right side):**
+    - **Idle State:** Total Tasks (19), Est. Time Saved (63%), Est. Duration
+    - **Running State:** Live "Pipeline Running" indicator with animated dots
+    - **Complete State:** ✨ Completion message, Workflow Acceleration %, Tasks Automated counter
+  - **Enhanced Controls:**
+    - Start Pipeline button (gradient blue/cyan)
+    - Pause Pipeline button (gradient yellow/orange) - only during execution
+    - Reset button (appears in running & complete states)
+    - Download Pipeline Report button (emerald gradient, completion only)
+    - Back Home button (always available)
+  - **Premium Design Elements:**
+    - Glassmorphism cards with backdrop blur
+    - Blue + purple + cyan neon accents with glowing borders
+    - Hover effects with opacity transitions
     - Animated background grid and gradient orbs
-    - Fully responsive (mobile, tablet, desktop)
+    - Fully responsive layout (3-column on desktop, stacked on mobile)
     - Professional SaaS dashboard aesthetic
     - Smooth state transitions and micro-animations
-  - **Controls:**
-    - Play/Start Pipeline button
-    - Reset Pipeline button
-    - Download Report button (appears on completion)
-    - Back to Homepage navigation
-  - **No backend** - pure frontend simulation with realistic timing
+  - **No backend** - pure frontend simulation with realistic timing (~3 minutes total)
   - Accessible via "Watch Live Demo" CTA button on hero
 
 - **2024-11-25**: Professional Hero CTA Section
