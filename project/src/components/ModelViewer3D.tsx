@@ -101,42 +101,43 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
     const reader = new FileReader();
     const fileName = file.name.toLowerCase();
 
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const content = event.target?.result;
-        if (!content) return;
-
-        let object: THREE.Object3D | null = null;
-
-        // Try OBJ first
-        if (fileName.endsWith('.obj') || fileName.includes('obj')) {
-          try {
-            const text = typeof content === 'string' ? content : new TextDecoder().decode(content as ArrayBuffer);
-            const objLoader = new OBJLoader();
-            object = objLoader.parse(text);
-          } catch {
-            // Silently fail and try next format
-          }
-        }
-
-        // Try GLTF/GLB
-        if (!object && (fileName.endsWith('.glb') || fileName.endsWith('.gltf') || fileName.includes('gltf') || fileName.includes('glb'))) {
-          const gltfLoader = new GLTFLoader();
-          const arrayBuffer = content instanceof ArrayBuffer ? content : new TextEncoder().encode(content as string).buffer;
-          gltfLoader.parse(arrayBuffer, '', (gltf) => {
-            applyModel(gltf.scene);
-            setLoading(false);
-          }, () => {
-            setLoading(false);
-          });
+        if (!content) {
+          setLoading(false);
           return;
         }
 
-        // If object was loaded, apply it
-        if (object) {
+        // Handle OBJ files
+        if (fileName.endsWith('.obj')) {
+          const text = typeof content === 'string' ? content : new TextDecoder().decode(content as ArrayBuffer);
+          const objLoader = new OBJLoader();
+          const object = objLoader.parse(text);
           applyModel(object);
+          setLoading(false);
+          return;
         }
-        
+
+        // Handle GLB/GLTF files
+        if (fileName.endsWith('.glb') || fileName.endsWith('.gltf')) {
+          const gltfLoader = new GLTFLoader();
+          const arrayBuffer = content instanceof ArrayBuffer ? content : new TextEncoder().encode(content as string).buffer;
+          
+          gltfLoader.parse(
+            arrayBuffer,
+            '',
+            (gltf) => {
+              applyModel(gltf.scene);
+              setLoading(false);
+            },
+            () => {
+              setLoading(false);
+            }
+          );
+          return;
+        }
+
         setLoading(false);
       } catch {
         setLoading(false);
@@ -147,6 +148,7 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
       setLoading(false);
     };
 
+    // Read file appropriately based on type
     if (fileName.endsWith('.glb')) {
       reader.readAsArrayBuffer(file);
     } else {
@@ -156,12 +158,13 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
     function applyModel(object: THREE.Object3D) {
       if (!sceneRef.current || !cameraRef.current) return;
 
-      // Remove old model
-      if (meshRef.current && meshRef.current !== (sceneRef.current.children.find(child => child instanceof THREE.Mesh))) {
-        sceneRef.current.remove(meshRef.current);
-      }
+      // Remove old uploaded model (keep default cube if needed)
+      const meshesToRemove = sceneRef.current.children.filter(
+        (child) => child !== meshRef.current && (child instanceof THREE.Group || (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry))
+      );
+      meshesToRemove.forEach((mesh) => sceneRef.current?.remove(mesh));
 
-      // Apply material to all meshes
+      // Apply consistent material to all meshes
       object.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           child.material = new THREE.MeshPhongMaterial({
@@ -172,11 +175,10 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
         }
       });
 
-      // Center and scale
+      // Center and scale model
       const box = new THREE.Box3().setFromObject(object);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
-
       object.position.sub(center);
 
       const maxDim = Math.max(size.x, size.y, size.z);
@@ -196,7 +198,7 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
         <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-blue-500 border-t-cyan-400 rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-sm text-gray-300">Loading...</p>
+            <p className="text-sm text-gray-300">Loading Model...</p>
           </div>
         </div>
       )}
