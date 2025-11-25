@@ -1,407 +1,374 @@
-import { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, ChevronLeft, Upload, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronLeft, Download, RotateCcw, Play } from 'lucide-react';
 
 export default function LiveTechShowcase() {
-  const [uploadPhase, setUploadPhase] = useState<'upload' | 'processing' | 'complete'>('upload');
-  const [isDragging, setIsDragging] = useState(false);
-  const [fileName, setFileName] = useState('');
-  const [processingProgress, setProcessingProgress] = useState(0);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [sliderPosition, setSliderPosition] = useState(50);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const [phase, setPhase] = useState<'idle' | 'running' | 'complete'>('idle');
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [currentStepIndex, setCurrentStepIndex] = useState(-1);
+  const [stepProgress, setStepProgress] = useState(0);
 
-  const processingSteps = [
-    { name: 'Loading Model', icon: '📥', duration: 15 },
-    { name: 'Analyzing Geometry', icon: '🔍', duration: 25 },
-    { name: 'Detecting Topology', icon: '🧬', duration: 20 },
-    { name: 'Optimizing Mesh', icon: '⚙️', duration: 25 },
-    { name: 'Finalizing Output', icon: '✨', duration: 15 },
+  const allSteps = [
+    {
+      category: 'Model Intake & Validation',
+      tasks: [
+        { name: 'Analyzing Topology', duration: 8 },
+        { name: 'Checking Naming Conventions', duration: 6 },
+        { name: 'Normalizing Scale', duration: 5 },
+      ],
+    },
+    {
+      category: 'Automatic Mesh Cleanup',
+      tasks: [
+        { name: 'Removing N-gons', duration: 10 },
+        { name: 'Rebuilding Geometry', duration: 12 },
+        { name: 'Auto-Retopology', duration: 15 },
+      ],
+    },
+    {
+      category: 'UV & Texture Automation',
+      tasks: [
+        { name: 'Auto UV Unwrap', duration: 12 },
+        { name: 'Generating UDIM Layout', duration: 8 },
+        { name: 'Packing UVs', duration: 10 },
+      ],
+    },
+    {
+      category: 'Pipeline Integration',
+      tasks: [
+        { name: 'Generating Folder Structure', duration: 6 },
+        { name: 'Auto File Renaming', duration: 8 },
+        { name: 'Format Conversion (FBX→GLB→USDZ)', duration: 15 },
+        { name: 'Checking Textures', duration: 7 },
+      ],
+    },
+    {
+      category: 'Render Preparation',
+      tasks: [
+        { name: 'Setting Up Light Rigs', duration: 10 },
+        { name: 'Creating Camera Presets', duration: 8 },
+        { name: 'Organizing Scene', duration: 6 },
+      ],
+    },
   ];
 
-  // Simulate processing
+  const flatSteps = allSteps.flatMap(cat =>
+    cat.tasks.map(task => ({ ...task, category: cat.category }))
+  );
+
+  const totalSteps = flatSteps.length;
+  const totalDuration = flatSteps.reduce((sum, step) => sum + step.duration, 0);
+
   useEffect(() => {
-    if (!isProcessing || uploadPhase !== 'processing') return;
+    if (!isRunning || phase !== 'running') return;
 
     const interval = setInterval(() => {
-      setProcessingProgress(prev => {
-        if (prev >= 100) {
-          setIsProcessing(false);
-          setUploadPhase('complete');
-          return 100;
-        }
-        return prev + 1;
-      });
+      setStepProgress(prev => {
+        const nextProgress = prev + 0.5;
+        const currentStepDuration = flatSteps[currentStepIndex]?.duration || 1;
 
-      setCurrentStep(Math.floor(processingProgress / 20));
+        if (nextProgress >= currentStepDuration * 1000 / 30) {
+          // Move to next step
+          if (currentStepIndex < flatSteps.length - 1) {
+            setCompletedSteps(prev => [...prev, currentStepIndex]);
+            setCurrentStepIndex(prev => prev + 1);
+            setStepProgress(0);
+          } else {
+            // All steps complete
+            setCompletedSteps(prev => [...prev, currentStepIndex]);
+            setIsRunning(false);
+            setPhase('complete');
+            clearInterval(interval);
+          }
+        } else {
+          setStepProgress(nextProgress);
+        }
+      });
     }, 30);
 
     return () => clearInterval(interval);
-  }, [isProcessing, uploadPhase, processingProgress]);
+  }, [isRunning, phase, currentStepIndex, flatSteps]);
 
-  const handleFileSelect = (file: File) => {
-    if (file.type.includes('model') || file.name.endsWith('.obj') || file.name.endsWith('.gltf') || file.name.endsWith('.glb')) {
-      setFileName(file.name);
-      setUploadPhase('processing');
-      setIsProcessing(true);
-      setProcessingProgress(0);
-      setCurrentStep(0);
-    }
+  const handleStart = () => {
+    setIsRunning(true);
+    setPhase('running');
+    setCurrentStepIndex(0);
+    setCompletedSteps([]);
+    setStepProgress(0);
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleFileSelect(files[0]);
-    }
+  const handleReset = () => {
+    setIsRunning(false);
+    setPhase('idle');
+    setCurrentStepIndex(-1);
+    setCompletedSteps([]);
+    setStepProgress(0);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.currentTarget.files;
-    if (files && files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  };
-
-  const resetDemo = () => {
-    setUploadPhase('upload');
-    setFileName('');
-    setProcessingProgress(0);
-    setCurrentStep(0);
-    setIsProcessing(false);
-    setSliderPosition(50);
-  };
+  const overallProgress = (completedSteps.length / totalSteps) * 100;
+  const timeSaved = Math.round(overallProgress * 0.63);
 
   return (
     <div className="fixed inset-0 bg-black z-50 overflow-auto">
       {/* Animated Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0" style={{
             backgroundImage: `
               linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px),
               linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px)
             `,
-            backgroundSize: '60px 60px',
-            animation: 'gridMove 30s linear infinite'
+            backgroundSize: '50px 50px',
+            animation: 'gridMove 40s linear infinite'
           }} />
         </div>
-        <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-blue-500 rounded-full filter blur-3xl opacity-10 animate-pulse" />
-        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-violet-600 rounded-full filter blur-3xl opacity-10 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600 rounded-full filter blur-3xl opacity-5 animate-pulse" />
+        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-violet-600 rounded-full filter blur-3xl opacity-5 animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col p-6">
+      <div className="relative z-10 min-h-screen flex flex-col p-4 md:p-8">
         {/* Header */}
         <div className="max-w-7xl mx-auto w-full mb-8">
           <button
             onClick={() => window.history.back()}
-            className="p-2 hover:bg-gray-800/50 rounded-lg transition-all backdrop-blur"
+            className="p-2 hover:bg-gray-800/50 rounded-lg transition-all"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <div className="mt-4">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-violet-400 bg-clip-text text-transparent">
-              DIMESHIA AI Pipeline
-            </h1>
-            <p className="text-gray-400 mt-2">Live 3D Model Optimization Demo</p>
-          </div>
+          <h1 className="text-4xl md:text-5xl font-bold mt-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-violet-400 bg-clip-text text-transparent">
+            DIMESHIA Workflow Automation
+          </h1>
+          <p className="text-gray-400 mt-2">AI-Powered 3D Production Pipeline</p>
         </div>
 
-        {/* Main Content */}
-        <div className="max-w-7xl mx-auto w-full flex-1">
-          {uploadPhase === 'upload' && (
-            <div className="space-y-6">
-              {/* Upload Section */}
-              <div
-                onDrop={handleDrop}
-                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                onDragLeave={() => setIsDragging(false)}
-                className="relative group"
-              >
-                {/* Glassmorphism Container */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
-                
-                <div className={`relative bg-black/40 backdrop-blur-xl border-2 rounded-3xl p-12 md:p-20 transition-all ${
-                  isDragging 
-                    ? 'border-blue-400 bg-blue-500/10' 
-                    : 'border-gray-700/50 hover:border-blue-500/50'
-                }`}>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    onChange={handleInputChange}
-                    className="hidden"
-                    accept=".obj,.gltf,.glb,.fbx,.blend,.max"
-                  />
+        {/* Main Container */}
+        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-3 gap-6 flex-1">
+          {/* Left: Flowchart View */}
+          <div className="lg:col-span-2 space-y-4">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-3xl blur opacity-50" />
+              <div className="relative bg-black/40 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-6 overflow-hidden">
+                <h2 className="text-xl font-bold text-white mb-6">Pipeline Flowchart</h2>
 
-                  <div className="text-center space-y-6">
-                    <div className="flex justify-center">
-                      <div className="text-8xl animate-bounce" style={{ animationDelay: '0s' }}>
-                        📤
+                <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                  {allSteps.map((category, catIdx) => (
+                    <div key={catIdx} className="space-y-2">
+                      {/* Category Label */}
+                      <div className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">
+                        {category.category}
+                      </div>
+
+                      {/* Tasks */}
+                      <div className="flex flex-wrap gap-2">
+                        {category.tasks.map((task, taskIdx) => {
+                          const globalIdx = allSteps
+                            .slice(0, catIdx)
+                            .reduce((sum, c) => sum + c.tasks.length, 0) + taskIdx;
+
+                          const isCompleted = completedSteps.includes(globalIdx);
+                          const isActive = currentStepIndex === globalIdx;
+                          const isPending = currentStepIndex > globalIdx;
+
+                          return (
+                            <div
+                              key={taskIdx}
+                              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 relative overflow-hidden ${
+                                isCompleted
+                                  ? 'bg-emerald-500/20 border border-emerald-500 text-emerald-400'
+                                  : isActive
+                                  ? 'bg-blue-500/30 border border-blue-400 text-blue-300 shadow-lg shadow-blue-500/50'
+                                  : isPending
+                                  ? 'bg-gray-700/50 border border-gray-600 text-gray-300'
+                                  : 'bg-gray-800/50 border border-gray-700 text-gray-400'
+                              }`}
+                            >
+                              {isCompleted && (
+                                <span className="mr-2">✓</span>
+                              )}
+                              {task.name}
+                              {isActive && (
+                                <div className="absolute inset-0 animate-pulse bg-blue-400/20" />
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-
-                    <div>
-                      <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-                        Upload Your 3D Model
-                      </h2>
-                      <p className="text-gray-400 text-lg">
-                        Drag and drop or click to upload OBJ, GLTF, GLB, FBX, Blend, or Max files
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      className="group relative inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-violet-500 rounded-xl font-semibold text-white overflow-hidden hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transition-all"
-                    >
-                      <Upload className="w-5 h-5" />
-                      Choose File
-                      <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
-                    </button>
-
-                    <p className="text-sm text-gray-500">
-                      Max 1GB • Supports all major 3D formats
-                    </p>
-                  </div>
+                  ))}
                 </div>
-              </div>
 
-              {/* Info Cards */}
-              <div className="grid md:grid-cols-3 gap-4">
-                {[
-                  { icon: '⚡', title: 'Real-Time Analysis', desc: 'AI processes your model instantly' },
-                  { icon: '📉', title: '90%+ Reduction', desc: 'File size reduced while keeping quality' },
-                  { icon: '🚀', title: '17x Faster', desc: 'Optimized models render instantly' },
-                ].map((item, i) => (
-                  <div key={i} className="group relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="relative bg-black/40 backdrop-blur-lg border border-gray-700/50 rounded-2xl p-6 hover:border-blue-500/50 transition-all">
-                      <div className="text-3xl mb-3">{item.icon}</div>
-                      <h3 className="font-bold text-white mb-2">{item.title}</h3>
-                      <p className="text-sm text-gray-400">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
+                {/* Scrollbar hint */}
+                <div className="mt-4 text-xs text-gray-500 text-center">
+                  {completedSteps.length}/{totalSteps} steps completed
+                </div>
               </div>
             </div>
-          )}
 
-          {uploadPhase === 'processing' && (
-            <div className="space-y-8">
-              {/* Processing Header */}
+            {/* Progress Bar */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-2xl blur opacity-50" />
+              <div className="relative bg-black/40 backdrop-blur-xl border border-cyan-500/50 rounded-2xl p-6">
+                <div className="flex justify-between items-center mb-3">
+                  <p className="text-sm font-semibold text-gray-300">Overall Progress</p>
+                  <p className="text-2xl font-bold text-cyan-400">{Math.round(overallProgress)}%</p>
+                </div>
+                <div className="h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-700">
+                  <div
+                    className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500 transition-all duration-300"
+                    style={{ width: `${overallProgress}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Current Step Details */}
+            {currentStepIndex >= 0 && currentStepIndex < flatSteps.length && (
               <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-2xl blur opacity-50" />
-                <div className="relative bg-black/40 backdrop-blur-xl border border-cyan-500/50 rounded-2xl p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-cyan-400 font-semibold">PROCESSING FILE</p>
-                      <p className="text-lg font-bold text-white mt-1">{fileName}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-3xl font-bold text-cyan-400">{processingProgress}%</p>
-                      <p className="text-xs text-gray-400">Step {currentStep + 1}/{processingSteps.length}</p>
-                    </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-2xl blur opacity-50" />
+                <div className="relative bg-black/40 backdrop-blur-xl border border-blue-500/50 rounded-2xl p-6">
+                  <p className="text-xs uppercase text-blue-400 font-bold tracking-wider mb-2">Current Task</p>
+                  <p className="text-lg font-bold text-white mb-4">
+                    {flatSteps[currentStepIndex].name}
+                  </p>
+                  <p className="text-xs text-gray-400 mb-3">
+                    {flatSteps[currentStepIndex].category}
+                  </p>
+                  <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all duration-100"
+                      style={{ width: `${(stepProgress / (flatSteps[currentStepIndex].duration * 1000 / 30)) * 100}%` }}
+                    />
                   </div>
                 </div>
               </div>
+            )}
+          </div>
 
-              {/* Processing Steps */}
-              <div className="space-y-3">
-                {processingSteps.map((step, index) => {
-                  const stepProgress = processingProgress / 20;
-                  const isActive = index <= stepProgress;
-                  const isCurrentStep = index === Math.floor(stepProgress);
-
-                  return (
-                    <div key={index} className="relative group">
-                      <div className={`absolute inset-0 bg-gradient-to-r from-blue-500/20 to-violet-500/20 rounded-xl blur transition-opacity ${
-                        isActive ? 'opacity-50' : 'opacity-0'
-                      }`} />
-                      
-                      <div className={`relative bg-black/40 backdrop-blur-lg border rounded-xl p-4 transition-all ${
-                        isActive ? 'border-blue-500/50 bg-blue-500/10' : 'border-gray-700/50'
-                      }`}>
-                        <div className="flex items-center gap-4">
-                          <div className={`text-2xl transition-transform ${
-                            isCurrentStep ? 'animate-spin' : ''
-                          }`}>
-                            {step.icon}
-                          </div>
-                          <div className="flex-1">
-                            <p className={`font-semibold transition-colors ${
-                              isActive ? 'text-blue-400' : 'text-gray-400'
-                            }`}>
-                              {step.name}
-                            </p>
-                          </div>
-                          {isCurrentStep && (
-                            <div className="flex items-center gap-2">
-                              <Zap className="w-4 h-4 text-yellow-400 animate-pulse" />
-                              <span className="text-xs text-yellow-400 font-semibold">ACTIVE</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Step Progress Bar */}
-                        <div className="mt-3 h-1 bg-gray-800 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full transition-all duration-300"
-                            style={{
-                              width: isCurrentStep ? `${(stepProgress % 1) * 100}%` : isActive ? '100%' : '0%'
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Overall Progress */}
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-2xl blur opacity-50" />
-                <div className="relative bg-black/40 backdrop-blur-xl border border-cyan-500/50 rounded-2xl p-6">
-                  <p className="text-sm text-gray-400 mb-3">Overall Progress</p>
-                  <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500 rounded-full transition-all duration-300"
-                      style={{ width: `${processingProgress}%` }}
-                    />
+          {/* Right: Sidebar */}
+          <div className="space-y-4">
+            {/* Stats */}
+            {phase === 'idle' && (
+              <div className="space-y-4">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-2xl blur opacity-50" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 text-center hover:border-blue-500/50 transition-all">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Total Tasks</p>
+                    <p className="text-4xl font-bold text-blue-400">{totalSteps}</p>
                   </div>
-                  <p className="text-xs text-gray-400 mt-3">
-                    Analyzing geometry, optimizing topology, and rendering final mesh...
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-violet-600/20 rounded-2xl blur opacity-50" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 text-center hover:border-purple-500/50 transition-all">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Est. Time Saved</p>
+                    <p className="text-4xl font-bold text-purple-400">63%</p>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-cyan-600/20 rounded-2xl blur opacity-50" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 text-center hover:border-cyan-500/50 transition-all">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Est. Duration</p>
+                    <p className="text-2xl font-bold text-cyan-400">{Math.round(totalDuration / 60)}m {totalDuration % 60}s</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {phase === 'running' && (
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl blur opacity-50" />
+                <div className="relative bg-black/40 backdrop-blur-xl border border-yellow-500/50 rounded-2xl p-6 text-center">
+                  <p className="text-xs text-yellow-400 uppercase font-bold tracking-wider mb-3">Pipeline Running</p>
+                  <div className="flex justify-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+                  </div>
+                  <p className="text-sm text-gray-300">
+                    Step {currentStepIndex + 1} of {totalSteps}
                   </p>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {uploadPhase === 'complete' && (
-            <div className="space-y-8">
-              {/* Success Header */}
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 rounded-2xl blur opacity-50" />
-                <div className="relative bg-black/40 backdrop-blur-xl border border-emerald-500/50 rounded-2xl p-8 text-center">
-                  <div className="text-6xl mb-4 animate-bounce">✨</div>
-                  <h2 className="text-3xl font-bold text-emerald-400 mb-2">Optimization Complete!</h2>
-                  <p className="text-gray-400">Your model has been processed and optimized</p>
-                </div>
-              </div>
-
-              {/* Before/After Comparison Slider */}
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-violet-500/20 rounded-3xl blur opacity-50 group-hover:opacity-75 transition-opacity" />
-                
-                <div className="relative bg-black/40 backdrop-blur-xl border border-gray-700/50 rounded-3xl overflow-hidden">
-                  <div className="relative h-96 md:h-[500px] overflow-hidden">
-                    {/* Before */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
-                      <div className="text-center">
-                        <div className="text-9xl opacity-30 animate-pulse">📦</div>
-                        <p className="text-gray-500 text-sm mt-4">Original Model</p>
-                        <p className="text-gray-600 text-xs">2,400,000 Polygons • 380 MB</p>
-                      </div>
-                      <div className="absolute top-4 left-4 bg-black/60 backdrop-blur px-3 py-1 rounded-lg">
-                        <p className="text-xs font-semibold text-orange-400">BEFORE</p>
-                      </div>
-                    </div>
-
-                    {/* After (with slider) */}
-                    <div
-                      className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-emerald-900/20 to-black overflow-hidden"
-                      style={{ width: `${sliderPosition}%` }}
-                    >
-                      <div className="text-center absolute inset-0 flex items-center justify-center">
-                        <div>
-                          <div className="text-9xl opacity-30 animate-pulse">✨</div>
-                          <p className="text-gray-400 text-sm mt-4">Optimized Model</p>
-                          <p className="text-gray-500 text-xs">142,000 Polygons • 22.5 MB</p>
-                        </div>
-                        <div className="absolute top-4 left-4 bg-black/60 backdrop-blur px-3 py-1 rounded-lg">
-                          <p className="text-xs font-semibold text-emerald-400">AFTER</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Slider Handle */}
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={sliderPosition}
-                      onChange={(e) => setSliderPosition(Number(e.target.value))}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-col-resize z-20"
-                    />
-                    <div
-                      className="absolute top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 to-blue-600 cursor-col-resize"
-                      style={{ left: `${sliderPosition}%` }}
-                    >
-                      <div className="absolute top-1/2 -translate-y-1/2 -translate-x-2 w-8 h-8 bg-cyan-400 rounded-full flex items-center justify-center shadow-lg">
-                        <div className="flex gap-1">
-                          <div className="w-0.5 h-3 bg-black rounded" />
-                          <div className="w-0.5 h-3 bg-black rounded" />
-                        </div>
-                      </div>
-                    </div>
+            {phase === 'complete' && (
+              <div className="space-y-4">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 rounded-2xl blur opacity-50" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-emerald-500/50 rounded-2xl p-6 text-center">
+                    <p className="text-3xl mb-3">✨</p>
+                    <p className="text-sm font-bold text-emerald-400 mb-4">Pipeline Complete!</p>
+                    <p className="text-xs text-gray-400">All {totalSteps} tasks automated</p>
                   </div>
+                </div>
 
-                  <div className="p-4 border-t border-gray-700/50 text-center">
-                    <p className="text-xs text-gray-500">Drag the slider to compare before and after</p>
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-cyan-600/20 rounded-2xl blur opacity-50" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-cyan-500/50 rounded-2xl p-6 text-center">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Workflow Acceleration</p>
+                    <p className="text-4xl font-bold text-cyan-400">{timeSaved}%</p>
+                    <p className="text-xs text-gray-500 mt-2">Time saved vs manual process</p>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-violet-600/20 rounded-2xl blur opacity-50" />
+                  <div className="relative bg-black/40 backdrop-blur-xl border border-violet-500/50 rounded-2xl p-6 text-center">
+                    <p className="text-2xl font-bold text-violet-400 mb-2">{totalSteps}</p>
+                    <p className="text-xs text-gray-400 uppercase tracking-wider">Tasks Automated</p>
                   </div>
                 </div>
               </div>
+            )}
 
-              {/* Results Summary */}
-              <div className="grid md:grid-cols-4 gap-4">
-                {[
-                  { label: 'Polygon Reduction', value: '94.1%', icon: '📉', color: 'from-blue-500 to-blue-600' },
-                  { label: 'File Size Reduction', value: '94.1%', icon: '💾', color: 'from-purple-500 to-purple-600' },
-                  { label: 'Render Speed', value: '17.1x', icon: '⚡', color: 'from-cyan-500 to-cyan-600' },
-                  { label: 'Quality Preserved', value: '96%', icon: '✨', color: 'from-emerald-500 to-emerald-600' },
-                ].map((item, i) => (
-                  <div key={i} className="group relative">
-                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} rounded-2xl blur opacity-0 group-hover:opacity-75 transition-opacity`} />
-                    <div className="relative bg-black/40 backdrop-blur-lg border border-gray-700/50 rounded-2xl p-6 text-center group-hover:border-gray-600 transition-all">
-                      <div className="text-3xl mb-2">{item.icon}</div>
-                      <p className="text-sm text-gray-400 mb-2">{item.label}</p>
-                      <p className={`text-3xl font-bold bg-gradient-to-r ${item.color} bg-clip-text text-transparent`}>
-                        {item.value}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+            {/* Control Buttons */}
+            <div className="space-y-3">
+              {phase === 'idle' && (
                 <button
-                  onClick={resetDemo}
-                  className="group relative inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl font-semibold text-white overflow-hidden hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transition-all"
+                  onClick={handleStart}
+                  className="w-full group relative px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl font-bold text-white overflow-hidden hover:shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center justify-center gap-2"
                 >
-                  <RotateCcw className="w-5 h-5" />
-                  Try Another Model
+                  <Play className="w-5 h-5" />
+                  Start Pipeline
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
                 </button>
+              )}
 
+              {(phase === 'running' || phase === 'complete') && (
                 <button
-                  onClick={() => window.history.back()}
-                  className="group relative inline-flex items-center gap-2 px-8 py-4 bg-gray-800 border-2 border-gray-700 rounded-xl font-semibold text-white overflow-hidden hover:border-blue-500 hover:bg-gray-900 transition-all"
+                  onClick={handleReset}
+                  className="w-full group relative px-6 py-4 bg-gray-800 border-2 border-gray-700 rounded-xl font-bold text-white overflow-hidden hover:border-violet-500 hover:bg-gray-900 transition-all flex items-center justify-center gap-2"
                 >
-                  Back to Homepage
+                  <RotateCcw className="w-5 h-5" />
+                  Reset Pipeline
                 </button>
-              </div>
+              )}
+
+              {phase === 'complete' && (
+                <button className="w-full group relative px-6 py-4 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl font-bold text-white overflow-hidden hover:shadow-2xl hover:shadow-emerald-500/50 transition-all flex items-center justify-center gap-2">
+                  <Download className="w-5 h-5" />
+                  Download Report
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
+                </button>
+              )}
+
+              <button
+                onClick={() => window.history.back()}
+                className="w-full px-6 py-3 bg-gray-800/50 border border-gray-700 rounded-xl font-semibold text-gray-300 hover:bg-gray-800 hover:border-gray-600 transition-all"
+              >
+                Back Home
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
       <style>{`
         @keyframes gridMove {
           0% { transform: translateY(0); }
-          100% { transform: translateY(60px); }
+          100% { transform: translateY(50px); }
         }
       `}</style>
     </div>
