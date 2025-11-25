@@ -3,6 +3,7 @@ import { Upload, X } from 'lucide-react';
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
 export interface UploadedModel {
   object: THREE.Group | THREE.Object3D;
@@ -228,6 +229,62 @@ export default function ModelUploader({ onModelUpload }: ModelUploaderProps) {
                 format: extension as string
               });
             });
+          } else if (extension === 'fbx') {
+            try {
+              const fbxLoader = new FBXLoader();
+              const arrayBuffer = content instanceof ArrayBuffer ? content : new TextEncoder().encode(content as string).buffer;
+              const object = fbxLoader.parse(arrayBuffer);
+              
+              // Validate and sanitize geometry
+              validateAndSanitizeGeometry(object);
+
+              // Auto-center and scale with NaN checks
+              try {
+                const box = new THREE.Box3().setFromObject(object);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                
+                if (!isFinite(center.x) || !isFinite(center.y) || !isFinite(center.z) ||
+                    !isFinite(size.x) || !isFinite(size.y) || !isFinite(size.z)) {
+                  throw new Error('Invalid model dimensions detected');
+                }
+                
+                const maxDim = Math.max(size.x, size.y, size.z);
+                if (maxDim === 0 || !isFinite(maxDim)) {
+                  throw new Error('Model has zero dimensions');
+                }
+                
+                const scale = 4 / maxDim;
+                if (!isFinite(scale)) {
+                  throw new Error('Invalid scaling calculation');
+                }
+
+                object.position.sub(center);
+                object.scale.multiplyScalar(scale);
+
+                resolve({
+                  object,
+                  name: file.name,
+                  format: 'fbx'
+                });
+              } catch (err) {
+                console.warn('Failed to center/scale FBX model, using fallback:', err);
+                const fallback = createFallbackGeometry();
+                resolve({
+                  object: fallback,
+                  name: file.name,
+                  format: 'fbx'
+                });
+              }
+            } catch (err) {
+              console.warn('FBX parsing failed, using fallback:', err);
+              const fallback = createFallbackGeometry();
+              resolve({
+                object: fallback,
+                name: file.name,
+                format: 'fbx'
+              });
+            }
           } else {
             const fallback = createFallbackGeometry();
             resolve({
