@@ -8,6 +8,11 @@ export interface UploadedModel {
   object: THREE.Group | THREE.Object3D;
   name: string;
   format: string;
+  stats?: {
+    polygons: number;
+    fileSize: string;
+    meshes: number;
+  };
 }
 
 interface ModelUploaderProps {
@@ -52,6 +57,24 @@ const createFallbackGeometry = (): THREE.Group => {
   const mesh = new THREE.Mesh(geometry, material);
   group.add(mesh);
   return group;
+};
+
+// Calculate model statistics
+const calculateModelStats = (object: THREE.Object3D): { polygons: number; meshes: number } => {
+  let polygons = 0;
+  let meshes = 0;
+
+  object.traverse((child) => {
+    if (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry) {
+      meshes++;
+      const posAttr = child.geometry.attributes.position;
+      if (posAttr && posAttr.array instanceof Float32Array) {
+        polygons += posAttr.count / 3;
+      }
+    }
+  });
+
+  return { polygons: Math.round(polygons), meshes };
 };
 
 export default function ModelUploader({ onModelUpload }: ModelUploaderProps) {
