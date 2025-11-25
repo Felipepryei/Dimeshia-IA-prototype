@@ -10,6 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "fflate": "^0.8.2",
+    "three-obj-mtl-loader": "^1.0.3",
     "three-stdlib": "^2.36.1"
   }
 }

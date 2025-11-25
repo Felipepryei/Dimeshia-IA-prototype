@@ -1,11 +1,14 @@
 import { useState, useEffect, Suspense } from 'react';
 import { ChevronLeft, Play, Pause, RotateCcw, Download } from 'lucide-react';
 import RealisticModel3D from './RealisticModel3D';
+import ModelUploader from './ModelUploader';
+import type { UploadedModel } from './ModelUploader';
 
 export default function LiveTechShowcase() {
   const [currentSection, setCurrentSection] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [sectionProgress, setSectionProgress] = useState(0);
+  const [uploadedModel, setUploadedModel] = useState<UploadedModel | null>(null);
 
   const sections = [
     { id: 'scan', name: 'Model Scan & Validation', duration: 8 },
@@ -56,15 +59,15 @@ export default function LiveTechShowcase() {
 
     switch (sections[currentSection].id) {
       case 'scan':
-        return <ScanValidation progress={progress} />;
+        return <ScanValidation progress={progress} uploadedModel={uploadedModel} />;
       case 'cleanup':
-        return <MeshCleanup progress={progress} />;
+        return <MeshCleanup progress={progress} uploadedModel={uploadedModel} />;
       case 'uv':
-        return <UVAutomation progress={progress} />;
+        return <UVAutomation progress={progress} uploadedModel={uploadedModel} />;
       case 'export':
-        return <PipelineIntegration progress={progress} />;
+        return <PipelineIntegration progress={progress} uploadedModel={uploadedModel} />;
       case 'render':
-        return <RenderPrep progress={progress} />;
+        return <RenderPrep progress={progress} uploadedModel={uploadedModel} />;
       case 'summary':
         return <SummaryReport />;
       default:
@@ -101,6 +104,17 @@ export default function LiveTechShowcase() {
             DIMESHIA AI Pipeline
           </h1>
           <p className="text-gray-400 mt-2">Real-time 3D Workflow Automation Engine</p>
+        </div>
+
+        {/* Model Uploader Section */}
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur opacity-30" />
+            <div className="relative bg-black/40 backdrop-blur-xl border border-green-600/30 rounded-2xl p-6">
+              <h2 className="text-sm font-semibold text-green-400 mb-4">Upload Your 3D Model</h2>
+              <ModelUploader onModelUpload={setUploadedModel} />
+            </div>
+          </div>
         </div>
 
         {/* Main Visualization */}
@@ -217,7 +231,7 @@ export default function LiveTechShowcase() {
   );
 }
 
-function ScanValidation({ progress }: { progress: number }) {
+function ScanValidation({ progress, uploadedModel }: { progress: number; uploadedModel?: UploadedModel | null }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
       {/* Realistic 3D Model Viewport */}

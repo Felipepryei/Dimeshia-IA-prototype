@@ -1,15 +1,34 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { PerspectiveCamera, Environment, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-function RealisticCharacter({ showNgons = false, showWireframe = false }: { showNgons?: boolean; showWireframe?: boolean }) {
+interface UploadedModel {
+  object: THREE.Group | THREE.Object3D;
+  name: string;
+  format: string;
+}
+
+function RealisticCharacter({ showNgons = false, showWireframe = false, uploadedModel }: { showNgons?: boolean; showWireframe?: boolean; uploadedModel?: UploadedModel | null }) {
   const groupRef = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    if (uploadedModel && groupRef.current) {
+      // Clear existing children
+      while (groupRef.current.children.length > 0) {
+        groupRef.current.remove(groupRef.current.children[0]);
+      }
+      // Add uploaded model
+      groupRef.current.add(uploadedModel.object.clone());
+    }
+  }, [uploadedModel]);
 
   useFrame(() => {
     if (groupRef.current) {
       groupRef.current.rotation.y += 0.004;
-      groupRef.current.position.y = Math.sin(Date.now() * 0.001) * 0.2;
+      if (!uploadedModel) {
+        groupRef.current.position.y = Math.sin(Date.now() * 0.001) * 0.2;
+      }
     }
   });
 
@@ -241,7 +260,7 @@ function RealisticCharacter({ showNgons = false, showWireframe = false }: { show
   );
 }
 
-export default function RealisticModel3D({ showNgons = false, showWireframe = false }: { showNgons?: boolean; showWireframe?: boolean }) {
+export default function RealisticModel3D({ showNgons = false, showWireframe = false, uploadedModel }: { showNgons?: boolean; showWireframe?: boolean; uploadedModel?: UploadedModel | null }) {
   return (
     <div className="w-full h-full rounded-xl overflow-hidden border border-gray-700 bg-gray-950">
       <Canvas>
@@ -252,7 +271,7 @@ export default function RealisticModel3D({ showNgons = false, showWireframe = fa
         <pointLight position={[-5, 5, 5]} intensity={0.8} color="#6366F1" />
         <pointLight position={[5, 3, -5]} intensity={0.6} color="#8B5CF6" />
         
-        <RealisticCharacter showNgons={showNgons} showWireframe={showWireframe} />
+        <RealisticCharacter showNgons={showNgons} showWireframe={showWireframe} uploadedModel={uploadedModel} />
         
         <OrbitControls enableZoom={true} autoRotate autoRotateSpeed={3} enablePan={false} />
         <gridHelper args={[10, 10]} position={[0, -2, 0]} />
