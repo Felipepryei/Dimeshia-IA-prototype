@@ -280,42 +280,26 @@ function MeshCleanup({ progress }: { progress: number }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <div className="grid md:grid-cols-2 gap-6 flex-1">
-        {/* Before */}
-        <div className="bg-gray-950 border border-gray-800 rounded-2xl p-6 flex flex-col">
-          <h3 className="text-red-400 font-bold text-sm mb-4">BEFORE</h3>
-          <div className="flex-1 flex items-center justify-center">
-            <svg width="150" height="150" viewBox="0 0 100 100">
-              {[...Array(20)].map((_, i) => (
-                <path
-                  key={i}
-                  d={`M${Math.random() * 100} ${Math.random() * 100} L${Math.random() * 100} ${Math.random() * 100}`}
-                  stroke="#EF4444"
-                  strokeWidth="0.5"
-                  opacity="0.6"
-                />
-              ))}
-            </svg>
+        {/* Before - With N-gons visualization */}
+        <div className="bg-gray-950 border border-red-800/50 rounded-2xl p-6 flex flex-col">
+          <h3 className="text-red-400 font-bold text-sm mb-4">BEFORE - With N-gons</h3>
+          <div className="flex-1 relative">
+            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
+              <RealisticModel3D showNgons={true} />
+            </Suspense>
           </div>
-          <div className="text-xs text-red-400 text-center">N-gons: 247 | Topology Issues: 42</div>
+          <div className="text-xs text-red-400 text-center mt-2">N-gons: 247 | Topology Issues: 42</div>
         </div>
 
-        {/* After */}
-        <div className="bg-gray-950 border border-gray-800 rounded-2xl p-6 flex flex-col">
-          <h3 className="text-green-400 font-bold text-sm mb-4">AFTER</h3>
-          <div className="flex-1 flex items-center justify-center">
-            <svg width="150" height="150" viewBox="0 0 100 100">
-              {[...Array(20)].map((_, i) => (
-                <path
-                  key={i}
-                  d={`M${50 + Math.cos(i * Math.PI / 10) * 40} ${50 + Math.sin(i * Math.PI / 10) * 40} L${50 + Math.cos((i + 1) * Math.PI / 10) * 40} ${50 + Math.sin((i + 1) * Math.PI / 10) * 40}`}
-                  stroke="#10B981"
-                  strokeWidth="0.5"
-                  opacity={0.6 + 0.4 * Math.sin(Date.now() / 300 + i)}
-                />
-              ))}
-            </svg>
+        {/* After - Clean model */}
+        <div className="bg-gray-950 border border-green-800/50 rounded-2xl p-6 flex flex-col">
+          <h3 className="text-green-400 font-bold text-sm mb-4">AFTER - Cleaned</h3>
+          <div className="flex-1 relative">
+            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
+              <RealisticModel3D showNgons={false} />
+            </Suspense>
           </div>
-          <div className="text-xs text-green-400 text-center">N-gons: 0 | Topology: Clean</div>
+          <div className="text-xs text-green-400 text-center mt-2">N-gons: 0 | Topology: Clean</div>
         </div>
       </div>
 
@@ -348,13 +332,20 @@ function MeshCleanup({ progress }: { progress: number }) {
 function UVAutomation({ progress }: { progress: number }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
+      {/* 3D Model with UV visualization */}
+      <div className="flex-1 relative">
+        <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
+          <RealisticModel3D showNgons={false} />
+        </Suspense>
+      </div>
+
       {/* UV Tiles Grid */}
-      <div className="flex-1 bg-gray-950 border border-gray-800 rounded-2xl p-6">
-        <div className="grid grid-cols-5 gap-2 h-full">
+      <div className="bg-gray-950 border border-gray-800 rounded-2xl p-4">
+        <div className="grid grid-cols-5 gap-2">
           {[1001, 1002, 1003, 1004, 1005].map((udim, i) => (
             <div
               key={i}
-              className={`rounded-lg border-2 flex items-center justify-center font-bold text-sm transition-all transform ${
+              className={`rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all transform ${
                 progress >= 20 * (i + 1)
                   ? 'bg-blue-500/40 border-blue-400 text-blue-300 scale-105'
                   : 'bg-gray-800/50 border-gray-700 text-gray-400'
@@ -398,51 +389,60 @@ function UVAutomation({ progress }: { progress: number }) {
 function PipelineIntegration({ progress }: { progress: number }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
-      {/* Export Formats */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { format: 'FBX', icon: '📦', active: progress >= 25 },
-          { format: 'GLB', icon: '📦', active: progress >= 50 },
-          { format: 'USDZ', icon: '📦', active: progress >= 75 },
-        ].map((fmt, i) => (
-          <div
-            key={i}
-            className={`rounded-lg border-2 p-4 text-center transition-all ${
-              fmt.active
-                ? 'bg-emerald-500/30 border-emerald-500 text-emerald-300'
-                : 'bg-gray-800/50 border-gray-700 text-gray-400'
-            }`}
-          >
-            <div className="text-2xl mb-2">{fmt.icon}</div>
-            <div className="text-sm font-bold">{fmt.format}</div>
-          </div>
-        ))}
+      {/* 3D Model Preview */}
+      <div className="flex-1 relative">
+        <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
+          <RealisticModel3D showNgons={false} />
+        </Suspense>
       </div>
 
-      {/* Pipeline Steps */}
-      <div className="flex-1 space-y-3">
-        {[
-          'Folder Structure Generation',
-          'Auto File Renaming',
-          'Format Conversion Pipeline',
-          'Texture Validation',
-        ].map((step, i) => (
-          <div
-            key={i}
-            className={`px-4 py-3 rounded-lg border transition-all ${
-              progress >= 25 * (i + 1)
-                ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300'
-                : progress >= 25 * i
-                ? 'bg-blue-500/20 border-blue-500 text-blue-300'
-                : 'bg-gray-800/50 border-gray-700 text-gray-400'
-            }`}
-          >
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-semibold">{step}</span>
-              {progress >= 25 * (i + 1) && <span className="text-green-400">✓</span>}
+      {/* Export Formats & Pipeline Steps */}
+      <div className="space-y-3">
+        {/* Export Formats */}
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { format: 'FBX', icon: '📦', active: progress >= 25 },
+            { format: 'GLB', icon: '📦', active: progress >= 50 },
+            { format: 'USDZ', icon: '📦', active: progress >= 75 },
+          ].map((fmt, i) => (
+            <div
+              key={i}
+              className={`rounded-lg border-2 p-3 text-center transition-all ${
+                fmt.active
+                  ? 'bg-emerald-500/30 border-emerald-500 text-emerald-300'
+                  : 'bg-gray-800/50 border-gray-700 text-gray-400'
+              }`}
+            >
+              <div className="text-xl mb-1">{fmt.icon}</div>
+              <div className="text-xs font-bold">{fmt.format}</div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Pipeline Steps */}
+        <div className="space-y-2">
+          {[
+            'Folder Structure Generation',
+            'Auto File Renaming',
+            'Format Conversion Pipeline',
+          ].map((step, i) => (
+            <div
+              key={i}
+              className={`px-3 py-2 rounded-lg border text-xs transition-all ${
+                progress >= 33 * (i + 1)
+                  ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300'
+                  : progress >= 33 * i
+                  ? 'bg-blue-500/20 border-blue-500 text-blue-300'
+                  : 'bg-gray-800/50 border-gray-700 text-gray-400'
+              }`}
+            >
+              <div className="flex justify-between items-center">
+                <span className="font-semibold">{step}</span>
+                {progress >= 33 * (i + 1) && <span className="text-green-400">✓</span>}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -451,44 +451,53 @@ function PipelineIntegration({ progress }: { progress: number }) {
 function RenderPrep({ progress }: { progress: number }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
-      {/* Render Elements */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { name: 'Auto Lighting', icon: '💡', active: progress >= 33 },
-          { name: 'Camera Setup', icon: '📷', active: progress >= 66 },
-          { name: 'Scene Org', icon: '📑', active: progress >= 100 },
-        ].map((elem, i) => (
-          <div
-            key={i}
-            className={`rounded-lg border-2 p-4 text-center transition-all ${
-              elem.active
-                ? 'bg-violet-500/30 border-violet-500 text-violet-300'
-                : 'bg-gray-800/50 border-gray-700 text-gray-400'
-            }`}
-          >
-            <div className="text-3xl mb-2">{elem.icon}</div>
-            <div className="text-sm font-bold">{elem.name}</div>
-          </div>
-        ))}
+      {/* 3D Model with lighting preview */}
+      <div className="flex-1 relative">
+        <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
+          <RealisticModel3D showNgons={false} />
+        </Suspense>
       </div>
 
-      {/* Render Settings */}
-      <div className="flex-1 space-y-3">
-        {[
-          { setting: 'Light Rig: 3-point + Fill', level: progress },
-          { setting: 'Camera: 35mm Wide', level: Math.max(0, progress - 33) },
-          { setting: 'Render: Path Tracer 512spp', level: Math.max(0, progress - 66) },
-        ].map((item, i) => (
-          <div key={i} className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
-            <div className="text-xs text-gray-300 font-semibold mb-2">{item.setting}</div>
-            <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-violet-500 to-purple-500"
-                style={{ width: `${Math.min(item.level, 100)}%` }}
-              />
+      {/* Render Elements & Settings */}
+      <div className="space-y-3">
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { name: 'Auto Lighting', icon: '💡', active: progress >= 33 },
+            { name: 'Camera Setup', icon: '📷', active: progress >= 66 },
+            { name: 'Scene Org', icon: '📑', active: progress >= 100 },
+          ].map((elem, i) => (
+            <div
+              key={i}
+              className={`rounded-lg border-2 p-3 text-center transition-all ${
+                elem.active
+                  ? 'bg-violet-500/30 border-violet-500 text-violet-300'
+                  : 'bg-gray-800/50 border-gray-700 text-gray-400'
+              }`}
+            >
+              <div className="text-2xl mb-1">{elem.icon}</div>
+              <div className="text-xs font-bold">{elem.name}</div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Render Settings */}
+        <div className="space-y-2">
+          {[
+            { setting: 'Light Rig: 3-point + Fill', level: progress },
+            { setting: 'Camera: 35mm Wide', level: Math.max(0, progress - 33) },
+            { setting: 'Render: Path Tracer 512spp', level: Math.max(0, progress - 66) },
+          ].map((item, i) => (
+            <div key={i} className="bg-gray-900/50 border border-gray-800 rounded-lg p-2">
+              <div className="text-xs text-gray-300 font-semibold mb-1">{item.setting}</div>
+              <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-violet-500 to-purple-500"
+                  style={{ width: `${Math.min(item.level, 100)}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

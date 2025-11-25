@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { PerspectiveCamera, Environment, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-function RealisticCharacter() {
+function RealisticCharacter({ showNgons = false }: { showNgons?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
@@ -156,25 +156,86 @@ function RealisticCharacter() {
         <boxGeometry args={[0.3, 0.15, 0.05]} />
         <meshStandardMaterial color="#A0826D" roughness={0.6} metalness={0} />
       </mesh>
+
+      {/* N-GONS VISUALIZATION - Red lines showing problematic geometry */}
+      {showNgons && (
+        <>
+          {/* Ngon indicators on torso */}
+          <lineSegments position={[0, 1.2, 0]}>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={12}
+                array={new Float32Array([
+                  -0.3, 0, 0, -0.2, 0.3, 0.1,
+                  -0.2, 0.3, 0.1, 0.2, 0.25, 0.15,
+                  0.2, 0.25, 0.15, 0.4, 0.1, 0.05,
+                  0.4, 0.1, 0.05, 0.3, -0.2, -0.1,
+                  0.3, -0.2, -0.1, -0.1, -0.3, -0.1,
+                  -0.1, -0.3, -0.1, -0.3, 0, 0,
+                ])}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#FF4444" linewidth={2} />
+          </lineSegments>
+
+          {/* Ngon indicators on arms */}
+          <lineSegments position={[-1.1, 1.5, 0]}>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={8}
+                array={new Float32Array([
+                  -0.2, 0.3, 0, 0, 0.4, 0.1,
+                  0, 0.4, 0.1, 0.2, 0.2, 0,
+                  0.2, 0.2, 0, 0.1, -0.3, -0.1,
+                  0.1, -0.3, -0.1, -0.2, 0.3, 0,
+                ])}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#FF4444" linewidth={2} />
+          </lineSegments>
+
+          {/* Ngon indicators on legs */}
+          <lineSegments position={[-0.35, 0.5, 0]}>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={8}
+                array={new Float32Array([
+                  -0.15, 0.3, 0.05, 0.15, 0.35, -0.05,
+                  0.15, 0.35, -0.05, 0.2, 0.1, 0.1,
+                  0.2, 0.1, 0.1, 0.05, -0.25, -0.1,
+                  0.05, -0.25, -0.1, -0.15, 0.3, 0.05,
+                ])}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#FF4444" linewidth={2} />
+          </lineSegments>
+        </>
+      )}
     </group>
   );
 }
 
-export default function RealisticModel3D() {
+export default function RealisticModel3D({ showNgons = false }: { showNgons?: boolean }) {
   return (
     <div className="w-full h-full rounded-xl overflow-hidden border border-gray-700 bg-gray-950">
       <Canvas>
-          <PerspectiveCamera makeDefault position={[0, 1, 5]} fov={45} />
-          <Environment preset="studio" />
-          <ambientLight intensity={1} color="#ffffff" />
-          <directionalLight position={[8, 12, 8]} intensity={1.2} color="#ffffff" castShadow />
-          <pointLight position={[-5, 5, 5]} intensity={0.8} color="#6366F1" />
-          <pointLight position={[5, 3, -5]} intensity={0.6} color="#8B5CF6" />
-          
-          <RealisticCharacter />
-          
-          <OrbitControls enableZoom={true} autoRotate autoRotateSpeed={3} enablePan={false} />
-          <gridHelper args={[10, 10]} position={[0, -2, 0]} />
+        <PerspectiveCamera makeDefault position={[0, 1, 5]} fov={45} />
+        <Environment preset="studio" />
+        <ambientLight intensity={1} color="#ffffff" />
+        <directionalLight position={[8, 12, 8]} intensity={1.2} color="#ffffff" castShadow />
+        <pointLight position={[-5, 5, 5]} intensity={0.8} color="#6366F1" />
+        <pointLight position={[5, 3, -5]} intensity={0.6} color="#8B5CF6" />
+        
+        <RealisticCharacter showNgons={showNgons} />
+        
+        <OrbitControls enableZoom={true} autoRotate autoRotateSpeed={3} enablePan={false} />
+        <gridHelper args={[10, 10]} position={[0, -2, 0]} />
       </Canvas>
     </div>
   );
