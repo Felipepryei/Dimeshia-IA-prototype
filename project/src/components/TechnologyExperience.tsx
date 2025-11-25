@@ -530,7 +530,7 @@ export default function TechnologyExperience() {
 
               {/* Processing Info */}
               <div className="bg-gray-900/50 rounded-2xl p-8 space-y-4 md:col-span-1">
-              {uploadedFileName ? (
+                {uploadedFileName ? (
                 <>
                   <div className="bg-green-900/30 border border-green-700/50 rounded-xl p-4">
                     <p className="text-sm text-gray-400">Uploaded File</p>
@@ -668,13 +668,14 @@ export default function TechnologyExperience() {
                     </div>
                   )}
                 </>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full py-8">
-                  <p className="text-gray-500 text-center">Upload a file to see real-time optimization</p>
-                </div>
-              )}
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full py-8">
+                    <p className="text-gray-500 text-center">Upload a file to see real-time optimization</p>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Optimized Model Viewer */}
           {uploadedFile && !isProcessing && processProgress === 100 && (
