@@ -5,6 +5,11 @@ export default function TechnologyExperience() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processProgress, setProcessProgress] = useState(0);
   const [expandedModel, setExpandedModel] = useState<number | null>(null);
+  const [uploadedModelData, setUploadedModelData] = useState<{
+    original: { polygons: string; fileSize: string; renderTime: string; memory: string; textures: string };
+    optimized: { polygons: string; fileSize: string; renderTime: string; memory: string; textures: string };
+    reduction: { polygons: string; fileSize: string; renderSpeed: string; memory: string; textureOpt: string };
+  } | null>(null);
 
   const modelData = [
     {
@@ -91,6 +96,11 @@ export default function TechnologyExperience() {
         if (prev >= 100) {
           clearInterval(interval);
           setIsProcessing(false);
+          setUploadedModelData({
+            original: { polygons: '3.2M', fileSize: '520 MB', renderTime: '52ms', memory: '1.4 GB', textures: '128' },
+            optimized: { polygons: '189K', fileSize: '31.4 MB', renderTime: '2.8ms', memory: '92 MB', textures: '20' },
+            reduction: { polygons: '94.1%', fileSize: '93.9%', renderSpeed: '18.6x', memory: '93.4%', textureOpt: '84.4%' }
+          });
           return 100;
         }
         return prev + Math.random() * 25;
@@ -303,17 +313,75 @@ export default function TechnologyExperience() {
                     </>
                   )}
 
-                  {!isProcessing && processProgress === 100 && (
-                    <div className="bg-green-900/20 border border-green-700/50 rounded-xl p-4 space-y-2">
-                      <p className="text-sm text-green-400 font-semibold">✓ Optimization Complete!</p>
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div>
-                          <p className="text-gray-400">Reduction</p>
-                          <p className="font-bold text-green-400">94.2%</p>
+                  {!isProcessing && processProgress === 100 && uploadedModelData && (
+                    <div className="space-y-4">
+                      <div className="bg-green-900/20 border border-green-700/50 rounded-xl p-4">
+                        <p className="text-sm text-green-400 font-semibold">✓ Optimization Complete!</p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-gray-800/40 border border-gray-700/50 rounded-lg p-3">
+                          <p className="text-xs uppercase text-gray-500 font-semibold mb-2">Original Model</p>
+                          <div className="space-y-1 text-xs">
+                            <div>
+                              <p className="text-gray-400">Polygons</p>
+                              <p className="font-bold text-orange-400">{uploadedModelData.original.polygons}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-400">File Size</p>
+                              <p className="font-bold text-orange-400">{uploadedModelData.original.fileSize}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-400">Render Time</p>
+                              <p className="font-bold text-orange-400">{uploadedModelData.original.renderTime}</p>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-gray-400">Time</p>
-                          <p className="font-bold text-cyan-400">42s</p>
+
+                        <div className="bg-green-900/20 border border-green-700/40 rounded-lg p-3">
+                          <p className="text-xs uppercase text-gray-500 font-semibold mb-2">AI Optimized</p>
+                          <div className="space-y-1 text-xs">
+                            <div>
+                              <p className="text-gray-400">Polygons</p>
+                              <p className="font-bold text-green-400">{uploadedModelData.optimized.polygons}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-400">File Size</p>
+                              <p className="font-bold text-green-400">{uploadedModelData.optimized.fileSize}</p>
+                            </div>
+                            <div>
+                              <p className="text-gray-400">Render Time</p>
+                              <p className="font-bold text-cyan-400">{uploadedModelData.optimized.renderTime}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/30 rounded-lg p-3">
+                        <div className="grid grid-cols-3 gap-2">
+                          <div className="text-xs">
+                            <p className="text-gray-400">Polygon Reduction</p>
+                            <p className="font-bold text-blue-400">{uploadedModelData.reduction.polygons}</p>
+                          </div>
+                          <div className="text-xs">
+                            <p className="text-gray-400">Size Reduction</p>
+                            <p className="font-bold text-violet-400">{uploadedModelData.reduction.fileSize}</p>
+                          </div>
+                          <div className="text-xs">
+                            <p className="text-gray-400">Render Speed</p>
+                            <p className="font-bold text-cyan-400">{uploadedModelData.reduction.renderSpeed}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-800/40 border border-gray-700/50 rounded-lg p-3 text-xs space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Memory Saved</span>
+                          <span className="font-bold text-green-400">{uploadedModelData.reduction.memory}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Textures Optimized</span>
+                          <span className="font-bold text-green-400">{uploadedModelData.reduction.textureOpt}</span>
                         </div>
                       </div>
                     </div>
