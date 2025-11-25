@@ -104,50 +104,51 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
 
     setError(null);
     const reader = new FileReader();
+    const fileName = file.name.toLowerCase();
 
     reader.onload = (event) => {
       try {
         const content = event.target?.result;
         if (!content) throw new Error('No file content');
 
-        const fileName = file.name.toLowerCase();
-        let object: THREE.Object3D | null = null;
-
-        try {
-          if (fileName.endsWith('.obj')) {
+        if (fileName.endsWith('.obj')) {
+          // Parse OBJ
+          try {
             const text = typeof content === 'string' ? content : new TextDecoder().decode(content as ArrayBuffer);
             const objLoader = new OBJLoader();
-            object = objLoader.parse(text);
-          } else if (fileName.endsWith('.glb') || fileName.endsWith('.gltf')) {
-            const gltfLoader = new GLTFLoader();
-            const arrayBuffer = content instanceof ArrayBuffer ? content : new TextEncoder().encode(content as string).buffer;
-            gltfLoader.parse(
-              arrayBuffer,
-              '',
-              (gltf) => {
-                object = gltf.scene;
-                applyModel(object);
-              },
-              (err) => {
-                setError('Failed to load GLB/GLTF file');
-                console.error(err);
-              }
-            );
-            return;
-          } else {
-            throw new Error('Unsupported file format. Use OBJ or GLB.');
-          }
-
-          if (object) {
+            const object = objLoader.parse(text);
             applyModel(object);
+          } catch (err) {
+            console.error('OBJ parse error:', err);
+            setError('Could not parse OBJ file. Verify format is correct.');
           }
-        } catch (parseErr) {
-          setError('Failed to parse model file');
-          console.error(parseErr);
+        } else if (fileName.endsWith('.glb') || fileName.endsWith('.gltf')) {
+          // Parse GLTF/GLB
+          const gltfLoader = new GLTFLoader();
+          const arrayBuffer = content instanceof ArrayBuffer ? content : new TextEncoder().encode(content as string).buffer;
+          
+          gltfLoader.parse(
+            arrayBuffer,
+            '',
+            (gltf) => {
+              try {
+                applyModel(gltf.scene);
+              } catch (err) {
+                console.error('Model application error:', err);
+                setError('Failed to apply model to scene');
+              }
+            },
+            (error) => {
+              console.error('GLTF parse error:', error);
+              setError('Could not parse GLB/GLTF file. Verify format is correct.');
+            }
+          );
+        } else {
+          setError('Unsupported format. Use OBJ or GLB.');
         }
       } catch (err) {
+        console.error('File reading error:', err);
         setError('Error reading file');
-        console.error(err);
       }
     };
 
@@ -155,17 +156,17 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
       setError('Failed to read file');
     };
 
-    if (file.name.toLowerCase().endsWith('.glb')) {
+    if (fileName.endsWith('.glb')) {
       reader.readAsArrayBuffer(file);
     } else {
       reader.readAsText(file);
     }
 
     function applyModel(object: THREE.Object3D) {
-      if (!sceneRef.current || !cameraRef.current) return;
+      if (!sceneRef.current || !cameraRef.current || !rendererRef.current) return;
 
-      // Remove old model
-      if (meshRef.current && meshRef.current !== sceneRef.current.children[0]) {
+      // Remove old model if it's not the default
+      if (meshRef.current && meshRef.current !== (sceneRef.current.children.find(child => child instanceof THREE.Mesh))) {
         sceneRef.current.remove(meshRef.current);
       }
 
@@ -193,6 +194,7 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
 
       sceneRef.current.add(object);
       meshRef.current = object;
+      setError(null);
     }
   }, [file, optimized]);
 
