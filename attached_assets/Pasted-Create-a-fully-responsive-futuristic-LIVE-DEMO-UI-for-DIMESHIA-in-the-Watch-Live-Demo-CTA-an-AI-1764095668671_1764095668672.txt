@@ -1,0 +1,122 @@
+Create a fully-responsive, futuristic LIVE DEMO UI for DIMESHIA in the “Watch Live Demo” CTA — an AI agency that automates repetitive 3D tasks and optimizes pipelines for artists and studios.
+
+This demo should NOT showcase rendering or product visuals.  
+Instead, simulate how DIMESHIA automates full 3D workflows exactly like a real production tool.
+
+The experience must feel like a REAL AI engine scanning, analyzing, fixing, and preparing 3D assets.
+
+────────────────────────────
+### SECTION 1 — REAL-TIME MODEL SCAN & VALIDATION
+Create a fake "3D Scan Simulation" screen:
+- Rotating wireframe silhouette (no real model)
+- Pulsing scan lines sweeping vertically
+- Diagnostic HUD overlays
+- Animated mesh grid distortion to simulate analysis
+
+Simulate the following checks with progress bars:
+1. Model Intake & Validation  
+2. Checking topology  
+3. Detecting ngons  
+4. Detecting scale inconsistencies  
+5. Detecting naming errors
+
+Each check should have:
+- Micro-animations  
+- Green checkmarks when complete  
+- Warnings that flash yellow before being auto-fixed  
+
+Visual style: Like Unreal Engine + NVIDIA Omniverse diagnostics.
+
+────────────────────────────
+### SECTION 2 — AUTOMATIC MESH CLEANUP (AI FIX MODULE)
+Show DIMESHIA fixing the issues automatically.
+
+Simulate:
+- Removing ngons (animated topology preview lines)
+- Rebuilding geometry (lines reorganizing like a neural net)
+- Auto-retopology simulation (mesh density drops visually)
+- Smoothing normals (soft glow pulse)
+
+Represent changes with:
+- “BEFORE → AFTER” meters
+- Topology heatmaps shifting from red → green
+- Speed meters (“Processing at 11.5M ops/sec”)
+
+────────────────────────────
+### SECTION 3 — UV & TEXTURE WORKFLOW AUTOMATION
+Simulate a UV automation screen with:
+- Fake UV islands sliding into place
+- UDIM tiles lighting up in sequence (1001 → 1010)
+- Packing animation with elastic transitions
+
+Show automated steps:
+- Auto UV unwrap  
+- UDIM layout generation  
+- UV packing optimization  
+- Detecting + fixing overlapping UVs  
+
+Make it visually satisfying — like a puzzle snapping together.
+
+────────────────────────────
+### SECTION 4 — PIPELINE INTEGRATION & EXPORT
+Simulate DIMESHIA preparing the asset for delivery.
+
+Steps:
+1. Folder structure auto-generation  
+2. Auto renaming using naming conventions  
+3. Format conversions:
+   - FBX → GLB → USDZ (smooth animated icon transitions)
+4. Missing texture scan (flash red → auto resolved)
+
+Next:  
+Show “AI Pipeline Brain” — a flowing neural graph connecting tasks in real time.
+
+────────────────────────────
+### SECTION 5 — RENDER PIPELINE PREP
+Show cinematic automation UI:
+
+- Auto light rig setup (icons of lights appear in sequence)
+- Auto camera presets (UI overlays switch lenses)
+- Scene organization (layers snapping into categories)
+
+Everything must feel FAST, SMART, and AUTOMATIC.
+
+────────────────────────────
+### SECTION 6 — FLOWCHART VIEW (FUTURISTIC)
+Create a “Flowchart View” that lights up each step as the pipeline runs:
+
+[SCAN] → [CLEANUP] → [UV] → [EXPORT] → [RENDER PREP]
+
+Each box should:
+- Glow neon blue when active  
+- Pulse purple when completed  
+- Draw animated nodes connecting steps  
+
+This must feel like a real AI system at work.
+
+────────────────────────────
+### SECTION 7 — FINAL SUMMARY SCREEN
+End with a professional SaaS-style report screen:
+
+- “Workflow Acceleration: +63% Faster Production”
+- “Tasks Automated: 17”
+- “Errors Fixed: 42”
+- “Exported Formats: FBX, GLB, USDZ”
+- CTA Button: “Download Pipeline Report” (fake button)
+
+────────────────────────────
+### DESIGN REQUIREMENTS
+- Dark futuristic UI  
+- Blue & purple neon accents  
+- Glassmorphism panels  
+- Smooth micro-interactions  
+- Fast, elegant transitions  
+- Premium AI SaaS look
+- Code must be fully in **HTML + CSS + JavaScript**
+- No backend  
+- Entire pipeline is simulated visually  
+
+────────────────────────────
+
+Goal:  
+Make DIMESHIA feel like a **real AI automation platform**, trusted by 3D artists and studios, capable of handling entire production pipelines automatically.
