@@ -144,7 +144,7 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
             }
           );
         } else {
-          setError('Unsupported format. Use OBJ or GLB.');
+          setError('Unsupported format. Use OBJ, GLB, GLTF, FBX, Blend, or Max.');
         }
       } catch (err) {
         console.error('File reading error:', err);
