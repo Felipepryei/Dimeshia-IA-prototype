@@ -206,7 +206,7 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
         <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50">
           <div className="text-center px-4">
             <p className="text-sm text-red-400 font-semibold">{error}</p>
-            <p className="text-xs text-red-300 mt-2">Try OBJ or GLB format</p>
+            <p className="text-xs text-red-300 mt-2">Try OBJ, GLB, GLTF, FBX, Blend, or Max format</p>
           </div>
         </div>
       )}
