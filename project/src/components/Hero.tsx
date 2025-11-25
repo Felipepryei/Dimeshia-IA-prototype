@@ -100,7 +100,7 @@ export default function Hero() {
           </button>
 
           <button
-            onClick={() => window.location.href = '?demo=true'}
+            onClick={() => window.location.href = '?demo=tech'}
             className="group relative px-10 py-5 bg-gray-900/50 border-2 border-gray-700 rounded-xl font-semibold text-lg overflow-hidden transition-all duration-300 hover:border-blue-500 hover:bg-gray-900/80 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-105"
           >
             <span className="relative z-10 flex items-center gap-2">

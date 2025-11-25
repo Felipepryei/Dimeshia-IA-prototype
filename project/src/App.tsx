@@ -13,17 +13,23 @@ import DimeshiaServices from './components/DimeshiaServices';
 import ImplementationGuide from './components/ImplementationGuide';
 import Footer from './components/Footer';
 import InteractiveDemo from './components/InteractiveDemo';
+import LiveTechShowcase from './components/LiveTechShowcase';
 
 function App() {
   const [showDemo, setShowDemo] = useState(false);
+  const [demoType, setDemoType] = useState('interactive');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setShowDemo(params.get('demo') === 'true');
+    const demo = params.get('demo');
+    if (demo) {
+      setShowDemo(true);
+      setDemoType(demo === 'tech' ? 'tech' : 'interactive');
+    }
   }, []);
 
   if (showDemo) {
-    return <InteractiveDemo />;
+    return demoType === 'tech' ? <LiveTechShowcase /> : <InteractiveDemo />;
   }
 
   return (
