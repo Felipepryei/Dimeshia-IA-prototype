@@ -100,8 +100,23 @@ export default function ModelViewer3D({ file, modelObject, optimized = false, la
     if (!modelObject || !sceneRef.current || !cameraRef.current) return;
 
     try {
-      const objectClone = modelObject.clone();
-      applyModel(objectClone);
+      // Remove old uploaded models first
+      const meshesToRemove = sceneRef.current.children.filter(
+        (child) => child !== meshRef.current && (child instanceof THREE.Group || (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry))
+      );
+      meshesToRemove.forEach((mesh) => sceneRef.current?.remove(mesh));
+      
+      // Remove default cube if it's the only mesh
+      if (meshRef.current && sceneRef.current.children.length > 0) {
+        const defaultMesh = meshRef.current;
+        if (defaultMesh instanceof THREE.Mesh) {
+          sceneRef.current.remove(defaultMesh);
+          meshRef.current = null;
+        }
+      }
+      
+      // Now add the uploaded model
+      applyModel(modelObject);
       setLoading(false);
     } catch (err) {
       console.error('Error displaying model:', err);
@@ -175,11 +190,14 @@ export default function ModelViewer3D({ file, modelObject, optimized = false, la
       if (!sceneRef.current || !cameraRef.current) return;
 
       try {
-        // Remove old uploaded model (keep default cube if needed)
-        const meshesToRemove = sceneRef.current.children.filter(
-          (child) => child !== meshRef.current && (child instanceof THREE.Group || (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry))
-        );
-        meshesToRemove.forEach((mesh) => sceneRef.current?.remove(mesh));
+        // Remove default cube from scene
+        const toRemove: THREE.Object3D[] = [];
+        sceneRef.current.children.forEach(child => {
+          if (!(child instanceof THREE.Light) && !(child instanceof THREE.Camera)) {
+            toRemove.push(child);
+          }
+        });
+        toRemove.forEach(obj => sceneRef.current?.remove(obj));
 
         // Calculate stats before modification
         let polygons = 0;
