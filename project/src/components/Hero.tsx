@@ -76,32 +76,44 @@ export default function Hero() {
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
+        {/* Professional CTA Section */}
+        <div className="mb-12 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-300 mb-8">
+            Revolutionize your 3D production pipeline with AI-powered automation. Reduce processing time by up to 90% while maintaining visual quality.
+          </p>
+        </div>
+
+        {/* Primary CTA */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
           <button
             onClick={() => {
-              const heroSection = document.getElementById('logo-showcase');
-              heroSection?.scrollIntoView({ behavior: 'smooth' });
+              const contactSection = document.getElementById('contact') || document.querySelector('footer');
+              contactSection?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-violet-600 rounded-xl font-medium text-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105"
+            className="group relative px-10 py-5 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl font-semibold text-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105"
           >
             <span className="relative z-10 flex items-center gap-2">
-              Explore Brand Identity
+              Start Your Transformation
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
 
           <button
             onClick={() => window.location.href = '?demo=true'}
-            className="group relative px-8 py-4 bg-gray-900 border border-gray-700 rounded-xl font-medium text-lg overflow-hidden transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-105"
+            className="group relative px-10 py-5 bg-gray-900/50 border-2 border-gray-700 rounded-xl font-semibold text-lg overflow-hidden transition-all duration-300 hover:border-blue-500 hover:bg-gray-900/80 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-105"
           >
             <span className="relative z-10 flex items-center gap-2">
               <Sparkles className="w-5 h-5" />
-              View Interactive Demo
+              Watch Live Demo
             </span>
           </button>
         </div>
+
+        {/* Secondary CTA Text */}
+        <p className="text-sm text-gray-500">
+          Join leading 3D studios optimizing their workflows
+        </p>
       </div>
 
       <style>{`
