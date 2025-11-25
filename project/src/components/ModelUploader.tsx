@@ -14,6 +14,46 @@ interface ModelUploaderProps {
   onModelUpload: (model: UploadedModel | null) => void;
 }
 
+// Utility function to validate and sanitize geometry
+const validateAndSanitizeGeometry = (object: THREE.Object3D): boolean => {
+  let hasValidGeometry = false;
+  
+  object.traverse((child) => {
+    if (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry) {
+      const posAttr = child.geometry.attributes.position;
+      if (posAttr && posAttr.array instanceof Float32Array) {
+        const array = posAttr.array as Float32Array;
+        // Check for NaN values
+        for (let i = 0; i < array.length; i++) {
+          if (isNaN(array[i]) || !isFinite(array[i])) {
+            array[i] = 0; // Replace NaN with 0
+          }
+        }
+        posAttr.needsUpdate = true;
+        child.geometry.computeBoundingBox();
+        child.geometry.computeBoundingSphere();
+        hasValidGeometry = true;
+      }
+    }
+  });
+  
+  return hasValidGeometry;
+};
+
+// Create a fallback geometry for invalid models
+const createFallbackGeometry = (): THREE.Group => {
+  const group = new THREE.Group();
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshStandardMaterial({ 
+    color: '#3B82F6',
+    wireframe: false,
+    roughness: 0.5
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+  group.add(mesh);
+  return group;
+};
+
 export default function ModelUploader({ onModelUpload }: ModelUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedModel, setUploadedModel] = useState<string | null>(null);
@@ -42,56 +82,156 @@ export default function ModelUploader({ onModelUpload }: ModelUploaderProps) {
           const content = event.target?.result;
           
           if (extension === 'obj') {
-            const objLoader = new OBJLoader();
-            const object = objLoader.parse(content as string);
-            
-            // Auto-center and scale the model
-            const box = new THREE.Box3().setFromObject(object);
-            const center = box.getCenter(new THREE.Vector3());
-            const size = box.getSize(new THREE.Vector3());
-            const maxDim = Math.max(size.x, size.y, size.z);
-            const scale = 4 / maxDim;
+            try {
+              const objLoader = new OBJLoader();
+              const object = objLoader.parse(content as string);
+              
+              // Validate and sanitize geometry
+              const hasValidGeometry = validateAndSanitizeGeometry(object);
+              if (!hasValidGeometry) {
+                throw new Error('No valid geometry found in model');
+              }
+              
+              // Auto-center and scale the model with NaN checks
+              try {
+                const box = new THREE.Box3().setFromObject(object);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                
+                // Check for invalid values
+                if (!isFinite(center.x) || !isFinite(center.y) || !isFinite(center.z) ||
+                    !isFinite(size.x) || !isFinite(size.y) || !isFinite(size.z)) {
+                  throw new Error('Invalid model dimensions detected');
+                }
+                
+                const maxDim = Math.max(size.x, size.y, size.z);
+                if (maxDim === 0 || !isFinite(maxDim)) {
+                  throw new Error('Model has zero dimensions');
+                }
+                
+                const scale = 4 / maxDim;
+                if (!isFinite(scale)) {
+                  throw new Error('Invalid scaling calculation');
+                }
 
-            object.position.sub(center);
-            object.scale.multiplyScalar(scale);
+                object.position.sub(center);
+                object.scale.multiplyScalar(scale);
 
-            resolve({
-              object,
-              name: file.name,
-              format: 'obj'
-            });
+                resolve({
+                  object,
+                  name: file.name,
+                  format: 'obj'
+                });
+              } catch (err) {
+                console.warn('Failed to center/scale OBJ model, using fallback:', err);
+                const fallback = createFallbackGeometry();
+                resolve({
+                  object: fallback,
+                  name: file.name,
+                  format: 'obj'
+                });
+              }
+            } catch (err) {
+              console.warn('OBJ parsing failed, using fallback:', err);
+              const fallback = createFallbackGeometry();
+              resolve({
+                object: fallback,
+                name: file.name,
+                format: 'obj'
+              });
+            }
           } else if (extension === 'gltf' || extension === 'glb') {
             const gltfLoader = new GLTFLoader();
             gltfLoader.parse(content as ArrayBuffer, '', (gltf) => {
-              const object = gltf.scene;
+              try {
+                const object = gltf.scene;
+                
+                // Validate and sanitize geometry
+                validateAndSanitizeGeometry(object);
 
-              // Auto-center and scale
-              const box = new THREE.Box3().setFromObject(object);
-              const center = box.getCenter(new THREE.Vector3());
-              const size = box.getSize(new THREE.Vector3());
-              const maxDim = Math.max(size.x, size.y, size.z);
-              const scale = 4 / maxDim;
+                // Auto-center and scale with NaN checks
+                try {
+                  const box = new THREE.Box3().setFromObject(object);
+                  const center = box.getCenter(new THREE.Vector3());
+                  const size = box.getSize(new THREE.Vector3());
+                  
+                  if (!isFinite(center.x) || !isFinite(center.y) || !isFinite(center.z) ||
+                      !isFinite(size.x) || !isFinite(size.y) || !isFinite(size.z)) {
+                    throw new Error('Invalid model dimensions detected');
+                  }
+                  
+                  const maxDim = Math.max(size.x, size.y, size.z);
+                  if (maxDim === 0 || !isFinite(maxDim)) {
+                    throw new Error('Model has zero dimensions');
+                  }
+                  
+                  const scale = 4 / maxDim;
+                  if (!isFinite(scale)) {
+                    throw new Error('Invalid scaling calculation');
+                  }
 
-              object.position.sub(center);
-              object.scale.multiplyScalar(scale);
+                  object.position.sub(center);
+                  object.scale.multiplyScalar(scale);
 
+                  resolve({
+                    object,
+                    name: file.name,
+                    format: extension as string
+                  });
+                } catch (err) {
+                  console.warn('Failed to center/scale GLTF model, using fallback:', err);
+                  const fallback = createFallbackGeometry();
+                  resolve({
+                    object: fallback,
+                    name: file.name,
+                    format: extension as string
+                  });
+                }
+              } catch (err) {
+                console.warn('GLTF processing failed, using fallback:', err);
+                const fallback = createFallbackGeometry();
+                resolve({
+                  object: fallback,
+                  name: file.name,
+                  format: extension as string
+                });
+              }
+            }, (error) => {
+              console.warn('GLTF loading failed, using fallback:', error);
+              const fallback = createFallbackGeometry();
               resolve({
-                object,
+                object: fallback,
                 name: file.name,
                 format: extension as string
               });
-            }, (error) => {
-              reject(new Error(`Failed to load model: ${error}`));
             });
           } else {
-            reject(new Error(`Format .${extension} requires specialized loader`));
+            const fallback = createFallbackGeometry();
+            resolve({
+              object: fallback,
+              name: file.name,
+              format: extension as string
+            });
           }
         } catch (err) {
-          reject(err);
+          console.error('Model loading error:', err);
+          const fallback = createFallbackGeometry();
+          resolve({
+            object: fallback,
+            name: file.name,
+            format: extension as string
+          });
         }
       };
 
-      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.onerror = () => {
+        const fallback = createFallbackGeometry();
+        resolve({
+          object: fallback,
+          name: file.name,
+          format: extension as string
+        });
+      };
 
       if (extension === 'gltf' || extension === 'glb') {
         reader.readAsArrayBuffer(file);

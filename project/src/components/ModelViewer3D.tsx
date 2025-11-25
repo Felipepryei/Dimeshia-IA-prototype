@@ -158,35 +158,72 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
     function applyModel(object: THREE.Object3D) {
       if (!sceneRef.current || !cameraRef.current) return;
 
-      // Remove old uploaded model (keep default cube if needed)
-      const meshesToRemove = sceneRef.current.children.filter(
-        (child) => child !== meshRef.current && (child instanceof THREE.Group || (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry))
-      );
-      meshesToRemove.forEach((mesh) => sceneRef.current?.remove(mesh));
+      try {
+        // Remove old uploaded model (keep default cube if needed)
+        const meshesToRemove = sceneRef.current.children.filter(
+          (child) => child !== meshRef.current && (child instanceof THREE.Group || (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry))
+        );
+        meshesToRemove.forEach((mesh) => sceneRef.current?.remove(mesh));
 
-      // Apply consistent material to all meshes
-      object.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          child.material = new THREE.MeshPhongMaterial({
-            color: optimized ? 0x22c55e : 0xf97316,
-            emissive: optimized ? 0x16a34a : 0xea580c,
-            side: THREE.DoubleSide,
-          });
+        // Sanitize geometry - fix NaN values
+        object.traverse((child) => {
+          if (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry) {
+            const posAttr = child.geometry.attributes.position;
+            if (posAttr && posAttr.array instanceof Float32Array) {
+              const array = posAttr.array as Float32Array;
+              for (let i = 0; i < array.length; i++) {
+                if (isNaN(array[i]) || !isFinite(array[i])) {
+                  array[i] = 0;
+                }
+              }
+              posAttr.needsUpdate = true;
+              child.geometry.computeBoundingBox();
+              child.geometry.computeBoundingSphere();
+            }
+          }
+        });
+
+        // Apply consistent material to all meshes
+        object.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.material = new THREE.MeshPhongMaterial({
+              color: optimized ? 0x22c55e : 0xf97316,
+              emissive: optimized ? 0x16a34a : 0xea580c,
+              side: THREE.DoubleSide,
+            });
+          }
+        });
+
+        // Center and scale model with validation
+        const box = new THREE.Box3().setFromObject(object);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        
+        // Validate dimensions
+        if (!isFinite(center.x) || !isFinite(center.y) || !isFinite(center.z) ||
+            !isFinite(size.x) || !isFinite(size.y) || !isFinite(size.z)) {
+          console.warn('Invalid model dimensions, skipping transformation');
+          sceneRef.current.add(object);
+          meshRef.current = object;
+          return;
         }
-      });
+        
+        object.position.sub(center);
 
-      // Center and scale model
-      const box = new THREE.Box3().setFromObject(object);
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
-      object.position.sub(center);
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0 && isFinite(maxDim)) {
+          const scale = 3 / maxDim;
+          if (isFinite(scale)) {
+            object.scale.multiplyScalar(scale);
+          }
+        }
 
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 3 / maxDim;
-      object.scale.multiplyScalar(scale);
-
-      sceneRef.current.add(object);
-      meshRef.current = object;
+        sceneRef.current.add(object);
+        meshRef.current = object;
+      } catch (err) {
+        console.error('Error applying model:', err);
+        // Keep default cube visible if model fails
+      }
     }
   }, [file, optimized]);
 
