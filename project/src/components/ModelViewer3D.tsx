@@ -5,11 +5,13 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 interface ModelViewer3DProps {
   file?: File;
+  modelObject?: THREE.Object3D;
   optimized?: boolean;
   label?: string;
+  onStatsUpdate?: (stats: { polygons: number; meshes: number; materials: number }) => void;
 }
 
-export default function ModelViewer3D({ file, optimized = false, label = '3D Model' }: ModelViewer3DProps) {
+export default function ModelViewer3D({ file, modelObject, optimized = false, label = '3D Model', onStatsUpdate }: ModelViewer3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -93,9 +95,23 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
     };
   }, [optimized]);
 
-  // Model loading
+  // Direct model object handling
   useEffect(() => {
-    if (!file || !sceneRef.current || !cameraRef.current) return;
+    if (!modelObject || !sceneRef.current || !cameraRef.current) return;
+
+    try {
+      const objectClone = modelObject.clone();
+      applyModel(objectClone);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error displaying model:', err);
+      setLoading(false);
+    }
+  }, [modelObject]);
+
+  // Model loading from file
+  useEffect(() => {
+    if (!file || !sceneRef.current || !cameraRef.current || modelObject) return; // Skip if modelObject provided
 
     setLoading(true);
     const reader = new FileReader();
@@ -165,11 +181,23 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
         );
         meshesToRemove.forEach((mesh) => sceneRef.current?.remove(mesh));
 
-        // Sanitize geometry - fix NaN values
+        // Calculate stats before modification
+        let polygons = 0;
+        let meshes = 0;
+        let materials = 0;
+        const materialSet = new Set<THREE.Material>();
+
+        // Sanitize geometry and count stats
         object.traverse((child) => {
           if (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry) {
+            meshes++;
+            if (child.material instanceof THREE.Material) {
+              materialSet.add(child.material);
+            }
             const posAttr = child.geometry.attributes.position;
             if (posAttr && posAttr.array instanceof Float32Array) {
+              polygons += posAttr.count / 3;
+              // Fix NaN values
               const array = posAttr.array as Float32Array;
               for (let i = 0; i < array.length; i++) {
                 if (isNaN(array[i]) || !isFinite(array[i])) {
@@ -182,6 +210,12 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
             }
           }
         });
+        materials = materialSet.size;
+
+        // Report stats
+        if (onStatsUpdate) {
+          onStatsUpdate({ polygons: Math.round(polygons), meshes, materials });
+        }
 
         // Apply consistent material to all meshes
         object.traverse((child) => {

@@ -10,6 +10,8 @@ export default function TechnologyExperience() {
   const [processProgress, setProcessProgress] = useState(0);
   const [expandedModel, setExpandedModel] = useState<number | null>(null);
   const [uploadedModel, setUploadedModel] = useState<UploadedModel | null>(null);
+  const [modelStats, setModelStats] = useState<{ polygons: number; meshes: number; materials: number } | null>(null);
+  const [optimizedStats, setOptimizedStats] = useState<{ polygons: number; meshes: number; materials: number } | null>(null);
   const [uploadedModelData, setUploadedModelData] = useState<{
     original: { polygons: string; fileSize: string; renderTime: string; memory: string; textures: string };
     optimized: { polygons: string; fileSize: string; renderTime: string; memory: string; textures: string };
@@ -89,6 +91,8 @@ export default function TechnologyExperience() {
     if (model) {
       setUploadedModel(model);
       setUploadedFileName(model.name);
+      setModelStats(null);
+      setOptimizedStats(null);
       simulateProcessing();
     }
   };
@@ -271,13 +275,29 @@ export default function TechnologyExperience() {
               </p>
               <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-gray-700 overflow-hidden">
                 {uploadedModel ? (
-                  <ModelViewer3D file={uploadedFile || undefined} optimized={false} label="Original Model" />
+                  <ModelViewer3D modelObject={uploadedModel.object} optimized={false} label="Original Model" onStatsUpdate={setModelStats} />
                 ) : (
                   <div className="flex items-center justify-center h-full">
                     <p className="text-gray-500 text-sm">Upload a model to see original</p>
                   </div>
                 )}
               </div>
+              {modelStats && (
+                <div className="mt-4 space-y-2 text-xs">
+                  <div className="flex justify-between text-gray-400">
+                    <span>Polygons:</span>
+                    <span className="text-orange-400 font-bold">{modelStats.polygons.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-400">
+                    <span>Meshes:</span>
+                    <span className="text-blue-400 font-bold">{modelStats.meshes}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-400">
+                    <span>Materials:</span>
+                    <span className="text-violet-400 font-bold">{modelStats.materials}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* AI Optimized Model Viewer */}
@@ -287,7 +307,7 @@ export default function TechnologyExperience() {
               </p>
               <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-emerald-700/40 overflow-hidden">
                 {uploadedModel && isProcessing === false && uploadedModelData ? (
-                  <ModelViewer3D file={uploadedFile || undefined} optimized={true} label="Optimized Model" />
+                  <ModelViewer3D modelObject={uploadedModel.object} optimized={true} label="Optimized Model" onStatsUpdate={setOptimizedStats} />
                 ) : uploadedModel ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center">
@@ -301,6 +321,22 @@ export default function TechnologyExperience() {
                   </div>
                 )}
               </div>
+              {optimizedStats && (
+                <div className="mt-4 space-y-2 text-xs">
+                  <div className="flex justify-between text-gray-400">
+                    <span>Polygons:</span>
+                    <span className="text-green-400 font-bold">{optimizedStats.polygons.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-400">
+                    <span>Meshes:</span>
+                    <span className="text-cyan-400 font-bold">{optimizedStats.meshes}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-400">
+                    <span>Materials:</span>
+                    <span className="text-emerald-400 font-bold">{optimizedStats.materials}</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
