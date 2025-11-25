@@ -256,171 +256,43 @@ export default function TechnologyExperience() {
           ))}
         </div>
 
-        {/* Live Demo - Visual Proof */}
-        <div className="my-24 bg-gradient-to-br from-emerald-950/30 to-cyan-950/30 border border-emerald-700/50 rounded-3xl p-8 md:p-12">
-          <div className="text-center mb-12">
-            <h3 className="text-4xl font-bold mb-4 text-white">
-              See It <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Work in Real-Time</span>
-            </h3>
-            <p className="text-gray-300 text-lg">Watch how our AI reduces polygon complexity while preserving visual fidelity</p>
-          </div>
+        {/* Interactive Upload Demo */}
+        <div className="my-16 bg-gradient-to-br from-blue-950/40 to-violet-950/40 border border-blue-800/50 rounded-3xl p-8 md:p-12">
+          <h3 className="text-3xl font-bold mb-2 text-white">Experience Our Technology</h3>
+          <p className="text-gray-400 mb-8">Upload a 3D model and watch our AI optimize it in real-time</p>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Original Complex Model */}
-            <div className="bg-gray-900/60 border border-gray-800 rounded-2xl p-6 overflow-hidden">
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm uppercase text-gray-400 font-semibold mb-4 flex items-center gap-2">
-                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                    Original - High Complexity
-                  </p>
-                  <div className="bg-gray-950/80 rounded-xl h-80 flex items-center justify-center border border-gray-700">
-                    <div className="relative w-32 h-32">
-                      <svg viewBox="0 0 200 200" className="w-full h-full animate-spin" style={{ animationDuration: '6s' }}>
-                        {/* Complex wireframe geometry */}
-                        {[...Array(16)].map((_, i) => {
-                          const angle = (i / 16) * Math.PI * 2;
-                          const x = 100 + 70 * Math.cos(angle);
-                          const y = 100 + 70 * Math.sin(angle);
-                          const nextAngle = ((i + 1) / 16) * Math.PI * 2;
-                          const nextX = 100 + 70 * Math.cos(nextAngle);
-                          const nextY = 100 + 70 * Math.sin(nextAngle);
-                          return (
-                            <g key={`outer-${i}`}>
-                              <line x1={x} y1={y} x2={nextX} y2={nextY} stroke="#f97316" strokeWidth="1" opacity="0.8" />
-                              <line x1="100" y1="100" x2={x} y2={y} stroke="#ea580c" strokeWidth="0.5" opacity="0.4" />
-                            </g>
-                          );
-                        })}
-                        {/* Inner complexity */}
-                        {[...Array(12)].map((_, i) => {
-                          const angle = (i / 12) * Math.PI * 2;
-                          const x = 100 + 40 * Math.cos(angle);
-                          const y = 100 + 40 * Math.sin(angle);
-                          const nextAngle = ((i + 1) / 12) * Math.PI * 2;
-                          const nextX = 100 + 40 * Math.cos(nextAngle);
-                          const nextY = 100 + 40 * Math.sin(nextAngle);
-                          return (
-                            <g key={`inner-${i}`}>
-                              <line x1={x} y1={y} x2={nextX} y2={nextY} stroke="#f97316" strokeWidth="0.5" opacity="0.6" />
-                            </g>
-                          );
-                        })}
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
-                    <p className="text-xs text-gray-400">Polygons</p>
-                    <p className="text-lg font-bold text-orange-400">2.4M</p>
-                  </div>
-                  <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
-                    <p className="text-xs text-gray-400">File Size</p>
-                    <p className="text-lg font-bold text-orange-400">380 MB</p>
-                  </div>
-                  <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
-                    <p className="text-xs text-gray-400">Render Time</p>
-                    <p className="text-lg font-bold text-orange-400">48ms</p>
-                  </div>
-                  <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
-                    <p className="text-xs text-gray-400">Memory</p>
-                    <p className="text-lg font-bold text-orange-400">1.1 GB</p>
-                  </div>
+            {/* Original Model Viewer */}
+            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 overflow-hidden flex flex-col">
+              <p className="text-xs uppercase text-gray-400 font-semibold mb-3 flex items-center gap-2">
+                <span className="text-lg">📦</span> Original Model
+              </p>
+              <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-gray-700 overflow-hidden flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-gray-500 text-sm">Upload a model to see original</p>
                 </div>
               </div>
             </div>
 
-            {/* Optimized Simplified Model */}
-            <div className="bg-gray-900/60 border border-emerald-800/50 rounded-2xl p-6 overflow-hidden">
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm uppercase text-gray-400 font-semibold mb-4 flex items-center gap-2">
-                    <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                    AI Optimized - Same Quality
-                  </p>
-                  <div className="bg-gray-950/80 rounded-xl h-80 flex items-center justify-center border border-emerald-700">
-                    <div className="relative w-32 h-32">
-                      <svg viewBox="0 0 200 200" className="w-full h-full animate-spin" style={{ animationDuration: '6s' }}>
-                        {/* Simplified geometry - fewer polygons */}
-                        {[...Array(8)].map((_, i) => {
-                          const angle = (i / 8) * Math.PI * 2;
-                          const x = 100 + 70 * Math.cos(angle);
-                          const y = 100 + 70 * Math.sin(angle);
-                          const nextAngle = ((i + 1) / 8) * Math.PI * 2;
-                          const nextX = 100 + 70 * Math.cos(nextAngle);
-                          const nextY = 100 + 70 * Math.sin(nextAngle);
-                          return (
-                            <g key={`opt-outer-${i}`}>
-                              <line x1={x} y1={y} x2={nextX} y2={nextY} stroke="#22c55e" strokeWidth="1.5" opacity="0.9" />
-                              <line x1="100" y1="100" x2={x} y2={y} stroke="#16a34a" strokeWidth="0.5" opacity="0.6" />
-                            </g>
-                          );
-                        })}
-                        {/* Inner - also simplified */}
-                        {[...Array(6)].map((_, i) => {
-                          const angle = (i / 6) * Math.PI * 2;
-                          const x = 100 + 40 * Math.cos(angle);
-                          const y = 100 + 40 * Math.sin(angle);
-                          const nextAngle = ((i + 1) / 6) * Math.PI * 2;
-                          const nextX = 100 + 40 * Math.cos(nextAngle);
-                          const nextY = 100 + 40 * Math.sin(nextAngle);
-                          return (
-                            <g key={`opt-inner-${i}`}>
-                              <line x1={x} y1={y} x2={nextX} y2={nextY} stroke="#22c55e" strokeWidth="0.8" opacity="0.7" />
-                            </g>
-                          );
-                        })}
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-emerald-900/30 rounded-lg p-3 border border-emerald-700">
-                    <p className="text-xs text-gray-400">Polygons</p>
-                    <p className="text-lg font-bold text-emerald-400">142K</p>
-                  </div>
-                  <div className="bg-emerald-900/30 rounded-lg p-3 border border-emerald-700">
-                    <p className="text-xs text-gray-400">File Size</p>
-                    <p className="text-lg font-bold text-emerald-400">22.5 MB</p>
-                  </div>
-                  <div className="bg-emerald-900/30 rounded-lg p-3 border border-emerald-700">
-                    <p className="text-xs text-gray-400">Render Time</p>
-                    <p className="text-lg font-bold text-emerald-400">2.8ms</p>
-                  </div>
-                  <div className="bg-emerald-900/30 rounded-lg p-3 border border-emerald-700">
-                    <p className="text-xs text-gray-400">Memory</p>
-                    <p className="text-lg font-bold text-emerald-400">65 MB</p>
-                  </div>
+            {/* AI Optimized Model Viewer */}
+            <div className="bg-gray-900/50 rounded-2xl p-6 border border-emerald-800/30 overflow-hidden flex flex-col">
+              <p className="text-xs uppercase text-gray-400 font-semibold mb-3 flex items-center gap-2">
+                <span className="text-lg">⚡</span> AI Optimized
+              </p>
+              <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-emerald-700/40 overflow-hidden flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-gray-500 text-sm">AI optimized version appears here</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Reduction Summary */}
-          <div className="mt-8 grid md:grid-cols-4 gap-4">
-            <div className="bg-gradient-to-br from-blue-900/40 to-blue-950/60 rounded-xl p-4 border border-blue-700/50">
-              <p className="text-xs text-gray-400 mb-2">Polygon Reduction</p>
-              <p className="text-2xl font-bold text-blue-400">94.1%</p>
-              <p className="text-xs text-blue-300 mt-1">2.4M → 142K</p>
-            </div>
-            <div className="bg-gradient-to-br from-purple-900/40 to-purple-950/60 rounded-xl p-4 border border-purple-700/50">
-              <p className="text-xs text-gray-400 mb-2">File Size Reduction</p>
-              <p className="text-2xl font-bold text-purple-400">94.1%</p>
-              <p className="text-xs text-purple-300 mt-1">380MB → 22.5MB</p>
-            </div>
-            <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-950/60 rounded-xl p-4 border border-cyan-700/50">
-              <p className="text-xs text-gray-400 mb-2">Render Speed</p>
-              <p className="text-2xl font-bold text-cyan-400">17.1x</p>
-              <p className="text-xs text-cyan-300 mt-1">Faster rendering</p>
-            </div>
-            <div className="bg-gradient-to-br from-green-900/40 to-green-950/60 rounded-xl p-4 border border-green-700/50">
-              <p className="text-xs text-gray-400 mb-2">Visual Quality</p>
-              <p className="text-2xl font-bold text-green-400">96%</p>
-              <p className="text-xs text-green-300 mt-1">Imperceptible loss</p>
-            </div>
+          {/* Upload Section */}
+          <div className="mt-8 bg-gray-900/30 border-2 border-dashed border-blue-600/50 rounded-3xl p-12 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-gray-900/40 transition-all">
+            <div className="text-6xl mb-4">📤</div>
+            <p className="text-white font-bold text-xl mb-2">Upload 3D Model</p>
+            <p className="text-sm text-gray-400 text-center">Support for .obj, .fbx, .gltf, .blend files</p>
+            <p className="text-xs text-gray-500 mt-3">Max 1GB • Real-time processing</p>
           </div>
         </div>
 
