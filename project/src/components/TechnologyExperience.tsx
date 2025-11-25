@@ -496,14 +496,15 @@ export default function TechnologyExperience() {
 
                   {!isProcessing && processProgress === 100 && uploadedModelData && (
                     <div className="space-y-4">
-                      <div className="bg-green-900/20 border border-green-700/50 rounded-xl p-4">
+                      <div className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-700/50 rounded-xl p-4">
                         <p className="text-sm text-green-400 font-semibold">✓ Optimization Complete!</p>
+                        <p className="text-xs text-green-300/70 mt-1">Real-time AI analysis and optimization finished</p>
                       </div>
 
                       <div className="grid grid-cols-2 gap-3">
                         <div className="bg-gray-800/40 border border-gray-700/50 rounded-lg p-3">
-                          <p className="text-xs uppercase text-gray-500 font-semibold mb-2">Original Model</p>
-                          <div className="space-y-1 text-xs">
+                          <p className="text-xs uppercase text-gray-500 font-semibold mb-3">Original Model</p>
+                          <div className="space-y-2 text-xs">
                             <div>
                               <p className="text-gray-400">Polygons</p>
                               <p className="font-bold text-orange-400">{uploadedModelData.original.polygons}</p>
@@ -516,53 +517,81 @@ export default function TechnologyExperience() {
                               <p className="text-gray-400">Render Time</p>
                               <p className="font-bold text-orange-400">{uploadedModelData.original.renderTime}</p>
                             </div>
+                            <div>
+                              <p className="text-gray-400">Memory</p>
+                              <p className="font-bold text-orange-400">{uploadedModelData.original.memory}</p>
+                            </div>
                           </div>
                         </div>
 
-                        <div className="bg-green-900/20 border border-green-700/40 rounded-lg p-3">
-                          <p className="text-xs uppercase text-gray-500 font-semibold mb-2">AI Optimized</p>
-                          <div className="space-y-1 text-xs">
+                        <div className="bg-emerald-900/20 border border-emerald-700/40 rounded-lg p-3">
+                          <p className="text-xs uppercase text-gray-500 font-semibold mb-3">AI Optimized</p>
+                          <div className="space-y-2 text-xs">
                             <div>
                               <p className="text-gray-400">Polygons</p>
-                              <p className="font-bold text-green-400">{uploadedModelData.optimized.polygons}</p>
+                              <p className="font-bold text-emerald-400">{uploadedModelData.optimized.polygons}</p>
                             </div>
                             <div>
                               <p className="text-gray-400">File Size</p>
-                              <p className="font-bold text-green-400">{uploadedModelData.optimized.fileSize}</p>
+                              <p className="font-bold text-emerald-400">{uploadedModelData.optimized.fileSize}</p>
                             </div>
                             <div>
                               <p className="text-gray-400">Render Time</p>
                               <p className="font-bold text-cyan-400">{uploadedModelData.optimized.renderTime}</p>
                             </div>
+                            <div>
+                              <p className="text-gray-400">Memory</p>
+                              <p className="font-bold text-emerald-400">{uploadedModelData.optimized.memory}</p>
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/30 rounded-lg p-3">
-                        <div className="grid grid-cols-3 gap-2">
-                          <div className="text-xs">
-                            <p className="text-gray-400">Polygon Reduction</p>
-                            <p className="font-bold text-blue-400">{uploadedModelData.reduction.polygons}</p>
+                      {/* Improvement Metrics */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-3">
+                          <p className="text-xs text-gray-400 mb-2">Polygon Reduction</p>
+                          <p className="text-xl font-bold text-blue-400">{uploadedModelData.reduction.polygons}</p>
+                          <div className="w-full bg-gray-700 h-1 rounded-full mt-2">
+                            <div className="bg-blue-500 h-full rounded-full" style={{width: '94%'}}></div>
                           </div>
-                          <div className="text-xs">
-                            <p className="text-gray-400">Size Reduction</p>
-                            <p className="font-bold text-violet-400">{uploadedModelData.reduction.fileSize}</p>
+                        </div>
+                        <div className="bg-purple-900/20 border border-purple-700/30 rounded-lg p-3">
+                          <p className="text-xs text-gray-400 mb-2">File Size Reduction</p>
+                          <p className="text-xl font-bold text-purple-400">{uploadedModelData.reduction.fileSize}</p>
+                          <div className="w-full bg-gray-700 h-1 rounded-full mt-2">
+                            <div className="bg-purple-500 h-full rounded-full" style={{width: '94%'}}></div>
                           </div>
-                          <div className="text-xs">
-                            <p className="text-gray-400">Render Speed</p>
-                            <p className="font-bold text-cyan-400">{uploadedModelData.reduction.renderSpeed}</p>
+                        </div>
+                        <div className="bg-cyan-900/20 border border-cyan-700/30 rounded-lg p-3">
+                          <p className="text-xs text-gray-400 mb-2">Render Speed Gain</p>
+                          <p className="text-xl font-bold text-cyan-400">{uploadedModelData.reduction.renderSpeed}</p>
+                          <div className="w-full bg-gray-700 h-1 rounded-full mt-2">
+                            <div className="bg-cyan-500 h-full rounded-full" style={{width: '95%'}}></div>
+                          </div>
+                        </div>
+                        <div className="bg-green-900/20 border border-green-700/30 rounded-lg p-3">
+                          <p className="text-xs text-gray-400 mb-2">Memory Saved</p>
+                          <p className="text-xl font-bold text-green-400">{uploadedModelData.reduction.memory}</p>
+                          <div className="w-full bg-gray-700 h-1 rounded-full mt-2">
+                            <div className="bg-green-500 h-full rounded-full" style={{width: '94%'}}></div>
                           </div>
                         </div>
                       </div>
 
+                      {/* Additional Metrics */}
                       <div className="bg-gray-800/40 border border-gray-700/50 rounded-lg p-3 text-xs space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">Memory Saved</span>
-                          <span className="font-bold text-green-400">{uploadedModelData.reduction.memory}</span>
-                        </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Textures Optimized</span>
                           <span className="font-bold text-green-400">{uploadedModelData.reduction.textureOpt}</span>
+                        </div>
+                        <div className="flex justify-between pt-2 border-t border-gray-700">
+                          <span className="text-gray-400">Original Textures</span>
+                          <span className="font-bold text-gray-300">{uploadedModelData.original.textures}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Optimized Textures</span>
+                          <span className="font-bold text-emerald-400">{uploadedModelData.optimized.textures}</span>
                         </div>
                       </div>
                     </div>
