@@ -4,61 +4,74 @@ export default function TechnologyExperience() {
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processProgress, setProcessProgress] = useState(0);
+  const [expandedModel, setExpandedModel] = useState<number | null>(null);
 
   const modelData = [
     {
       name: 'Character Model',
       icon: '🧑',
-      original: { polygons: '2.8M', fileSize: '450 MB', time: '—', renderTime: '45ms' },
-      optimized: { polygons: '156K', fileSize: '28.2 MB', time: '47s', renderTime: '2.4ms' },
-      reduction: { polygons: '94.4%', fileSize: '93.7%', renderSpeed: '18.75x' },
+      original: { polygons: '2.8M', fileSize: '450 MB', time: '—', renderTime: '45ms', memory: '1.2 GB', textures: '156' },
+      optimized: { polygons: '156K', fileSize: '28.2 MB', time: '47s', renderTime: '2.4ms', memory: '68 MB', textures: '24' },
+      reduction: { polygons: '94.4%', fileSize: '93.7%', renderSpeed: '18.75x', memory: '94.3%', textureOpt: '84.6%' },
       quality: '96%',
-      processing: 'High-poly character with rigging'
+      qualityLoss: '<1%',
+      processing: 'High-poly character with rigging',
+      uvUsage: '92% → 98%'
     },
     {
       name: 'Scene Environment',
       icon: '🏙️',
-      original: { polygons: '5.2M', fileSize: '847 MB', time: '—', renderTime: '89ms' },
-      optimized: { polygons: '245K', fileSize: '42.5 MB', time: '82s', renderTime: '3.2ms' },
-      reduction: { polygons: '95.3%', fileSize: '94.9%', renderSpeed: '27.8x' },
+      original: { polygons: '5.2M', fileSize: '847 MB', time: '—', renderTime: '89ms', memory: '2.1 GB', textures: '340' },
+      optimized: { polygons: '245K', fileSize: '42.5 MB', time: '82s', renderTime: '3.2ms', memory: '124 MB', textures: '52' },
+      reduction: { polygons: '95.3%', fileSize: '94.9%', renderSpeed: '27.8x', memory: '94.1%', textureOpt: '84.7%' },
       quality: '97%',
-      processing: 'Complex city with vegetation'
+      qualityLoss: '<0.5%',
+      processing: 'Complex city with vegetation',
+      uvUsage: '88% → 96%'
     },
     {
       name: 'Product Model',
       icon: '📦',
-      original: { polygons: '890K', fileSize: '142 MB', time: '—', renderTime: '22ms' },
-      optimized: { polygons: '68K', fileSize: '8.9 MB', time: '23s', renderTime: '0.9ms' },
-      reduction: { polygons: '92.4%', fileSize: '93.7%', renderSpeed: '24.4x' },
+      original: { polygons: '890K', fileSize: '142 MB', time: '—', renderTime: '22ms', memory: '450 MB', textures: '89' },
+      optimized: { polygons: '68K', fileSize: '8.9 MB', time: '23s', renderTime: '0.9ms', memory: '28 MB', textures: '14' },
+      reduction: { polygons: '92.4%', fileSize: '93.7%', renderSpeed: '24.4x', memory: '93.8%', textureOpt: '84.3%' },
       quality: '95%',
-      processing: 'High-detail consumer product'
+      qualityLoss: '<2%',
+      processing: 'High-detail consumer product',
+      uvUsage: '85% → 94%'
     },
     {
       name: 'Vehicle Model',
       icon: '🚗',
-      original: { polygons: '1.6M', fileSize: '265 MB', time: '—', renderTime: '38ms' },
-      optimized: { polygons: '94K', fileSize: '15.8 MB', time: '35s', renderTime: '1.6ms' },
-      reduction: { polygons: '94.1%', fileSize: '94.0%', renderSpeed: '23.75x' },
+      original: { polygons: '1.6M', fileSize: '265 MB', time: '—', renderTime: '38ms', memory: '890 MB', textures: '145' },
+      optimized: { polygons: '94K', fileSize: '15.8 MB', time: '35s', renderTime: '1.6ms', memory: '45 MB', textures: '23' },
+      reduction: { polygons: '94.1%', fileSize: '94.0%', renderSpeed: '23.75x', memory: '94.9%', textureOpt: '84.1%' },
       quality: '96%',
-      processing: 'Detailed automotive asset'
+      qualityLoss: '<1%',
+      processing: 'Detailed automotive asset',
+      uvUsage: '91% → 97%'
     },
     {
       name: 'Architecture Building',
       icon: '🏗️',
-      original: { polygons: '4.1M', fileSize: '678 MB', time: '—', renderTime: '72ms' },
-      optimized: { polygons: '198K', fileSize: '34.2 MB', time: '61s', renderTime: '2.8ms' },
-      reduction: { polygons: '95.2%', fileSize: '94.9%', renderSpeed: '25.7x' },
+      original: { polygons: '4.1M', fileSize: '678 MB', time: '—', renderTime: '72ms', memory: '1.8 GB', textures: '267' },
+      optimized: { polygons: '198K', fileSize: '34.2 MB', time: '61s', renderTime: '2.8ms', memory: '98 MB', textures: '42' },
+      reduction: { polygons: '95.2%', fileSize: '94.9%', renderSpeed: '25.7x', memory: '94.6%', textureOpt: '84.3%' },
       quality: '96%',
-      processing: 'High-detail architectural asset'
+      qualityLoss: '<1.5%',
+      processing: 'High-detail architectural asset',
+      uvUsage: '89% → 95%'
     },
     {
       name: 'Mechanical Part',
       icon: '⚙️',
-      original: { polygons: '756K', fileSize: '125 MB', time: '—', renderTime: '18ms' },
-      optimized: { polygons: '42K', fileSize: '5.3 MB', time: '19s', renderTime: '0.7ms' },
-      reduction: { polygons: '94.4%', fileSize: '95.8%', renderSpeed: '25.7x' },
+      original: { polygons: '756K', fileSize: '125 MB', time: '—', renderTime: '18ms', memory: '380 MB', textures: '67' },
+      optimized: { polygons: '42K', fileSize: '5.3 MB', time: '19s', renderTime: '0.7ms', memory: '19 MB', textures: '10' },
+      reduction: { polygons: '94.4%', fileSize: '95.8%', renderSpeed: '25.7x', memory: '95.0%', textureOpt: '85.1%' },
       quality: '97%',
-      processing: 'Precision mechanical asset'
+      qualityLoss: '<0.8%',
+      processing: 'Precision mechanical asset',
+      uvUsage: '93% → 99%'
     },
   ];
 
@@ -98,10 +111,27 @@ export default function TechnologyExperience() {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
+        {/* Enhanced Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-5xl md:text-6xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-violet-400 bg-clip-text text-transparent">
+              AI-Powered 3D Optimization
+            </span>
+          </h2>
+          <p className="text-2xl text-gray-300 mb-4">Experience Our Technology</p>
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto">
+            Watch our AI optimize it in real-time — See dramatic reductions in polygons and file size while maintaining visual quality. Click any model to see detailed optimization metrics.
+          </p>
+        </div>
+
         {/* Real Model Comparison Data */}
         <div className="grid md:grid-cols-2 gap-6 mb-16">
           {modelData.map((model, index) => (
-            <div key={index} className="bg-gradient-to-br from-gray-900/60 to-gray-950/60 border border-gray-800 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all">
+            <div
+              key={index}
+              onClick={() => setExpandedModel(expandedModel === index ? null : index)}
+              className="bg-gradient-to-br from-gray-900/60 to-gray-950/60 border border-gray-800 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all cursor-pointer transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20"
+            >
               {/* Header */}
               <div className="bg-gradient-to-r from-blue-600/10 to-violet-600/10 border-b border-gray-800 p-4">
                 <div className="flex items-center gap-3">
@@ -110,6 +140,7 @@ export default function TechnologyExperience() {
                     <h4 className="text-lg font-bold text-white">{model.name}</h4>
                     <p className="text-xs text-gray-400">{model.processing}</p>
                   </div>
+                  <span className="text-2xl text-blue-400">{expandedModel === index ? '−' : '+'}</span>
                 </div>
               </div>
 
@@ -128,6 +159,10 @@ export default function TechnologyExperience() {
                         <p className="text-xs text-gray-400">File Size</p>
                         <p className="text-sm font-bold text-orange-400">{model.original.fileSize}</p>
                       </div>
+                      <div>
+                        <p className="text-xs text-gray-400">Render Time</p>
+                        <p className="text-sm font-bold text-orange-400">{model.original.renderTime}</p>
+                      </div>
                     </div>
                   </div>
 
@@ -144,14 +179,18 @@ export default function TechnologyExperience() {
                         <p className="text-sm font-bold text-green-400">{model.optimized.fileSize}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-400">Processing Time</p>
+                        <p className="text-xs text-gray-400">Render Time</p>
+                        <p className="text-sm font-bold text-cyan-400">{model.optimized.renderTime}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400">Time to Optimize</p>
                         <p className="text-sm font-bold text-cyan-400">{model.optimized.time}</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Reduction Stats */}
+                {/* Key Performance Metrics */}
                 <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/30 rounded-xl p-4">
                   <div className="grid grid-cols-3 gap-3">
                     <div>
@@ -168,6 +207,37 @@ export default function TechnologyExperience() {
                     </div>
                   </div>
                 </div>
+
+                {/* Expanded Details */}
+                {expandedModel === index && (
+                  <div className="bg-gray-800/40 border border-gray-700/50 rounded-xl p-4 space-y-3 animate-in">
+                    <h5 className="text-sm font-bold text-blue-300 mb-3">Advanced Metrics</h5>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-xs text-gray-400">Memory Usage</p>
+                        <p className="text-xs font-mono text-gray-300">{model.original.memory} → {model.optimized.memory}</p>
+                        <p className="text-xs font-bold text-green-400 mt-1">{model.reduction.memory} reduction</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400">Textures Optimized</p>
+                        <p className="text-xs font-mono text-gray-300">{model.original.textures} → {model.optimized.textures}</p>
+                        <p className="text-xs font-bold text-green-400 mt-1">{model.reduction.textureOpt} reduction</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400">Render Speed Gain</p>
+                        <p className="text-xs font-bold text-cyan-400">{model.reduction.renderSpeed} faster</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400">UV Optimization</p>
+                        <p className="text-xs font-mono text-gray-300">{model.uvUsage}</p>
+                      </div>
+                    </div>
+                    <div className="bg-green-900/30 border border-green-700/50 rounded-lg p-2 mt-2">
+                      <p className="text-xs text-gray-400">Visual Quality Loss</p>
+                      <p className="text-xs font-bold text-green-400">{model.qualityLoss} (imperceptible)</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
