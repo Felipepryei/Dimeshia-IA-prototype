@@ -20,6 +20,99 @@ export default function ModelViewer3D({ file, modelObject, optimized = false, la
   const animationIdRef = useRef<number>();
   const [loading, setLoading] = useState(false);
 
+  // Shared function to apply/display models in the scene
+  const applyModel = (object: THREE.Object3D) => {
+    if (!sceneRef.current || !cameraRef.current) return;
+
+    try {
+      // Remove default cube from scene
+      const toRemove: THREE.Object3D[] = [];
+      sceneRef.current.children.forEach(child => {
+        if (!(child instanceof THREE.Light) && !(child instanceof THREE.Camera)) {
+          toRemove.push(child);
+        }
+      });
+      toRemove.forEach(obj => sceneRef.current?.remove(obj));
+
+      // Calculate stats before modification
+      let polygons = 0;
+      let meshes = 0;
+      let materials = 0;
+      const materialSet = new Set<THREE.Material>();
+
+      // Sanitize geometry and count stats
+      object.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry) {
+          meshes++;
+          if (child.material instanceof THREE.Material) {
+            materialSet.add(child.material);
+          }
+          const posAttr = child.geometry.attributes.position;
+          if (posAttr && posAttr.array instanceof Float32Array) {
+            polygons += posAttr.count / 3;
+            // Fix NaN values
+            const array = posAttr.array as Float32Array;
+            for (let i = 0; i < array.length; i++) {
+              if (isNaN(array[i]) || !isFinite(array[i])) {
+                array[i] = 0;
+              }
+            }
+            posAttr.needsUpdate = true;
+            child.geometry.computeBoundingBox();
+            child.geometry.computeBoundingSphere();
+          }
+        }
+      });
+      materials = materialSet.size;
+
+      // Report stats
+      if (onStatsUpdate) {
+        onStatsUpdate({ polygons: Math.round(polygons), meshes, materials });
+      }
+
+      // Apply consistent material to all meshes
+      object.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.material = new THREE.MeshPhongMaterial({
+            color: optimized ? 0x22c55e : 0xf97316,
+            emissive: optimized ? 0x16a34a : 0xea580c,
+            side: THREE.DoubleSide,
+          });
+        }
+      });
+
+      // Center and scale model with validation
+      const box = new THREE.Box3().setFromObject(object);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      
+      // Validate dimensions
+      if (!isFinite(center.x) || !isFinite(center.y) || !isFinite(center.z) ||
+          !isFinite(size.x) || !isFinite(size.y) || !isFinite(size.z)) {
+        console.warn('Invalid model dimensions, skipping transformation');
+        sceneRef.current.add(object);
+        meshRef.current = object;
+        return;
+      }
+      
+      object.position.sub(center);
+
+      const maxDim = Math.max(size.x, size.y, size.z);
+      if (maxDim > 0 && isFinite(maxDim)) {
+        const scale = 3 / maxDim;
+        if (isFinite(scale)) {
+          object.scale.multiplyScalar(scale);
+        }
+      }
+
+      sceneRef.current.add(object);
+      meshRef.current = object;
+    } catch (err) {
+      console.error('Error applying model:', err);
+      // Keep default cube visible if model fails
+    }
+  };
+
   // Scene initialization
   useEffect(() => {
     if (!containerRef.current) return;
@@ -185,99 +278,7 @@ export default function ModelViewer3D({ file, modelObject, optimized = false, la
     } else {
       reader.readAsText(file);
     }
-
-    function applyModel(object: THREE.Object3D) {
-      if (!sceneRef.current || !cameraRef.current) return;
-
-      try {
-        // Remove default cube from scene
-        const toRemove: THREE.Object3D[] = [];
-        sceneRef.current.children.forEach(child => {
-          if (!(child instanceof THREE.Light) && !(child instanceof THREE.Camera)) {
-            toRemove.push(child);
-          }
-        });
-        toRemove.forEach(obj => sceneRef.current?.remove(obj));
-
-        // Calculate stats before modification
-        let polygons = 0;
-        let meshes = 0;
-        let materials = 0;
-        const materialSet = new Set<THREE.Material>();
-
-        // Sanitize geometry and count stats
-        object.traverse((child) => {
-          if (child instanceof THREE.Mesh && child.geometry instanceof THREE.BufferGeometry) {
-            meshes++;
-            if (child.material instanceof THREE.Material) {
-              materialSet.add(child.material);
-            }
-            const posAttr = child.geometry.attributes.position;
-            if (posAttr && posAttr.array instanceof Float32Array) {
-              polygons += posAttr.count / 3;
-              // Fix NaN values
-              const array = posAttr.array as Float32Array;
-              for (let i = 0; i < array.length; i++) {
-                if (isNaN(array[i]) || !isFinite(array[i])) {
-                  array[i] = 0;
-                }
-              }
-              posAttr.needsUpdate = true;
-              child.geometry.computeBoundingBox();
-              child.geometry.computeBoundingSphere();
-            }
-          }
-        });
-        materials = materialSet.size;
-
-        // Report stats
-        if (onStatsUpdate) {
-          onStatsUpdate({ polygons: Math.round(polygons), meshes, materials });
-        }
-
-        // Apply consistent material to all meshes
-        object.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.material = new THREE.MeshPhongMaterial({
-              color: optimized ? 0x22c55e : 0xf97316,
-              emissive: optimized ? 0x16a34a : 0xea580c,
-              side: THREE.DoubleSide,
-            });
-          }
-        });
-
-        // Center and scale model with validation
-        const box = new THREE.Box3().setFromObject(object);
-        const size = box.getSize(new THREE.Vector3());
-        const center = box.getCenter(new THREE.Vector3());
-        
-        // Validate dimensions
-        if (!isFinite(center.x) || !isFinite(center.y) || !isFinite(center.z) ||
-            !isFinite(size.x) || !isFinite(size.y) || !isFinite(size.z)) {
-          console.warn('Invalid model dimensions, skipping transformation');
-          sceneRef.current.add(object);
-          meshRef.current = object;
-          return;
-        }
-        
-        object.position.sub(center);
-
-        const maxDim = Math.max(size.x, size.y, size.z);
-        if (maxDim > 0 && isFinite(maxDim)) {
-          const scale = 3 / maxDim;
-          if (isFinite(scale)) {
-            object.scale.multiplyScalar(scale);
-          }
-        }
-
-        sceneRef.current.add(object);
-        meshRef.current = object;
-      } catch (err) {
-        console.error('Error applying model:', err);
-        // Keep default cube visible if model fails
-      }
-    }
-  }, [file, optimized]);
+  }, [file, optimized, applyModel]);
 
   return (
     <div className="w-full h-full relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-lg border border-gray-800 overflow-hidden">
