@@ -429,36 +429,107 @@ export default function TechnologyExperience() {
           <h3 className="text-3xl font-bold mb-2 text-white">Try It Yourself</h3>
           <p className="text-gray-400 mb-8">Upload your own 3D model to see optimization results instantly</p>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Upload Area */}
-            <div className="bg-gray-900/50 border-2 border-dashed border-blue-600/50 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 transition-all">
-              <input
-                type="file"
-                onChange={handleFileUpload}
-                className="hidden"
-                id="file-upload"
-                accept=".fbx,.obj,.gltf,.glb,.max,.blend"
-              />
-              <label htmlFor="file-upload" className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
-                <div className="text-5xl mb-4">📤</div>
-                <p className="text-white font-semibold mb-2">Upload 3D Model</p>
-                <p className="text-sm text-gray-400 text-center">OBJ, GLB, GLTF, FBX, Blend, Max</p>
-                <p className="text-xs text-gray-500 mt-3">Max 1GB</p>
-              </label>
-            </div>
+          {!uploadedFile ? (
+            /* Initial View - Show Impressive Stats & Upload */
+            <div className="space-y-8">
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Upload Card */}
+                <div className="bg-gradient-to-br from-blue-900/20 to-cyan-900/20 border-2 border-dashed border-blue-500/50 rounded-3xl p-10 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:from-blue-900/30 transition-all">
+                  <input
+                    type="file"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    id="file-upload"
+                    accept=".fbx,.obj,.gltf,.glb,.max,.blend"
+                  />
+                  <label htmlFor="file-upload" className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
+                    <div className="text-6xl mb-4">📤</div>
+                    <p className="text-white font-bold text-xl mb-2">Upload Your 3D Model</p>
+                    <p className="text-sm text-blue-300 text-center mb-4">OBJ, GLB, GLTF, FBX, Blend, Max</p>
+                    <p className="text-xs text-gray-400">Up to 1GB • Real-time processing</p>
+                  </label>
+                </div>
 
-            {/* Original Model Viewer */}
-            {uploadedFile && (
+                {/* What to Expect */}
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-white mb-4">What You'll Get</h4>
+                  <div className="space-y-3">
+                    <div className="bg-green-900/20 border border-green-700/30 rounded-lg p-3 flex items-start gap-3">
+                      <span className="text-2xl">📉</span>
+                      <div>
+                        <p className="font-semibold text-green-400">94% Polygon Reduction</p>
+                        <p className="text-xs text-gray-400">Keep visual quality, drop massive file size</p>
+                      </div>
+                    </div>
+                    <div className="bg-cyan-900/20 border border-cyan-700/30 rounded-lg p-3 flex items-start gap-3">
+                      <span className="text-2xl">⚡</span>
+                      <div>
+                        <p className="font-semibold text-cyan-400">17x Faster Rendering</p>
+                        <p className="text-xs text-gray-400">Your models load and render instantly</p>
+                      </div>
+                    </div>
+                    <div className="bg-purple-900/20 border border-purple-700/30 rounded-lg p-3 flex items-start gap-3">
+                      <span className="text-2xl">💾</span>
+                      <div>
+                        <p className="font-semibold text-purple-400">94% File Size Reduction</p>
+                        <p className="text-xs text-gray-400">From 380MB to just 22MB</p>
+                      </div>
+                    </div>
+                    <div className="bg-emerald-900/20 border border-emerald-700/30 rounded-lg p-3 flex items-start gap-3">
+                      <span className="text-2xl">🎨</span>
+                      <div>
+                        <p className="font-semibold text-emerald-400">96% Quality Preserved</p>
+                        <p className="text-xs text-gray-400">Imperceptible visual loss</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Average Results */}
+              <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
+                <h4 className="text-lg font-bold text-white mb-6">Average Results from Real Projects</h4>
+                <div className="grid md:grid-cols-6 gap-4">
+                  <div className="bg-blue-900/30 rounded-lg p-4 text-center">
+                    <p className="text-2xl font-bold text-blue-400">2.4M</p>
+                    <p className="text-xs text-gray-400 mt-2">Average Input Polygons</p>
+                  </div>
+                  <div className="bg-emerald-900/30 rounded-lg p-4 text-center">
+                    <p className="text-2xl font-bold text-emerald-400">142K</p>
+                    <p className="text-xs text-gray-400 mt-2">After Optimization</p>
+                  </div>
+                  <div className="bg-cyan-900/30 rounded-lg p-4 text-center">
+                    <p className="text-2xl font-bold text-cyan-400">23-82s</p>
+                    <p className="text-xs text-gray-400 mt-2">Processing Time</p>
+                  </div>
+                  <div className="bg-purple-900/30 rounded-lg p-4 text-center">
+                    <p className="text-2xl font-bold text-purple-400">94%</p>
+                    <p className="text-xs text-gray-400 mt-2">Reduction Rate</p>
+                  </div>
+                  <div className="bg-green-900/30 rounded-lg p-4 text-center">
+                    <p className="text-2xl font-bold text-green-400">96%</p>
+                    <p className="text-xs text-gray-400 mt-2">Quality Score</p>
+                  </div>
+                  <div className="bg-orange-900/30 rounded-lg p-4 text-center">
+                    <p className="text-2xl font-bold text-orange-400">17.1x</p>
+                    <p className="text-xs text-gray-400 mt-2">Speed Increase</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Upload Progress View */
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Original Model Viewer */}
               <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 overflow-hidden flex flex-col">
                 <p className="text-xs uppercase text-gray-400 font-semibold mb-3">Original Model</p>
                 <div className="flex-1 min-h-80">
                   <ModelViewer3D file={uploadedFile} optimized={false} label="Original" />
                 </div>
               </div>
-            )}
 
-            {/* Processing Info */}
-            <div className={`bg-gray-900/50 rounded-2xl p-8 space-y-4 ${uploadedFile ? 'md:col-span-1' : 'md:col-span-2'}`}>
+              {/* Processing Info */}
+              <div className="bg-gray-900/50 rounded-2xl p-8 space-y-4 md:col-span-1">
               {uploadedFileName ? (
                 <>
                   <div className="bg-green-900/30 border border-green-700/50 rounded-xl p-4">
