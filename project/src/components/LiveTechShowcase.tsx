@@ -291,7 +291,7 @@ function ScanValidation({ progress, uploadedModel }: { progress: number; uploade
   );
 }
 
-function MeshCleanup({ progress }: { progress: number }) {
+function MeshCleanup({ progress, uploadedModel }: { progress: number; uploadedModel?: UploadedModel | null }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <div className="grid md:grid-cols-2 gap-6 flex-1">
@@ -300,7 +300,7 @@ function MeshCleanup({ progress }: { progress: number }) {
           <h3 className="text-red-400 font-bold text-sm mb-4">BEFORE - N-gons + Wireframe</h3>
           <div className="flex-1 relative">
             <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
-              <RealisticModel3D showNgons={true} showWireframe={true} />
+              <RealisticModel3D showNgons={true} showWireframe={true} uploadedModel={uploadedModel} />
             </Suspense>
           </div>
           <div className="text-xs text-red-400 text-center mt-2">N-gons: 247 | Topo Issues: 42 | Red edges = Problem areas</div>
@@ -311,7 +311,7 @@ function MeshCleanup({ progress }: { progress: number }) {
           <h3 className="text-green-400 font-bold text-sm mb-4">AFTER - Clean + Wireframe</h3>
           <div className="flex-1 relative">
             <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
-              <RealisticModel3D showNgons={false} showWireframe={true} />
+              <RealisticModel3D showNgons={false} showWireframe={true} uploadedModel={uploadedModel} />
             </Suspense>
           </div>
           <div className="text-xs text-green-400 text-center mt-2">N-gons: 0 | Topology: Perfect | All quads</div>
@@ -344,13 +344,13 @@ function MeshCleanup({ progress }: { progress: number }) {
   );
 }
 
-function UVAutomation({ progress }: { progress: number }) {
+function UVAutomation({ progress, uploadedModel }: { progress: number; uploadedModel?: UploadedModel | null }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
       {/* 3D Model with UV visualization */}
       <div className="flex-1 relative">
         <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
-          <RealisticModel3D showNgons={false} />
+          <RealisticModel3D showNgons={false} uploadedModel={uploadedModel} />
         </Suspense>
       </div>
 
@@ -401,13 +401,13 @@ function UVAutomation({ progress }: { progress: number }) {
   );
 }
 
-function PipelineIntegration({ progress }: { progress: number }) {
+function PipelineIntegration({ progress, uploadedModel }: { progress: number; uploadedModel?: UploadedModel | null }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
       {/* 3D Model Preview */}
       <div className="flex-1 relative">
         <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
-          <RealisticModel3D showNgons={false} />
+          <RealisticModel3D showNgons={false} uploadedModel={uploadedModel} />
         </Suspense>
       </div>
 
@@ -463,13 +463,13 @@ function PipelineIntegration({ progress }: { progress: number }) {
   );
 }
 
-function RenderPrep({ progress }: { progress: number }) {
+function RenderPrep({ progress, uploadedModel }: { progress: number; uploadedModel?: UploadedModel | null }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
       {/* 3D Model with lighting preview */}
       <div className="flex-1 relative">
         <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
-          <RealisticModel3D showNgons={false} />
+          <RealisticModel3D showNgons={false} uploadedModel={uploadedModel} />
         </Suspense>
       </div>
 
