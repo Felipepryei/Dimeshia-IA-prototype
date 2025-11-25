@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import ModelViewer3D from './ModelViewer3D';
 
 export default function TechnologyExperience() {
-  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processProgress, setProcessProgress] = useState(0);
   const [expandedModel, setExpandedModel] = useState<number | null>(null);
@@ -83,7 +85,8 @@ export default function TechnologyExperience() {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setUploadedFile(file.name);
+      setUploadedFile(file);
+      setUploadedFileName(file.name);
       simulateProcessing();
     }
   };
@@ -258,7 +261,7 @@ export default function TechnologyExperience() {
           <h3 className="text-3xl font-bold mb-2 text-white">Try It Yourself</h3>
           <p className="text-gray-400 mb-8">Upload your own 3D model to see optimization results instantly</p>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             {/* Upload Area */}
             <div className="bg-gray-900/50 border-2 border-dashed border-blue-600/50 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 transition-all">
               <input
@@ -271,18 +274,28 @@ export default function TechnologyExperience() {
               <label htmlFor="file-upload" className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
                 <div className="text-5xl mb-4">📤</div>
                 <p className="text-white font-semibold mb-2">Upload 3D Model</p>
-                <p className="text-sm text-gray-400 text-center">FBX, OBJ, GLTF, GLB, MAX, or BLEND</p>
+                <p className="text-sm text-gray-400 text-center">FBX, OBJ, GLTF, GLB</p>
                 <p className="text-xs text-gray-500 mt-3">Max 1GB</p>
               </label>
             </div>
 
+            {/* Original Model Viewer */}
+            {uploadedFile && (
+              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 overflow-hidden flex flex-col">
+                <p className="text-xs uppercase text-gray-400 font-semibold mb-3">Original Model</p>
+                <div className="flex-1 min-h-80">
+                  <ModelViewer3D file={uploadedFile} optimized={false} label="Original" />
+                </div>
+              </div>
+            )}
+
             {/* Processing Info */}
-            <div className="bg-gray-900/50 rounded-2xl p-8 space-y-4">
-              {uploadedFile ? (
+            <div className={`bg-gray-900/50 rounded-2xl p-8 space-y-4 ${uploadedFile ? 'md:col-span-1' : 'md:col-span-2'}`}>
+              {uploadedFileName ? (
                 <>
                   <div className="bg-green-900/30 border border-green-700/50 rounded-xl p-4">
                     <p className="text-sm text-gray-400">Uploaded File</p>
-                    <p className="text-lg font-bold text-green-400 break-all">{uploadedFile}</p>
+                    <p className="text-lg font-bold text-green-400 break-all">{uploadedFileName}</p>
                   </div>
 
                   {isProcessing && (
@@ -394,6 +407,27 @@ export default function TechnologyExperience() {
               )}
             </div>
           </div>
+
+          {/* Optimized Model Viewer */}
+          {uploadedFile && !isProcessing && processProgress === 100 && (
+            <div className="mt-8 bg-gradient-to-b from-green-900/10 to-transparent border border-green-700/30 rounded-2xl p-8">
+              <h4 className="text-2xl font-bold mb-6 text-white">See Your Model Optimized</h4>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="flex flex-col">
+                  <p className="text-xs uppercase text-gray-400 font-semibold mb-3">Original Model</p>
+                  <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-gray-800 overflow-hidden">
+                    <ModelViewer3D file={uploadedFile} optimized={false} label="Before Optimization" />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-xs uppercase text-gray-400 font-semibold mb-3">AI Optimized</p>
+                  <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-green-700/40 overflow-hidden">
+                    <ModelViewer3D file={uploadedFile} optimized={true} label="After Optimization" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Key Insights */}
