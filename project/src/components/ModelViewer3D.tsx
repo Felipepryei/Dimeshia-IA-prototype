@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 interface ModelViewer3DProps {
   file?: File;
@@ -12,63 +12,55 @@ interface ModelViewer3DProps {
 export default function ModelViewer3D({ file, optimized = false, label = '3D Model' }: ModelViewer3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const meshRef = useRef<THREE.Group | THREE.Mesh | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const meshRef = useRef<THREE.Object3D | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const animationIdRef = useRef<number>();
+  const [error, setError] = useState<string | null>(null);
 
-  // Initialize scene
+  // Scene initialization
   useEffect(() => {
     if (!containerRef.current) return;
 
     try {
-      // Scene setup
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x1a1a2e);
-      sceneRef.current = scene;
 
-      // Camera setup
-      const width = containerRef.current.clientWidth;
-      const height = containerRef.current.clientHeight;
-      const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-      camera.position.set(0, 0, 4);
-      cameraRef.current = camera;
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        containerRef.current.clientWidth / containerRef.current.clientHeight,
+        0.1,
+        10000
+      );
+      camera.position.z = 5;
 
-      // Renderer setup
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       containerRef.current.appendChild(renderer.domElement);
-      rendererRef.current = renderer;
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
-      directionalLight.position.set(5, 5, 5);
-      directionalLight.castShadow = true;
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+      directionalLight.position.set(10, 10, 10);
       scene.add(directionalLight);
 
-      const pointLight = new THREE.PointLight(0x3b82f6, 0.5);
-      pointLight.position.set(-5, 3, 5);
-      scene.add(pointLight);
-
-      // Default geometry
-      const defaultGeometry = new THREE.IcosahedronGeometry(1, 4);
+      // Default cube
+      const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
       const material = new THREE.MeshPhongMaterial({
         color: optimized ? 0x22c55e : 0xf97316,
         emissive: optimized ? 0x16a34a : 0xea580c,
-        shininess: 100,
-        side: THREE.DoubleSide,
       });
-      const mesh = new THREE.Mesh(defaultGeometry, material);
+      const mesh = new THREE.Mesh(geometry, material);
       scene.add(mesh);
+
+      sceneRef.current = scene;
+      cameraRef.current = camera;
+      rendererRef.current = renderer;
       meshRef.current = mesh;
 
-      // Animation loop
       const animate = () => {
         animationIdRef.current = requestAnimationFrame(animate);
         if (meshRef.current) {
@@ -79,141 +71,128 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
       };
       animate();
 
-      // Handle window resize
       const handleResize = () => {
-        if (!containerRef.current || !camera || !renderer) return;
-        const w = containerRef.current.clientWidth;
-        const h = containerRef.current.clientHeight;
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
+        if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
+        const width = containerRef.current.clientWidth;
+        const height = containerRef.current.clientHeight;
+        cameraRef.current.aspect = width / height;
+        cameraRef.current.updateProjectionMatrix();
+        rendererRef.current.setSize(width, height);
       };
+
       window.addEventListener('resize', handleResize);
 
       return () => {
         window.removeEventListener('resize', handleResize);
-        if (animationIdRef.current) {
-          cancelAnimationFrame(animationIdRef.current);
-        }
+        if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
         if (containerRef.current && renderer.domElement.parentNode === containerRef.current) {
           containerRef.current.removeChild(renderer.domElement);
         }
         renderer.dispose();
-        defaultGeometry.dispose();
+        geometry.dispose();
         material.dispose();
       };
     } catch (err) {
-      setError('Failed to initialize 3D viewer');
-      console.error(err);
+      console.error('Scene setup error:', err);
+      setError('Failed to initialize viewer');
     }
   }, [optimized]);
 
-  // Load uploaded file
+  // Model loading
   useEffect(() => {
-    if (!file || !sceneRef.current) return;
+    if (!file || !sceneRef.current || !cameraRef.current) return;
 
-    setIsLoading(true);
     setError(null);
-
     const reader = new FileReader();
-    const fileType = file.type;
-    const fileName = file.name.toLowerCase();
 
-    reader.onload = async (event) => {
+    reader.onload = (event) => {
       try {
-        const data = event.target?.result;
-        if (!data) throw new Error('Failed to read file');
+        const content = event.target?.result;
+        if (!content) throw new Error('No file content');
 
-        let loadedObject: THREE.Group | THREE.Mesh | null = null;
+        const fileName = file.name.toLowerCase();
+        let object: THREE.Object3D | null = null;
 
-        // Handle OBJ files
-        if (fileName.endsWith('.obj') || fileType === 'text/plain') {
-          const text = typeof data === 'string' ? data : new TextDecoder().decode(data as ArrayBuffer);
-          const objLoader = new OBJLoader();
-          loadedObject = objLoader.parse(text);
-        }
-        // Handle GLTF/GLB files
-        else if (fileName.endsWith('.gltf') || fileName.endsWith('.glb') || fileType === 'model/gltf+json' || fileType === 'model/gltf-binary') {
-          const gltfLoader = new GLTFLoader();
-          try {
-            const gltf = await new Promise<any>((resolve, reject) => {
-              gltfLoader.parse(data as ArrayBuffer, '', resolve, reject);
-            });
-            loadedObject = gltf.scene;
-          } catch {
-            const arrayBuffer = data instanceof ArrayBuffer ? data : Buffer.from(data as string);
-            const gltf = await new Promise<any>((resolve, reject) => {
-              gltfLoader.parse(arrayBuffer, '', resolve, reject);
-            });
-            loadedObject = gltf.scene;
+        try {
+          if (fileName.endsWith('.obj')) {
+            const text = typeof content === 'string' ? content : new TextDecoder().decode(content as ArrayBuffer);
+            const objLoader = new OBJLoader();
+            object = objLoader.parse(text);
+          } else if (fileName.endsWith('.glb') || fileName.endsWith('.gltf')) {
+            const gltfLoader = new GLTFLoader();
+            const arrayBuffer = content instanceof ArrayBuffer ? content : new TextEncoder().encode(content as string).buffer;
+            gltfLoader.parse(
+              arrayBuffer,
+              '',
+              (gltf) => {
+                object = gltf.scene;
+                applyModel(object);
+              },
+              (err) => {
+                setError('Failed to load GLB/GLTF file');
+                console.error(err);
+              }
+            );
+            return;
+          } else {
+            throw new Error('Unsupported file format. Use OBJ or GLB.');
           }
-        }
-        // Fallback: try OBJ parser
-        else {
-          const text = typeof data === 'string' ? data : new TextDecoder().decode(data as ArrayBuffer);
-          const objLoader = new OBJLoader();
-          loadedObject = objLoader.parse(text);
-        }
 
-        if (!loadedObject) throw new Error('Failed to parse model');
-
-        // Remove old mesh
-        if (meshRef.current && sceneRef.current) {
-          sceneRef.current.remove(meshRef.current);
-          if (meshRef.current instanceof THREE.Mesh) {
-            meshRef.current.geometry?.dispose();
-            if (Array.isArray(meshRef.current.material)) {
-              meshRef.current.material.forEach(m => m.dispose());
-            } else {
-              meshRef.current.material?.dispose();
-            }
+          if (object) {
+            applyModel(object);
           }
+        } catch (parseErr) {
+          setError('Failed to parse model file');
+          console.error(parseErr);
         }
-
-        // Apply material to all meshes
-        loadedObject.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.material = new THREE.MeshPhongMaterial({
-              color: optimized ? 0x22c55e : 0xf97316,
-              emissive: optimized ? 0x16a34a : 0xea580c,
-              shininess: 100,
-              side: THREE.DoubleSide,
-            });
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-
-        // Center and scale the model
-        const box = new THREE.Box3().setFromObject(loadedObject);
-        const size = box.getSize(new THREE.Vector3());
-        const center = box.getCenter(new THREE.Vector3());
-        
-        loadedObject.position.sub(center);
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = cameraRef.current!.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-        cameraZ *= 1.2;
-
-        if (cameraRef.current) {
-          cameraRef.current.position.z = cameraZ;
-          cameraRef.current.lookAt(loadedObject.position);
-        }
-
-        sceneRef.current?.add(loadedObject);
-        meshRef.current = loadedObject;
-        setIsLoading(false);
       } catch (err) {
-        console.error('Model loading error:', err);
-        setError('Could not load model. Try OBJ or GLB format.');
-        setIsLoading(false);
+        setError('Error reading file');
+        console.error(err);
       }
     };
 
-    if (file.type.includes('gltf') || file.name.endsWith('.glb')) {
+    reader.onerror = () => {
+      setError('Failed to read file');
+    };
+
+    if (file.name.toLowerCase().endsWith('.glb')) {
       reader.readAsArrayBuffer(file);
     } else {
       reader.readAsText(file);
+    }
+
+    function applyModel(object: THREE.Object3D) {
+      if (!sceneRef.current || !cameraRef.current) return;
+
+      // Remove old model
+      if (meshRef.current && meshRef.current !== sceneRef.current.children[0]) {
+        sceneRef.current.remove(meshRef.current);
+      }
+
+      // Apply material to all meshes
+      object.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.material = new THREE.MeshPhongMaterial({
+            color: optimized ? 0x22c55e : 0xf97316,
+            emissive: optimized ? 0x16a34a : 0xea580c,
+            side: THREE.DoubleSide,
+          });
+        }
+      });
+
+      // Center and scale
+      const box = new THREE.Box3().setFromObject(object);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+
+      object.position.sub(center);
+
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = 3 / maxDim;
+      object.scale.multiplyScalar(scale);
+
+      sceneRef.current.add(object);
+      meshRef.current = object;
     }
   }, [file, optimized]);
 
@@ -221,24 +200,16 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
     <div className="w-full h-full relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-lg border border-gray-800 overflow-hidden">
       <div ref={containerRef} className="w-full h-full" />
       
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10">
-          <div className="text-center">
-            <div className="w-12 h-12 border-4 border-blue-500 border-t-cyan-400 rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-sm text-gray-300">Loading Model...</p>
-          </div>
-        </div>
-      )}
-
       {error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50">
           <div className="text-center px-4">
-            <p className="text-sm text-red-400">{error}</p>
+            <p className="text-sm text-red-400 font-semibold">{error}</p>
+            <p className="text-xs text-red-300 mt-2">Try OBJ or GLB format</p>
           </div>
         </div>
       )}
 
-      <div className="absolute top-3 left-3 bg-black/60 px-3 py-1 rounded-lg border border-gray-700 z-5">
+      <div className="absolute top-3 left-3 bg-black/60 px-3 py-1 rounded-lg border border-gray-700 z-10">
         <p className="text-xs font-semibold text-gray-300">{label}</p>
       </div>
     </div>
