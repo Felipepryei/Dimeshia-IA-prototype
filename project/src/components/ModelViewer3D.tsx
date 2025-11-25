@@ -16,144 +16,135 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
   const meshRef = useRef<THREE.Object3D | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const animationIdRef = useRef<number>();
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   // Scene initialization
   useEffect(() => {
     if (!containerRef.current) return;
 
-    try {
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x1a1a2e);
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1a2e);
 
-      const camera = new THREE.PerspectiveCamera(
-        75,
-        containerRef.current.clientWidth / containerRef.current.clientHeight,
-        0.1,
-        10000
-      );
-      camera.position.z = 5;
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      containerRef.current.clientWidth / containerRef.current.clientHeight,
+      0.1,
+      10000
+    );
+    camera.position.z = 5;
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      containerRef.current.appendChild(renderer.domElement);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    containerRef.current.appendChild(renderer.domElement);
 
-      // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-      scene.add(ambientLight);
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-      directionalLight.position.set(10, 10, 10);
-      scene.add(directionalLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    directionalLight.position.set(10, 10, 10);
+    scene.add(directionalLight);
 
-      // Default cube
-      const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-      const material = new THREE.MeshPhongMaterial({
-        color: optimized ? 0x22c55e : 0xf97316,
-        emissive: optimized ? 0x16a34a : 0xea580c,
-      });
-      const mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
+    // Default cube
+    const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+    const material = new THREE.MeshPhongMaterial({
+      color: optimized ? 0x22c55e : 0xf97316,
+      emissive: optimized ? 0x16a34a : 0xea580c,
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
 
-      sceneRef.current = scene;
-      cameraRef.current = camera;
-      rendererRef.current = renderer;
-      meshRef.current = mesh;
+    sceneRef.current = scene;
+    cameraRef.current = camera;
+    rendererRef.current = renderer;
+    meshRef.current = mesh;
 
-      const animate = () => {
-        animationIdRef.current = requestAnimationFrame(animate);
-        if (meshRef.current) {
-          meshRef.current.rotation.x += 0.005;
-          meshRef.current.rotation.y += 0.008;
-        }
-        renderer.render(scene, camera);
-      };
-      animate();
+    const animate = () => {
+      animationIdRef.current = requestAnimationFrame(animate);
+      if (meshRef.current) {
+        meshRef.current.rotation.x += 0.005;
+        meshRef.current.rotation.y += 0.008;
+      }
+      renderer.render(scene, camera);
+    };
+    animate();
 
-      const handleResize = () => {
-        if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
-        const width = containerRef.current.clientWidth;
-        const height = containerRef.current.clientHeight;
-        cameraRef.current.aspect = width / height;
-        cameraRef.current.updateProjectionMatrix();
-        rendererRef.current.setSize(width, height);
-      };
+    const handleResize = () => {
+      if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
+      const width = containerRef.current.clientWidth;
+      const height = containerRef.current.clientHeight;
+      cameraRef.current.aspect = width / height;
+      cameraRef.current.updateProjectionMatrix();
+      rendererRef.current.setSize(width, height);
+    };
 
-      window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
 
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
-        if (containerRef.current && renderer.domElement.parentNode === containerRef.current) {
-          containerRef.current.removeChild(renderer.domElement);
-        }
-        renderer.dispose();
-        geometry.dispose();
-        material.dispose();
-      };
-    } catch (err) {
-      console.error('Scene setup error:', err);
-      setError('Failed to initialize viewer');
-    }
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
+      if (containerRef.current && renderer.domElement.parentNode === containerRef.current) {
+        containerRef.current.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+      geometry.dispose();
+      material.dispose();
+    };
   }, [optimized]);
 
   // Model loading
   useEffect(() => {
     if (!file || !sceneRef.current || !cameraRef.current) return;
 
-    setError(null);
+    setLoading(true);
     const reader = new FileReader();
     const fileName = file.name.toLowerCase();
 
     reader.onload = (event) => {
       try {
         const content = event.target?.result;
-        if (!content) throw new Error('No file content');
+        if (!content) return;
 
-        if (fileName.endsWith('.obj')) {
-          // Parse OBJ
+        let object: THREE.Object3D | null = null;
+
+        // Try OBJ first
+        if (fileName.endsWith('.obj') || fileName.includes('obj')) {
           try {
             const text = typeof content === 'string' ? content : new TextDecoder().decode(content as ArrayBuffer);
             const objLoader = new OBJLoader();
-            const object = objLoader.parse(text);
-            applyModel(object);
-          } catch (err) {
-            console.error('OBJ parse error:', err);
-            setError('Could not parse OBJ file. Verify format is correct.');
+            object = objLoader.parse(text);
+          } catch {
+            // Silently fail and try next format
           }
-        } else if (fileName.endsWith('.glb') || fileName.endsWith('.gltf')) {
-          // Parse GLTF/GLB
+        }
+
+        // Try GLTF/GLB
+        if (!object && (fileName.endsWith('.glb') || fileName.endsWith('.gltf') || fileName.includes('gltf') || fileName.includes('glb'))) {
           const gltfLoader = new GLTFLoader();
           const arrayBuffer = content instanceof ArrayBuffer ? content : new TextEncoder().encode(content as string).buffer;
-          
-          gltfLoader.parse(
-            arrayBuffer,
-            '',
-            (gltf) => {
-              try {
-                applyModel(gltf.scene);
-              } catch (err) {
-                console.error('Model application error:', err);
-                setError('Failed to apply model to scene');
-              }
-            },
-            (error) => {
-              console.error('GLTF parse error:', error);
-              setError('Could not parse GLB/GLTF file. Verify format is correct.');
-            }
-          );
-        } else {
-          setError('Unsupported format. Use OBJ, GLB, GLTF, FBX, Blend, or Max.');
+          gltfLoader.parse(arrayBuffer, '', (gltf) => {
+            applyModel(gltf.scene);
+            setLoading(false);
+          }, () => {
+            setLoading(false);
+          });
+          return;
         }
-      } catch (err) {
-        console.error('File reading error:', err);
-        setError('Error reading file');
+
+        // If object was loaded, apply it
+        if (object) {
+          applyModel(object);
+        }
+        
+        setLoading(false);
+      } catch {
+        setLoading(false);
       }
     };
 
     reader.onerror = () => {
-      setError('Failed to read file');
+      setLoading(false);
     };
 
     if (fileName.endsWith('.glb')) {
@@ -163,9 +154,9 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
     }
 
     function applyModel(object: THREE.Object3D) {
-      if (!sceneRef.current || !cameraRef.current || !rendererRef.current) return;
+      if (!sceneRef.current || !cameraRef.current) return;
 
-      // Remove old model if it's not the default
+      // Remove old model
       if (meshRef.current && meshRef.current !== (sceneRef.current.children.find(child => child instanceof THREE.Mesh))) {
         sceneRef.current.remove(meshRef.current);
       }
@@ -194,7 +185,6 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
 
       sceneRef.current.add(object);
       meshRef.current = object;
-      setError(null);
     }
   }, [file, optimized]);
 
@@ -202,11 +192,11 @@ export default function ModelViewer3D({ file, optimized = false, label = '3D Mod
     <div className="w-full h-full relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-lg border border-gray-800 overflow-hidden">
       <div ref={containerRef} className="w-full h-full" />
       
-      {error && (
+      {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50">
-          <div className="text-center px-4">
-            <p className="text-sm text-red-400 font-semibold">{error}</p>
-            <p className="text-xs text-red-300 mt-2">Try OBJ, GLB, GLTF, FBX, Blend, or Max format</p>
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-blue-500 border-t-cyan-400 rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-sm text-gray-300">Loading...</p>
           </div>
         </div>
       )}
