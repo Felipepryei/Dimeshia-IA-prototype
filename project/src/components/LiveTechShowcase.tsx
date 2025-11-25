@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { ChevronLeft, Play, Pause, RotateCcw, Download } from 'lucide-react';
+import RealisticModel3D from './RealisticModel3D';
 
 export default function LiveTechShowcase() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -219,27 +220,25 @@ export default function LiveTechShowcase() {
 function ScanValidation({ progress }: { progress: number }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
-      {/* Wireframe Viewport */}
-      <div className="flex-1 bg-gray-950 border border-gray-800 rounded-2xl p-6 flex items-center justify-center relative overflow-hidden">
-        {/* Scan lines */}
-        <div className="absolute inset-0 opacity-50">
-          <div className="absolute inset-0 animate-scan" style={{ background: 'linear-gradient(180deg, transparent, rgba(59, 130, 246, 0.4), transparent)', height: '2px' }} />
+      {/* Realistic 3D Model Viewport */}
+      <div className="flex-1 relative">
+        <Suspense fallback={
+          <div className="w-full h-full bg-gray-950 border border-gray-800 rounded-2xl flex items-center justify-center">
+            <div className="text-gray-500">Loading 3D Model...</div>
+          </div>
+        }>
+          <RealisticModel3D />
+        </Suspense>
+
+        {/* Scan lines overlay */}
+        <div className="absolute inset-0 opacity-20 rounded-xl pointer-events-none">
+          <div className="absolute inset-0 animate-scan" style={{ background: 'linear-gradient(180deg, transparent, rgba(59, 130, 246, 0.3), transparent)', height: '3px' }} />
         </div>
 
-        {/* Rotating wireframe silhouette */}
-        <svg width="200" height="200" viewBox="0 0 100 100" className="animate-float">
-          <circle cx="50" cy="50" r="40" stroke="#3B82F6" strokeWidth="1.5" fill="none" opacity="0.6" />
-          <path d="M30 30 L70 30 L70 70 L30 70 Z" stroke="#8B5CF6" strokeWidth="1" fill="none" opacity="0.4" />
-          <circle cx="50" cy="30" r="3" fill="#3B82F6" />
-          <circle cx="70" cy="50" r="3" fill="#8B5CF6" />
-          <circle cx="50" cy="70" r="3" fill="#3B82F6" />
-          <circle cx="30" cy="50" r="3" fill="#8B5CF6" />
-        </svg>
-
         {/* HUD Overlays */}
-        <div className="absolute top-4 right-4 text-xs font-mono space-y-1 text-blue-400 bg-black/60 p-3 rounded border border-blue-500/30">
+        <div className="absolute top-4 right-4 text-xs font-mono space-y-1 text-blue-400 bg-black/70 p-3 rounded border border-blue-500/50 backdrop-blur-sm">
           <div>SCAN: {Math.round(progress)}%</div>
-          <div>MESH: 2,847v</div>
+          <div>POLY: 14,247</div>
           <div>GPU: 87%</div>
         </div>
       </div>
