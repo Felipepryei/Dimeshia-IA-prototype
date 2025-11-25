@@ -244,21 +244,22 @@ function ScanValidation({ progress }: { progress: number }) {
       </div>
 
       {/* Diagnostic Checks */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {[
-          { name: 'Topology Analysis', p: progress },
-          { name: 'Ngon Detection', p: Math.max(0, progress - 20) },
-          { name: 'Scale Check', p: Math.max(0, progress - 40) },
-          { name: 'Naming Validation', p: Math.max(0, progress - 60) },
-          { name: 'UVs Scan', p: Math.max(0, progress - 80) },
+          { name: 'Topology Analysis', p: progress, detail: 'Analyzing mesh structure' },
+          { name: 'Ngon Detection', p: Math.max(0, progress - 20), detail: 'Found: 247 n-gons' },
+          { name: 'Scale Check', p: Math.max(0, progress - 40), detail: 'Scale: Inconsistent' },
+          { name: 'Naming Validation', p: Math.max(0, progress - 60), detail: 'Issues: 12' },
+          { name: 'UVs Scan', p: Math.max(0, progress - 80), detail: 'Overlaps detected' },
         ].map((check, i) => (
           <div key={i} className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-1">
               <span className="text-xs text-gray-300 font-semibold">{check.name}</span>
               <span className={`text-xs font-bold ${check.p >= 100 ? 'text-green-400' : 'text-blue-400'}`}>
                 {check.p >= 100 ? '✓' : `${Math.round(check.p)}%`}
               </span>
             </div>
+            <p className="text-xs text-gray-500 mb-2">{check.detail}</p>
             <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all duration-300 ${
@@ -280,26 +281,26 @@ function MeshCleanup({ progress }: { progress: number }) {
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <div className="grid md:grid-cols-2 gap-6 flex-1">
-        {/* Before - With N-gons visualization */}
+        {/* Before - With N-gons visualization and wireframe */}
         <div className="bg-gray-950 border border-red-800/50 rounded-2xl p-6 flex flex-col">
-          <h3 className="text-red-400 font-bold text-sm mb-4">BEFORE - With N-gons</h3>
+          <h3 className="text-red-400 font-bold text-sm mb-4">BEFORE - N-gons + Wireframe</h3>
           <div className="flex-1 relative">
             <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
-              <RealisticModel3D showNgons={true} />
+              <RealisticModel3D showNgons={true} showWireframe={true} />
             </Suspense>
           </div>
-          <div className="text-xs text-red-400 text-center mt-2">N-gons: 247 | Topology Issues: 42</div>
+          <div className="text-xs text-red-400 text-center mt-2">N-gons: 247 | Topo Issues: 42 | Red edges = Problem areas</div>
         </div>
 
-        {/* After - Clean model */}
+        {/* After - Clean model with wireframe */}
         <div className="bg-gray-950 border border-green-800/50 rounded-2xl p-6 flex flex-col">
-          <h3 className="text-green-400 font-bold text-sm mb-4">AFTER - Cleaned</h3>
+          <h3 className="text-green-400 font-bold text-sm mb-4">AFTER - Clean + Wireframe</h3>
           <div className="flex-1 relative">
             <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>}>
-              <RealisticModel3D showNgons={false} />
+              <RealisticModel3D showNgons={false} showWireframe={true} />
             </Suspense>
           </div>
-          <div className="text-xs text-green-400 text-center mt-2">N-gons: 0 | Topology: Clean</div>
+          <div className="text-xs text-green-400 text-center mt-2">N-gons: 0 | Topology: Perfect | All quads</div>
         </div>
       </div>
 
