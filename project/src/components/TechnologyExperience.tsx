@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import ModelViewer3D from './ModelViewer3D';
+import ModelUploader from './ModelUploader';
+import type { UploadedModel } from './ModelUploader';
 
 export default function TechnologyExperience() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -7,6 +9,7 @@ export default function TechnologyExperience() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processProgress, setProcessProgress] = useState(0);
   const [expandedModel, setExpandedModel] = useState<number | null>(null);
+  const [uploadedModel, setUploadedModel] = useState<UploadedModel | null>(null);
   const [uploadedModelData, setUploadedModelData] = useState<{
     original: { polygons: string; fileSize: string; renderTime: string; memory: string; textures: string };
     optimized: { polygons: string; fileSize: string; renderTime: string; memory: string; textures: string };
@@ -82,11 +85,10 @@ export default function TechnologyExperience() {
     },
   ];
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setUploadedFile(file);
-      setUploadedFileName(file.name);
+  const handleModelUpload = (model: UploadedModel | null) => {
+    if (model) {
+      setUploadedModel(model);
+      setUploadedFileName(model.name);
       simulateProcessing();
     }
   };
@@ -261,16 +263,20 @@ export default function TechnologyExperience() {
           <h3 className="text-3xl font-bold mb-2 text-white">Experience Our Technology</h3>
           <p className="text-gray-400 mb-8">Upload a 3D model and watch our AI optimize it in real-time</p>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
             {/* Original Model Viewer */}
             <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 overflow-hidden flex flex-col">
               <p className="text-xs uppercase text-gray-400 font-semibold mb-3 flex items-center gap-2">
                 <span className="text-lg">📦</span> Original Model
               </p>
-              <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-gray-700 overflow-hidden flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-gray-500 text-sm">Upload a model to see original</p>
-                </div>
+              <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-gray-700 overflow-hidden">
+                {uploadedModel ? (
+                  <ModelViewer3D file={uploadedFile || undefined} optimized={false} label="Original Model" />
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-gray-500 text-sm">Upload a model to see original</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -279,20 +285,28 @@ export default function TechnologyExperience() {
               <p className="text-xs uppercase text-gray-400 font-semibold mb-3 flex items-center gap-2">
                 <span className="text-lg">⚡</span> AI Optimized
               </p>
-              <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-emerald-700/40 overflow-hidden flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-gray-500 text-sm">AI optimized version appears here</p>
-                </div>
+              <div className="flex-1 min-h-96 bg-gray-950/50 rounded-xl border border-emerald-700/40 overflow-hidden">
+                {uploadedModel && isProcessing === false && uploadedModelData ? (
+                  <ModelViewer3D file={uploadedFile || undefined} optimized={true} label="Optimized Model" />
+                ) : uploadedModel ? (
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                      <p className="text-gray-400 text-xs">Processing: {Math.round(processProgress)}%</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-gray-500 text-sm">AI optimized version appears here</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
           {/* Upload Section */}
-          <div className="mt-8 bg-gray-900/30 border-2 border-dashed border-blue-600/50 rounded-3xl p-12 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-gray-900/40 transition-all">
-            <div className="text-6xl mb-4">📤</div>
-            <p className="text-white font-bold text-xl mb-2">Upload 3D Model</p>
-            <p className="text-sm text-gray-400 text-center">Support for .obj, .fbx, .gltf, .blend files</p>
-            <p className="text-xs text-gray-500 mt-3">Max 1GB • Real-time processing</p>
+          <div className="mt-8">
+            <ModelUploader onModelUpload={handleModelUpload} />
           </div>
         </div>
 
