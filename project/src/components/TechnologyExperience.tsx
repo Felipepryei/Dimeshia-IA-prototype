@@ -246,7 +246,7 @@ export default function TechnologyExperience() {
         {/* Interactive Upload Demo */}
         <div className="my-16 bg-gradient-to-br from-blue-950/40 to-violet-950/40 border border-blue-800/50 rounded-3xl p-8 md:p-12">
           <h3 className="text-3xl font-bold mb-2 text-white">Try It Yourself</h3>
-          <p className="text-gray-400 mb-8">Upload a 3D model and watch our AI optimize it in real-time</p>
+          <p className="text-gray-400 mb-8">Upload your own 3D model to see optimization results instantly</p>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Upload Area */}
