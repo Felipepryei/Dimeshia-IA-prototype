@@ -85,7 +85,12 @@ export default function ModelUploader({ onModelUpload }: ModelUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const supportedFormats = ['.obj', '.gltf', '.glb', '.fbx', '.blend'];
+  const supportedFormats = ['.obj', '.gltf', '.glb', '.fbx'];
+  const infoText = {
+    formats: 'OBJ, GLB, GLTF, FBX',
+    blend: 'BLEND files must be converted to GLB/FBX/OBJ using Blender (File > Export As)',
+    max: 'MAX files must be converted to FBX using 3DS Max'
+  };
 
   const loadModel = async (file: File): Promise<UploadedModel | null> => {
     const extension = file.name.toLowerCase().split('.').pop();
@@ -435,14 +440,17 @@ export default function ModelUploader({ onModelUpload }: ModelUploaderProps) {
             </button>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Upload className="w-8 h-8 mx-auto text-gray-400" />
             <div>
               <p className="font-semibold text-gray-300">Upload 3D Model</p>
-              <p className="text-xs text-gray-500 mt-1">
-                Support for .obj, .fbx, .gltf, .blend
+              <p className="text-xs text-gray-500 mt-2">
+                ✅ Direct support: <span className="text-cyan-400 font-mono">{infoText.formats}</span>
               </p>
-              <p className="text-xs text-gray-600 mt-1">Max 100MB · Real-time processing</p>
+              <p className="text-xs text-yellow-600 mt-2 bg-yellow-900/20 border border-yellow-700/30 rounded px-2 py-1">
+                ⚠️ BLEND files: {infoText.blend}
+              </p>
+              <p className="text-xs text-gray-600 mt-2">Max 100MB · Real-time processing</p>
             </div>
           </div>
         )}

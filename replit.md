@@ -108,6 +108,19 @@ The Vite server is configured to work with Replit's iframe proxy:
 - Gradient overlays and blur effects
 
 ## Recent Changes
+- **2024-11-25**: Full 3D Model Upload Support with Real-time Statistics
+  - ✅ **Experience Our Technology Section**: Upload 3D models to see real optimization demo
+  - ✅ **Multi-format Support**: OBJ, GLB, GLTF, FBX files load directly with real geometry
+  - ✅ **Live Model Statistics**: Display actual polygon count, mesh count, and material count
+  - ✅ **FBXLoader Integration**: Added professional FBX file support
+  - ✅ **Geometry Validation**: NaN detection and fallback cube for invalid models
+  - ⚠️ **BLEND/MAX Files**: Require conversion to GLB/FBX/OBJ format first
+  - **How to Convert Buoy Model (BLEND to GLB)**:
+    1. Open Buoy Model in Blender
+    2. Go to File > Export As > Export as GLB
+    3. Upload the .glb file to Experience Our Technology
+    4. See your real model with polygon/mesh/material statistics
+
 - **2024-11-25**: DIMESHIA AI Pipeline Complete Overhaul - Premium Automation Showcase (v3) with Realistic 3D Character
   - Completely rebuilt LiveTechShowcase with 6 immersive automation stages
   - **NOT rendering or product visuals** - showcases real AI automation workflow like production tool
@@ -225,7 +238,19 @@ The Vite server is configured to work with Replit's iframe proxy:
 - **Component-based**: Each section is a separate React component
 
 ## User Preferences
-- None documented yet
+- Wants to showcase Buoy Model in Experience Our Technology section
+- Prefers to see real 3D models with optimization statistics displayed
+
+## File Format Support
+**✅ Directly Supported (No conversion needed)**:
+- OBJ files (.obj)
+- GLB files (.glb) 
+- GLTF files (.gltf)
+- FBX files (.fbx)
+
+**⚠️ Requires Conversion First**:
+- BLEND files → Export as GLB/FBX from Blender
+- MAX files → Export as FBX from 3DS Max
 
 ## Future Enhancement Ideas
 1. Add Framer Motion for advanced animations
