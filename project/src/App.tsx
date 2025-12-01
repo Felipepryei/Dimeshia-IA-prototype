@@ -3,7 +3,6 @@ import Hero from './components/Hero';
 import LogoShowcase from './components/LogoShowcase';
 import BrandEssence from './components/BrandEssence';
 import AmaoSection from './components/AmaoSection';
-import AmaoLiveDemo from './components/AmaoLiveDemo';
 import StudioDemo from './components/StudioDemo';
 import LivePipelineDemo from './components/LivePipelineDemo';
 import AIAutomationLab from './components/AIAutomationLab';
@@ -43,7 +42,6 @@ function App() {
       <LogoShowcase />
       <BrandEssence />
       <AmaoSection />
-      <AmaoLiveDemo />
       <StudioDemo />
       <section className="py-32 px-6 relative overflow-hidden bg-gradient-to-b from-black via-gray-950 to-black">
         <div className="max-w-7xl mx-auto">
