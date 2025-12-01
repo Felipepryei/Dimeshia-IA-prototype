@@ -11,6 +11,7 @@ import AIOptimizationTool from './components/AIOptimizationTool';
 import ClientBenefits from './components/ClientBenefits';
 import DimeshiaServices from './components/DimeshiaServices';
 import ImplementationGuide from './components/ImplementationGuide';
+import PricingSection from './components/PricingSection';
 import Footer from './components/Footer';
 import InteractiveDemo from './components/InteractiveDemo';
 import LiveTechShowcase from './components/LiveTechShowcase';
@@ -50,6 +51,7 @@ function App() {
       <ClientBenefits />
       <DimeshiaServices />
       <ImplementationGuide />
+      <PricingSection />
       <Footer />
     </div>
   );
