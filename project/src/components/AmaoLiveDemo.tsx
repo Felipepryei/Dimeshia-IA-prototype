@@ -1,65 +1,17 @@
 import { useState } from 'react';
-import { Play, Zap, Headphones, AlertTriangle, Zap as Lightning, Layers3, Package, Star, CheckCircle } from 'lucide-react';
+import { Play, Zap } from 'lucide-react';
 
 export default function AmaoLiveDemo() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [showResults, setShowResults] = useState(false);
   const [sliderPosition, setSliderPosition] = useState(50);
 
   const handleAnalyze = () => {
     setIsAnalyzing(true);
-    setShowResults(false);
     
     setTimeout(() => {
       setIsAnalyzing(false);
-      setShowResults(true);
     }, 2500);
   };
-
-  const analysisResults = [
-    {
-      icon: Headphones,
-      label: 'Model Inspected',
-      value: 'character_rigged_v2.fbx',
-      description: 'Full analysis completed by AMAO',
-      color: 'from-blue-600 to-cyan-400'
-    },
-    {
-      icon: AlertTriangle,
-      label: 'Issues Found',
-      value: '36 Total',
-      details: ['8 topology errors', '16 overlapping UV islands', '12 NGons'],
-      color: 'from-orange-600 to-red-400'
-    },
-    {
-      icon: Lightning,
-      label: 'Optimization Preview',
-      value: '68% Reduction',
-      description: 'Polygon reduction achievable with quality retained',
-      color: 'from-violet-600 to-fuchsia-400'
-    },
-    {
-      icon: Layers3,
-      label: 'UV Suggestion',
-      value: 'Smart Unwrap',
-      description: 'Optimal layout created (not applied yet)',
-      color: 'from-cyan-600 to-emerald-400'
-    },
-    {
-      icon: Package,
-      label: 'Export Advice',
-      value: 'Web + Games',
-      description: 'Ready for Unreal, Unity, Babylon.js, Three.js',
-      color: 'from-emerald-600 to-teal-400'
-    },
-    {
-      icon: Star,
-      label: 'Production Score',
-      value: '8.4/10',
-      description: 'High quality, minor tweaks recommended',
-      color: 'from-yellow-600 to-amber-400'
-    }
-  ];
 
   return (
     <section className="py-24 px-6 relative overflow-hidden bg-gradient-to-b from-black via-gray-950 to-black">
@@ -167,68 +119,6 @@ export default function AmaoLiveDemo() {
                 </button>
               </div>
             </div>
-
-            {/* Detailed Analysis Results */}
-            {showResults && (
-              <div className="mt-8 rounded-3xl border border-gray-700/50 bg-gradient-to-br from-gray-900/80 to-gray-800/40 overflow-hidden animate-fadeIn">
-                <div className="p-8">
-                  <div className="flex items-center gap-3 mb-8">
-                    <CheckCircle className="w-6 h-6 text-emerald-400" />
-                    <h3 className="text-2xl font-bold text-white">Analysis Report</h3>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {analysisResults.map((result, idx) => {
-                      const Icon = result.icon;
-                      return (
-                        <div
-                          key={idx}
-                          className="group bg-gradient-to-br from-gray-800/40 to-gray-900/40 rounded-2xl p-6 border border-gray-700/30 hover:border-gray-600/50 transition-all hover:shadow-lg animate-fadeIn"
-                          style={{ animationDelay: `${idx * 80}ms` }}
-                        >
-                          <div className="flex items-start gap-3 mb-3">
-                            <div className={`p-3 rounded-lg bg-gradient-to-br ${result.color} flex-shrink-0`}>
-                              <Icon className="w-5 h-5 text-white" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold">{result.label}</p>
-                              <p className={`text-2xl font-black bg-gradient-to-r ${result.color} bg-clip-text text-transparent mt-1`}>
-                                {result.value}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          {result.details ? (
-                            <div className="space-y-2 mt-4 border-t border-gray-700/50 pt-4">
-                              {result.details.map((detail, i) => (
-                                <div key={i} className="flex items-start gap-2">
-                                  <span className="text-cyan-400 mt-1">•</span>
-                                  <span className="text-sm text-gray-400">{detail}</span>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-sm text-gray-400 mt-2">{result.description}</p>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <div className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30">
-                    <div className="flex items-start gap-4">
-                      <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
-                      <div>
-                        <h4 className="font-bold text-white mb-2">Ready for Production</h4>
-                        <p className="text-sm text-gray-300">
-                          This model is optimized and ready for deployment across web and game engines. Download the optimized version to get started immediately.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
