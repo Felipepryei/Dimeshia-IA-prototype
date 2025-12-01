@@ -17,10 +17,10 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
   - Automated Scene Cleaning (78% file size reduction)
   - Polygon Reduction Engine (91% poly reduction, 8x faster render)
   - Real-time beta result simulation with concrete KPI metrics
-- **Experience Our Technology**: Real 3D model upload with live statistics (polygon count, mesh count, material count) and before/after optimization comparison
+- **Experience Our Technology**: Real 3D model upload with live statistics (polygon count, mesh count, material count) and before/after optimization comparison with AI Analysis Report export
+- **AMAO Product Launch**: Premium hero section with clear headline + subheadline + main CTA ("Try AMAO Demo"), followed by How-It-Works 4-step workflow (Upload → AI Analysis → Optimize → Download/Export) with visual flow and production-ready indicators
 - **AI 3D Optimization Tool**: Interactive tool for model optimization with real-time statistics.
 - **Professional Pricing Section**: 4-tier pricing model ($29, $79, $199, Custom) with per-tier feature sets for 3D Artists, Freelancers, Studios, and Creative Agencies.
-- **AMAO Product Launch**: Automated Model Analysis & Optimization with 8-stage interactive pipeline.
 - **Interactive Color System**: Clickable color palette.
 - **Responsive Design**: Mobile-first approach with smooth animations.
 
