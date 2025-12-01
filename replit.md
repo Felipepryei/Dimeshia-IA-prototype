@@ -12,13 +12,14 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 
 **Key Features:**
 - **Automated Studio Pipeline Demo**: A real-time, interactive demonstration of a 6-stage 3D production workflow, featuring a realistic 3D character model, dynamic metrics, and professional UI elements (e.g., glassmorphism, neon accents).
+- **AMAO Live Demo Preview**: Interactive before/after comparison with draggable slider, real analysis results, and production-ready indicators
+- **AMAO Product Launch**: Premium hero section with clear headline + subheadline + main CTA ("Try AMAO Demo"), followed by How-It-Works 4-step workflow (Upload → AI Analysis → Optimize → Download/Export) with visual flow and production-ready indicators
 - **AI Automation Lab (R&D Section)**: Core R&D showcase with 3 experiment cards:
   - Intelligent Naming Engine (94% accuracy, 12 sec per scene)
   - Automated Scene Cleaning (78% file size reduction)
   - Polygon Reduction Engine (91% poly reduction, 8x faster render)
   - Real-time beta result simulation with concrete KPI metrics
 - **Experience Our Technology**: Real 3D model upload with live statistics (polygon count, mesh count, material count) and before/after optimization comparison with AI Analysis Report export
-- **AMAO Product Launch**: Premium hero section with clear headline + subheadline + main CTA ("Try AMAO Demo"), followed by How-It-Works 4-step workflow (Upload → AI Analysis → Optimize → Download/Export) with visual flow and production-ready indicators
 - **AI 3D Optimization Tool**: Interactive tool for model optimization with real-time statistics.
 - **Professional Pricing Section**: 4-tier pricing model ($29, $79, $199, Custom) with per-tier feature sets for 3D Artists, Freelancers, Studios, and Creative Agencies.
 - **Interactive Color System**: Clickable color palette.
@@ -32,7 +33,16 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 
 ## Recent Updates (December 2024)
 
-### Latest Changes:
+### Latest Changes (v2.1):
+- **AMAO Live Demo Preview Section**: New premium demo visualization showcasing before/after model comparison:
+  - Interactive slider to compare original vs optimized models (45,230 → 12,870 polygons)
+  - Real-time analysis results card showing key metrics (71.5% poly reduction, 847 N-gons fixed, 100% UVs generated, 96% quality retained)
+  - "Try AMAO Analysis (Beta)" CTA button with analyzing state animation
+  - Color-coded results with gradient accents (Blue, Violet, Cyan, Emerald)
+  - Grid layout for desktop with production-ready badge
+  - Responsive design with smooth animations and staggered reveals
+
+### Previous Changes:
 - **AI Automation Lab Enhanced**: Premium redesign with visual improvements:
   - Color-coded experiment cards (Blue/Cyan, Purple/Pink, Emerald/Teal)
   - Structured metric grids with gradient text for each experiment

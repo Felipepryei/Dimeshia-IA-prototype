@@ -1,0 +1,51 @@
+You are a senior product designer and 3D AI SaaS architect. 
+We are upgrading the Dimeshia prototype inside Replit to look like a real, high-end SaaS product.
+The core product of Dimeshia is AMAO (Automated Model Analysis & Optimization), an AI tool that:
+- analyzes 3D model quality (polygon count, n-gons, ngons, topology issues)
+- automatically reduces polygon count while preserving detail
+- generates clean UVs for texturing
+- exports optimized downloadable models for 3D pipelines (Unity, Unreal, Maya, Blender)
+
+Your task right now:
+Create a new section in the landing page called "AMAO Live Demo Preview" with the goal of building credibility through visual proof.
+
+Requirements for this section:
+1. It must include at least one realistic product demo visualization using:
+   - a 3D interactive model preview using Three.js or Spline 3D export, OR
+   - an optimized 3D model before/after showcase animation (GIF or looping video),
+   - plus an analysis card showing simulated results: polycount reduced, issues detected, UVs generated.
+
+2. Visual structure:
+   - Headline: "See AMAO in Action"
+   - Subheadline: "Upload a model → get instant QA, topology fixes, UVs and optimized export-ready assets"
+   - One main button CTA: "Try AMAO Analysis (Beta)" that visually reacts when hovered/clicked.
+
+3. Content to include (as simulated demo):
+   - A side by side preview labeled:
+        "Original Model (45,230 Polygons, N-gons detected)"
+        "Optimized by AMAO (12,870 Polygons, Clean Topology, Auto UVs)"
+   - A results card showing simulated output stats with icons:
+        ✔ Polygon reduction preserved details  
+        ✔ N-gons fixed  
+        ✔ UVs generated  
+        ✔ Model optimized for texturing and engines  
+
+4. Style guidelines:
+   - Minimal, premium, modern, tech aesthetic
+   - Dark UI, neon accent teal or green, clean typography
+   - Rounded containers, soft glow around 3D preview
+   - Responsive layout for desktop + mobile
+   - No long paragraphs, concise impactful copy
+
+5. Optional but valuable:
+   - If possible, integrate a rotating 3D viewer inside the section using:
+        - Three.js GLTF viewer
+        - or an embedded Spline scene
+        - or a Spline 3D iframe export
+   - The preview must not identify any real person or brand that could cause copyright issues.
+
+Outcome:
+The section must feel real and visually prove how AMAO optimizes 3D models, even if the results are simulated for beta credibility.
+Return the final code or component structure ready to paste into Replit using JavaScript/React/HTML.
+
+Start building the section now.
