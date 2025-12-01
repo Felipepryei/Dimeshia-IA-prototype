@@ -11,6 +11,12 @@ This project is a high-end brand identity showcase for DIMESHIA, an AI automatio
 The application is a frontend-only, static showcase built with React 18.3.1, Vite 5.4.2, and TypeScript 5.5.3. Styling is managed with Tailwind CSS 3.4.1. 3D graphics are handled by Three.js, integrated via `@react-three/fiber` and `@react-three/drei`. The UI/UX features a high-tech, futuristic aesthetic with a clean, minimal interface, incorporating gradient overlays, blur effects, and animations.
 
 **Key Features:**
+- **See AMAO in Action**: 3D live demonstration section featuring:
+  - Model selection interface with 3 presets (Character 246K, Scene 189K, Product 157K)
+  - File upload support for custom 3D models (FBX, OBJ, GLTF, GLB)
+  - Real-time 3D viewer showing original high-poly models
+  - Interactive AMAO Analysis Pipeline with 8-stage processing visualization
+  - Live analysis results dashboard
 - **AMAO Product Launch**: Premium hero section with clear headline + subheadline + main CTA ("Try AMAO Demo"), followed by How-It-Works 4-step workflow (Upload → AI Analysis → Optimize → Download/Export) with visual flow and production-ready indicators
 - **AI Automation Lab (R&D Section)**: Core R&D showcase with 3 experiment cards:
   - Intelligent Naming Engine (94% accuracy, 12 sec per scene)
@@ -31,14 +37,21 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 
 ## Recent Updates (December 2025)
 
-### Latest Changes (v2.3):
-- **Removed "See AMAO in Action" Section**: Cleaned up AmaoLiveDemo component:
-  - Removed entire "See AMAO in Action" hero section
-  - Removed 3D model selection interface (preset models, upload functionality)
-  - Removed AMAO Analysis Pipeline visualization
-  - Removed AI Analysis Results dashboard
-  - Removed before/after slider comparison and detailed analysis report
-  - AmaoLiveDemo now returns null (component disabled but kept for backwards compatibility)
+### Latest Changes (v2.4):
+- **Restored "See AMAO in Action" Section**: Fully restored 3D live demonstration:
+  - Section title and description: "See AMAO in Action - Watch AMAO analyze your 3D model step-by-step..."
+  - Model selection interface with Presets/Upload toggle
+  - 3 preset models: 3D Character Model (246K), Environment Scene (189K), Product Design (157K)
+  - File upload functionality for custom 3D models
+  - Original model viewer showing high-poly meshes
+  - AMAO Analysis Pipeline with 8-stage interactive visualization:
+    - Model Loaded → Topology Scan → Ngon Detection → UV Analysis → Normal Check → Density Analysis → Optimization Plan → AI Recommendation
+  - Live analysis progress tracking with status indicators
+  - AI Analysis Results dashboard
+  - Play/Stop and Reset controls for analysis pipeline
+
+### Previous Changes (v2.3):
+- **Removed "See AMAO in Action" Section**: Cleaned up AmaoLiveDemo component (temporarily)
 
 ### Previous Changes (v2.2):
 - **AMAO Demo Integrated into CTA**: Interactive demo now embedded directly in "Launch AMAO Beta — Join the Waitlist" section:
