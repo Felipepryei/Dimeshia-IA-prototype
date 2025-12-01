@@ -43,16 +43,18 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 
 ## Recent Updates (December 2025)
 
-### Latest Changes (v2.6):
-- **Enhanced AMAO Live Demo Preview**: Upgraded with premium visual effects:
-  - Animated 3D rotation effect on preview boxes (continuous 360° rotation + perspective)
-  - Improved container styling with backdrop blur and enhanced shadows
-  - Better visual hierarchy with taller preview boxes (h-80)
-  - Enhanced metrics display showing original vs optimized stats
-  - Added "71.5% smaller" reduction stat for impact
-  - Improved Analysis Results card with individual styled containers per result
-  - Enhanced CTA button with 110% hover scale and better shadow effects
-  - Professional premium SaaS aesthetic with cyan/emerald neon accents
+### Latest Changes (v2.7):
+- **Replaced Interactive Demo with Premium AMAO Live Demo Preview**:
+  - Removed AmaoLiveDemo component from CTA section
+  - Created new "See AMAO in Action" static demo showcase
+  - Before/after model comparison (Original 45,230 → Optimized 12,870 polygons)
+  - Premium container with backdrop blur, shadow effects, and cyan/emerald glow
+  - Original Model card: Shows N-gons detected and polygon count
+  - Optimized Model card: Shows 71.5% reduction with clean topology
+  - Analysis Results card with 4 achievement checkmarks
+  - "Try AMAO Analysis (Beta)" button with hover scale effects (110%)
+  - High-end SaaS visual design for credibility and trust
+  - Fully responsive layout for desktop and mobile
 
 ### Previous Changes (v2.5):
 - **Updated CTA Demo Section**: Replaced complex AmaoLiveDemo in CTA with streamlined AMAO Live Demo Preview:
