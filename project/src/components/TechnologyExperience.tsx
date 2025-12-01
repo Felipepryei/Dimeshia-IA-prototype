@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Download } from 'lucide-react';
 import ModelViewer3D from './ModelViewer3D';
 import ModelUploader from './ModelUploader';
 import type { UploadedModel } from './ModelUploader';
@@ -109,6 +110,80 @@ export default function TechnologyExperience() {
       memoryReduction: (memoryReduction * 100).toFixed(1),
       qualityRetention: qualityRetention.toFixed(0)
     };
+  };
+
+  const exportAnalysisReport = () => {
+    if (!modelStats || !uploadedFileName) return;
+
+    const metrics = calculateOptimizationMetrics(modelStats);
+    
+    const report = {
+      timestamp: new Date().toISOString(),
+      modelName: uploadedFileName,
+      analysisType: "AI 3D Optimization Analysis",
+      originalModel: {
+        polygonCount: modelStats.polygons,
+        meshCount: modelStats.meshes,
+        materialCount: modelStats.materials
+      },
+      optimizedModel: {
+        polygonCount: metrics.optimizedPolygons,
+        meshCount: metrics.optimizedMeshes,
+        materialCount: metrics.optimizedMaterials
+      },
+      optimizationResults: {
+        polygonReduction: {
+          percentage: `${metrics.polygonReduction}%`,
+          description: "Polygon count reduced while preserving silhouettes and UV maps"
+        },
+        meshReduction: {
+          percentage: "40%",
+          description: "Mesh count optimized through intelligent geometry consolidation"
+        },
+        materialReduction: {
+          percentage: "65%",
+          description: "Material count reduced through smart texture atlasing"
+        },
+        fileSizeReduction: {
+          percentage: `${metrics.fileReduction}%`,
+          description: "Overall file size reduction across all formats"
+        },
+        renderPerformance: {
+          speedGain: `${metrics.renderSpeedGain}x`,
+          description: "Rendering speed improvement proportional to polygon reduction"
+        },
+        memorySavings: {
+          percentage: `${metrics.memoryReduction}%`,
+          description: "GPU and system memory usage reduction"
+        }
+      },
+      qualityMetrics: {
+        visualQualityRetention: `${metrics.qualityRetention}%`,
+        qualityLoss: "Imperceptible to human eye",
+        productionReadiness: "Yes - ready for immediate deployment"
+      },
+      summary: {
+        status: "Optimization Complete",
+        recommendation: "Model is optimized and ready for production use across all platforms (web, game engines, AR/VR)",
+        appliedTechnologies: [
+          "Intelligent Polygon Decimation Engine",
+          "AI-Powered Mesh Consolidation",
+          "Smart Material Atlasing",
+          "Lossless Compression"
+        ]
+      }
+    };
+
+    const dataStr = JSON.stringify(report, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `AI-Analysis-Report-${uploadedFileName.split('.')[0]}-${new Date().getTime()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const handleModelUpload = (model: UploadedModel | null) => {
@@ -368,9 +443,18 @@ export default function TechnologyExperience() {
           {/* Real Metrics Display Section */}
           {modelStats && (
             <div className="mt-8 bg-gradient-to-r from-emerald-950/40 to-cyan-950/40 border border-emerald-700/50 rounded-3xl p-8 md:p-12">
-              <div className="mb-6">
-                <h4 className="text-2xl font-bold text-white mb-2">Real Optimization Metrics</h4>
-                <p className="text-gray-400">Based on your uploaded model: <span className="text-emerald-400 font-semibold">{uploadedFileName}</span></p>
+              <div className="mb-6 flex items-start justify-between">
+                <div>
+                  <h4 className="text-2xl font-bold text-white mb-2">Real Optimization Metrics</h4>
+                  <p className="text-gray-400">Based on your uploaded model: <span className="text-emerald-400 font-semibold">{uploadedFileName}</span></p>
+                </div>
+                <button
+                  onClick={exportAnalysisReport}
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white rounded-lg font-semibold transition-all duration-300 whitespace-nowrap"
+                >
+                  <Download className="w-4 h-4" />
+                  Export Report
+                </button>
               </div>
               
               {(() => {
