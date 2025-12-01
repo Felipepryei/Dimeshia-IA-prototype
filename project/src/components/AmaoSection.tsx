@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle, Upload, Zap, CheckSquare, Download } from 'lucide-react';
-import AmaoDemo from './AmaoDemo';
 
 export default function AmaoSection() {
   const [email, setEmail] = useState('');
@@ -171,21 +170,6 @@ export default function AmaoSection() {
               <p className="text-sm text-gray-400">{feature.description}</p>
             </div>
           ))}
-        </div>
-
-        {/* Interactive AMAO Demo Section */}
-        <div className="mb-20">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl md:text-4xl font-bold mb-4">See AMAO in Action</h3>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              Watch AMAO analyze your 3D model step-by-step, detecting issues and recommending optimizations in real-time.
-            </p>
-          </div>
-
-          {/* Live Demo Component */}
-          <div className="bg-gradient-to-br from-gray-900/40 to-gray-800/20 border border-gray-800 rounded-3xl p-8 md:p-12">
-            <AmaoDemo />
-          </div>
         </div>
 
         {/* CTA Footer */}
