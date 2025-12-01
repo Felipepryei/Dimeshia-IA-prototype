@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle, Upload, Zap, CheckSquare, Download } from 'lucide-react';
+import AmaoLiveDemo from './AmaoLiveDemo';
 
 export default function AmaoSection() {
   const [email, setEmail] = useState('');
@@ -172,45 +173,53 @@ export default function AmaoSection() {
           ))}
         </div>
 
-        {/* CTA Footer */}
-        <div className="bg-gradient-to-r from-blue-900/30 via-violet-900/30 to-cyan-900/30 border border-blue-800/50 rounded-3xl p-12 text-center">
-          <h3 className="text-4xl font-bold mb-4">
-            Launch AMAO Beta <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">— Join the Waitlist</span>
-          </h3>
-          <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-            Be among the first to access AMAO's advanced model analysis and optimization capabilities. Early adopters get lifetime premium benefits.
-          </p>
+        {/* CTA Footer with Demo */}
+        <div className="bg-gradient-to-r from-blue-900/30 via-violet-900/30 to-cyan-900/30 border border-blue-800/50 rounded-3xl p-12 overflow-hidden">
+          {/* Demo Section */}
+          <div className="mb-12">
+            <AmaoLiveDemo />
+          </div>
 
-          <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 px-6 py-4 bg-gray-900 border border-gray-800 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
-              required
-            />
-            <button
-              type="submit"
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold rounded-xl transition-all transform hover:scale-105 whitespace-nowrap flex items-center justify-center gap-2"
-            >
-              {submitted ? (
-                <>
-                  <CheckCircle className="w-5 h-5" />
-                  Joined!
-                </>
-              ) : (
-                <>
-                  <Mail className="w-5 h-5" />
-                  Join Waitlist
-                </>
-              )}
-            </button>
-          </form>
+          {/* Waitlist Section */}
+          <div className="text-center">
+            <h3 className="text-4xl font-bold mb-4">
+              Launch AMAO Beta <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">— Join the Waitlist</span>
+            </h3>
+            <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+              Be among the first to access AMAO's advanced model analysis and optimization capabilities. Early adopters get lifetime premium benefits.
+            </p>
 
-          <p className="text-xs text-gray-500 mt-4">
-            We respect your privacy. Unsubscribe at any time.
-          </p>
+            <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 px-6 py-4 bg-gray-900 border border-gray-800 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
+                required
+              />
+              <button
+                type="submit"
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold rounded-xl transition-all transform hover:scale-105 whitespace-nowrap flex items-center justify-center gap-2"
+              >
+                {submitted ? (
+                  <>
+                    <CheckCircle className="w-5 h-5" />
+                    Joined!
+                  </>
+                ) : (
+                  <>
+                    <Mail className="w-5 h-5" />
+                    Join Waitlist
+                  </>
+                )}
+              </button>
+            </form>
+
+            <p className="text-xs text-gray-500 mt-4">
+              We respect your privacy. Unsubscribe at any time.
+            </p>
+          </div>
         </div>
       </div>
     </section>

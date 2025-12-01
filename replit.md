@@ -33,14 +33,16 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 
 ## Recent Updates (December 2024)
 
-### Latest Changes (v2.1):
-- **AMAO Live Demo Preview Section**: New premium demo visualization showcasing before/after model comparison:
-  - Interactive slider to compare original vs optimized models (45,230 → 12,870 polygons)
-  - Real-time analysis results card showing key metrics (71.5% poly reduction, 847 N-gons fixed, 100% UVs generated, 96% quality retained)
-  - "Try AMAO Analysis (Beta)" CTA button with analyzing state animation
-  - Color-coded results with gradient accents (Blue, Violet, Cyan, Emerald)
-  - Grid layout for desktop with production-ready badge
-  - Responsive design with smooth animations and staggered reveals
+### Latest Changes (v2.2):
+- **AMAO Demo Integrated into CTA**: Interactive demo now embedded directly in "Launch AMAO Beta — Join the Waitlist" section:
+  - Before/after slider with draggable comparison (Original 45,230 → Optimized 12,870 polygons)
+  - "Run Analysis" button with 2.5-second animation state
+  - Professional SaaS styling with gradient backgrounds
+  - Seamless flow: Demo → Headline → Description → Email Signup
+  - Improved conversion experience with interactive proof
+
+### Previous Changes (v2.1):
+- **AMAO Live Demo Preview Section**: Premium demo visualization with interactive slider
 
 ### Previous Changes:
 - **AI Automation Lab Enhanced**: Premium redesign with visual improvements:
