@@ -43,7 +43,18 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 
 ## Recent Updates (December 2025)
 
-### Latest Changes (v2.5):
+### Latest Changes (v2.6):
+- **Enhanced AMAO Live Demo Preview**: Upgraded with premium visual effects:
+  - Animated 3D rotation effect on preview boxes (continuous 360° rotation + perspective)
+  - Improved container styling with backdrop blur and enhanced shadows
+  - Better visual hierarchy with taller preview boxes (h-80)
+  - Enhanced metrics display showing original vs optimized stats
+  - Added "71.5% smaller" reduction stat for impact
+  - Improved Analysis Results card with individual styled containers per result
+  - Enhanced CTA button with 110% hover scale and better shadow effects
+  - Professional premium SaaS aesthetic with cyan/emerald neon accents
+
+### Previous Changes (v2.5):
 - **Updated CTA Demo Section**: Replaced complex AmaoLiveDemo in CTA with streamlined AMAO Live Demo Preview:
   - Removed duplicate demo rendering from App.tsx
   - Simplified CTA section with before/after comparison cards
