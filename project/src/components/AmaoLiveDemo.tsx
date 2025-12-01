@@ -34,18 +34,6 @@ export default function AmaoLiveDemo() {
             <div className="relative rounded-3xl overflow-hidden border border-gray-700/50 bg-gradient-to-br from-gray-900/80 to-gray-800/40 shadow-2xl">
               {/* Before/After Split */}
               <div className="relative h-96 md:h-[500px] bg-gradient-to-br from-gray-900 to-gray-950 overflow-hidden group">
-                {/* Background grid effect */}
-                <div className="absolute inset-0 opacity-10">
-                  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5"/>
-                      </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)" className="text-gray-500"/>
-                  </svg>
-                </div>
-
                 {/* Left Side - Original */}
                 <div className="absolute inset-0 left-0 right-1/2 flex flex-col items-center justify-center bg-gradient-to-r from-blue-950/30 to-transparent p-6">
                   <div className="text-center">
@@ -112,20 +100,39 @@ export default function AmaoLiveDemo() {
                 )}
               </div>
 
-              {/* Footer with CTA */}
-              <div className="p-6 bg-gradient-to-r from-gray-900/80 to-gray-800/40 border-t border-gray-700/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm text-gray-400">Interactive before/after comparison</p>
-                  <p className="text-xs text-gray-500 mt-1">Drag the slider to compare optimization results</p>
+              {/* Footer with Enhanced CTA */}
+              <div className="p-6 bg-gradient-to-r from-gray-900/80 to-gray-800/40 border-t border-gray-700/50">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-white mb-3">Ready to Optimize?</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div>
+                        <p className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-1">71.5% Reduction</p>
+                        <p className="text-sm text-gray-400">Polygon count optimized</p>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-widest text-violet-400 font-semibold mb-1">847 Issues Fixed</p>
+                        <p className="text-sm text-gray-400">N-gons and topology cleaned</p>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-widest text-emerald-400 font-semibold mb-1">100% UVs Generated</p>
+                        <p className="text-sm text-gray-400">Ready for texturing</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-3">Drag the slider above to compare optimization results in real-time</p>
+                  </div>
+                  <button
+                    onClick={handleAnalyze}
+                    disabled={isAnalyzing}
+                    className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 disabled:from-gray-700 disabled:to-gray-700 text-white font-bold rounded-xl transition-all transform hover:scale-105 flex items-center gap-3 whitespace-nowrap shadow-xl hover:shadow-emerald-500/50 group flex-shrink-0"
+                  >
+                    <Play className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <div className="text-left">
+                      <div className="font-bold text-base">{isAnalyzing ? 'Analyzing...' : 'Try Demo'}</div>
+                      <div className="text-xs opacity-90">{isAnalyzing ? 'Processing' : 'See Results'}</div>
+                    </div>
+                  </button>
                 </div>
-                <button
-                  onClick={handleAnalyze}
-                  disabled={isAnalyzing}
-                  className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 disabled:from-gray-700 disabled:to-gray-700 text-white font-bold rounded-xl transition-all transform hover:scale-105 flex items-center gap-2 whitespace-nowrap shadow-lg hover:shadow-emerald-500/50"
-                >
-                  <Play className="w-4 h-4" />
-                  {isAnalyzing ? 'Analyzing...' : 'Try AMAO Analysis (Beta)'}
-                </button>
               </div>
             </div>
           </div>
