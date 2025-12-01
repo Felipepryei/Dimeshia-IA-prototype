@@ -11,8 +11,6 @@ This project is a high-end brand identity showcase for DIMESHIA, an AI automatio
 The application is a frontend-only, static showcase built with React 18.3.1, Vite 5.4.2, and TypeScript 5.5.3. Styling is managed with Tailwind CSS 3.4.1. 3D graphics are handled by Three.js, integrated via `@react-three/fiber` and `@react-three/drei`. The UI/UX features a high-tech, futuristic aesthetic with a clean, minimal interface, incorporating gradient overlays, blur effects, and animations.
 
 **Key Features:**
-- **Automated Studio Pipeline Demo**: A real-time, interactive demonstration of a 6-stage 3D production workflow, featuring a realistic 3D character model, dynamic metrics, and professional UI elements (e.g., glassmorphism, neon accents).
-- **AMAO Live Demo Preview**: Interactive before/after comparison with draggable slider, real analysis results, and production-ready indicators
 - **AMAO Product Launch**: Premium hero section with clear headline + subheadline + main CTA ("Try AMAO Demo"), followed by How-It-Works 4-step workflow (Upload → AI Analysis → Optimize → Download/Export) with visual flow and production-ready indicators
 - **AI Automation Lab (R&D Section)**: Core R&D showcase with 3 experiment cards:
   - Intelligent Naming Engine (94% accuracy, 12 sec per scene)
@@ -31,9 +29,18 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 - **Color Palette**: Primary Electric Blue (#3B82F6), Accent Violet (#8B5CF6), Neutral Black to White grayscale.
 - **Typography**: Inter (Google Fonts) with weights 400-900.
 
-## Recent Updates (December 2024)
+## Recent Updates (December 2025)
 
-### Latest Changes (v2.2):
+### Latest Changes (v2.3):
+- **Removed "See AMAO in Action" Section**: Cleaned up AmaoLiveDemo component:
+  - Removed entire "See AMAO in Action" hero section
+  - Removed 3D model selection interface (preset models, upload functionality)
+  - Removed AMAO Analysis Pipeline visualization
+  - Removed AI Analysis Results dashboard
+  - Removed before/after slider comparison and detailed analysis report
+  - AmaoLiveDemo now returns null (component disabled but kept for backwards compatibility)
+
+### Previous Changes (v2.2):
 - **AMAO Demo Integrated into CTA**: Interactive demo now embedded directly in "Launch AMAO Beta — Join the Waitlist" section:
   - Before/after slider with draggable comparison (Original 45,230 → Optimized 12,870 polygons)
   - "Run Analysis" button with 2.5-second animation state
