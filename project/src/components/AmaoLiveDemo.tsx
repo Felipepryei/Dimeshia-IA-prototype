@@ -61,16 +61,6 @@ export default function AmaoLiveDemo() {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <h2 className="text-5xl md:text-6xl font-black mb-6">
-            See AMAO in <span className="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">Action</span>
-          </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Upload a model → get instant QA, topology fixes, UVs and optimized export-ready assets
-          </p>
-        </div>
-
         {/* Main Demo Container */}
         <div className="grid lg:grid-cols-3 gap-8 mb-16">
           {/* Before/After Visualization */}
