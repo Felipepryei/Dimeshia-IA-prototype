@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Play, Pause, RotateCw, Zap, Headphones, AlertTriangle, Zap as Lightning, Layers3, Package, Star, CheckCircle, Cpu, Layers, Upload as UploadIcon, RotateCcw } from 'lucide-react';
-import PipelineModelViewer from './PipelineModelViewer';
+import { Play, Zap, Headphones, AlertTriangle, Zap as Lightning, Layers3, Package, Star, CheckCircle, Upload as UploadIcon, RotateCcw } from 'lucide-react';
 import UnifiedModelViewer from './UnifiedModelViewer';
 
 export default function AmaoLiveDemo() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [sliderPosition, setSliderPosition] = useState(50);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [activeStep, setActiveStep] = useState(0);
   const [stage, setStage] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(0);
@@ -34,51 +30,6 @@ export default function AmaoLiveDemo() {
     { title: 'AI Recommendation', desc: 'Generating final optimization report', time: 1 }
   ];
 
-  const workflowSteps = [
-    {
-      id: 1,
-      name: '3D Model Input',
-      desc: 'AI analyzes mesh topology',
-      color: 'from-blue-500 to-cyan-500',
-      icon: Layers,
-      duration: 2000
-    },
-    {
-      id: 2,
-      name: 'Pipeline Processing',
-      desc: 'Automated texture & lighting',
-      color: 'from-violet-500 to-purple-500',
-      icon: Cpu,
-      duration: 2500
-    },
-    {
-      id: 3,
-      name: 'Render Optimization',
-      desc: 'GPU acceleration & AI upscaling',
-      color: 'from-cyan-500 to-blue-600',
-      icon: Zap,
-      duration: 2000
-    },
-    {
-      id: 4,
-      name: 'Output Delivery',
-      desc: 'Production-ready assets',
-      color: 'from-green-500 to-emerald-600',
-      icon: Layers,
-      duration: 1500
-    },
-  ];
-
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const handleReset = () => {
-    setIsPlaying(false);
-    setProgress(0);
-    setActiveStep(0);
-  };
-
   const handleAnalysisPlay = () => {
     if (stage === analysisStages.length) {
       setStage(0);
@@ -94,22 +45,6 @@ export default function AmaoLiveDemo() {
   };
 
   const isAnalysisComplete = stage === analysisStages.length;
-
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setActiveStep((step) => (step + 1) % workflowSteps.length);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, workflowSteps[activeStep].duration / 100);
-
-    return () => clearInterval(interval);
-  }, [isPlaying, activeStep]);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -211,195 +146,6 @@ export default function AmaoLiveDemo() {
           </p>
         </div>
 
-        {/* Live Demonstration Section */}
-        <div className="mb-20">
-          <div className="relative bg-gradient-to-br from-gray-900 via-black to-gray-900 border border-gray-700 rounded-3xl p-8 shadow-2xl">
-            {/* Control Bar */}
-            <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-800">
-              <div className="flex items-center gap-3">
-                <img src="/logo de dimeshia IA.jpg" alt="DIMESHIA" className="w-10 h-10 object-contain" />
-                <div>
-                  <div className="text-sm font-semibold text-gray-200">DIMESHIA Studio Pipeline</div>
-                  <div className="text-xs text-gray-500">AI-Powered 3D Analysis</div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handlePlayPause}
-                  className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
-                    isPlaying
-                      ? 'bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500'
-                      : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500'
-                  } shadow-lg hover:shadow-xl hover:scale-105`}
-                >
-                  {isPlaying ? (
-                    <>
-                      <Pause className="w-5 h-5" />
-                      Pause
-                    </>
-                  ) : (
-                    <>
-                      <Play className="w-5 h-5" />
-                      Play Demo
-                    </>
-                  )}
-                </button>
-
-                <button
-                  onClick={handleReset}
-                  className="p-3 bg-gray-800 hover:bg-gray-700 rounded-xl transition-all hover:scale-105"
-                  title="Reset"
-                >
-                  <RotateCw className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Visualization Area */}
-            <div className="relative bg-black border border-gray-800 rounded-2xl overflow-hidden" style={{ height: '500px' }}>
-              {/* Grid Background */}
-              <div className="absolute inset-0 opacity-20" style={{
-                backgroundImage: `
-                  linear-gradient(to right, rgba(59, 130, 246, 0.3) 1px, transparent 1px),
-                  linear-gradient(to bottom, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
-                `,
-                backgroundSize: '40px 40px',
-                animation: isPlaying ? 'gridMove 20s linear infinite' : 'none'
-              }} />
-
-              {/* Central 3D Object Visualization */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-full h-full">
-                  {/* 3D Model Viewer */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className={`w-96 h-96 transition-all duration-1000 ${isPlaying ? 'scale-110' : 'scale-100'}`}>
-                      <PipelineModelViewer stage={activeStep} />
-                    </div>
-                  </div>
-
-                  {/* Orbiting Particles */}
-                  {isPlaying && (
-                    <>
-                      {[0, 1, 2, 3, 4, 5].map((i) => (
-                        <div
-                          key={i}
-                          className="absolute w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-violet-400"
-                          style={{
-                            top: '50%',
-                            left: '50%',
-                            animation: `orbit ${3 + i}s linear infinite`,
-                            animationDelay: `${i * 0.5}s`,
-                            opacity: 0.6
-                          }}
-                        />
-                      ))}
-                    </>
-                  )}
-
-                  {/* Processing Rings */}
-                  {isPlaying && (
-                    <>
-                      <div className="absolute inset-0 border-2 border-blue-500 rounded-full animate-ping opacity-20" style={{ width: '450px', height: '450px', top: '25px', left: '50%', transform: 'translateX(-50%)' }} />
-                      <div className="absolute inset-0 border-2 border-violet-500 rounded-full animate-ping opacity-20" style={{ width: '450px', height: '450px', top: '25px', left: '50%', transform: 'translateX(-50%)', animationDelay: '0.5s' }} />
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Workflow Steps Overlay */}
-              <div className="absolute top-6 left-6 right-6 flex justify-between">
-                {workflowSteps.map((step, index) => {
-                  const StepIcon = step.icon;
-                  const isActive = index === activeStep;
-                  const isCompleted = index < activeStep;
-
-                  return (
-                    <div
-                      key={step.id}
-                      className={`flex-1 mx-2 transition-all duration-500 ${
-                        isActive ? 'scale-110' : 'scale-100'
-                      }`}
-                    >
-                      <div className={`p-4 rounded-xl backdrop-blur-sm border-2 transition-all duration-500 ${
-                        isActive
-                          ? `border-blue-400 bg-gradient-to-br ${step.color} bg-opacity-20`
-                          : isCompleted
-                          ? 'border-green-500 bg-green-900/20'
-                          : 'border-gray-700 bg-gray-900/40'
-                      }`}>
-                        <div className="flex items-center gap-2 mb-2">
-                          <StepIcon className={`w-5 h-5 ${
-                            isActive ? 'text-white animate-pulse' : isCompleted ? 'text-green-400' : 'text-gray-500'
-                          }`} />
-                          <span className={`text-xs font-semibold ${
-                            isActive ? 'text-white' : isCompleted ? 'text-green-300' : 'text-gray-400'
-                          }`}>
-                            Step {index + 1}
-                          </span>
-                        </div>
-                        <div className={`text-sm font-medium mb-1 ${
-                          isActive ? 'text-white' : 'text-gray-400'
-                        }`}>
-                          {step.name}
-                        </div>
-                        <div className="text-xs text-gray-500">{step.desc}</div>
-
-                        {/* Progress Bar */}
-                        {isActive && isPlaying && (
-                          <div className="mt-3 h-1 bg-gray-800 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-blue-500 to-violet-500 transition-all duration-100"
-                              style={{ width: `${progress}%` }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Stats Panel */}
-              <div className="absolute bottom-6 left-6 bg-black/80 backdrop-blur-sm border border-gray-700 rounded-xl p-4">
-                <div className="grid grid-cols-4 gap-4 text-xs">
-                  <div>
-                    <div className="text-gray-400 mb-1">Processing</div>
-                    <div className="text-blue-400 font-mono font-bold">
-                      {isPlaying ? `${Math.round(progress)}%` : '0%'}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-gray-400 mb-1">Polygons</div>
-                    <div className="text-violet-400 font-mono font-bold">
-                      {activeStep === 0 ? '245K' : activeStep === 1 ? '156K' : activeStep === 2 ? '45K' : '12K'}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-gray-400 mb-1">GPU Usage</div>
-                    <div className="text-cyan-400 font-mono font-bold">
-                      {isPlaying ? '87%' : '12%'}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-gray-400 mb-1">Quality</div>
-                    <div className="text-green-400 font-mono font-bold">
-                      {activeStep === 0 ? '65%' : activeStep === 1 ? '78%' : activeStep === 2 ? '92%' : '98%'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* AI Status Indicator */}
-              <div className="absolute bottom-6 right-6 flex items-center gap-2 bg-black/80 backdrop-blur-sm border border-gray-700 rounded-xl px-4 py-3">
-                <div className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-green-400 animate-pulse' : 'bg-gray-600'}`} />
-                <span className="text-xs text-gray-300">
-                  {isPlaying ? 'AI Processing Active' : 'System Idle'}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* 3D Model Selection & Analysis Section */}
         <div className="mb-20 space-y-8">
