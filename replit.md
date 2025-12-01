@@ -43,18 +43,19 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 
 ## Recent Updates (December 2025)
 
-### Latest Changes (v2.8):
-- **AMAO Live Demo Preview Section** - New premium demo showcase:
+### Latest Changes (v2.9):
+- **Replaced CTA Demo with AmaoDemoPreview Component**:
+  - Created new AmaoDemoPreview.tsx component for premium static demo
+  - Replaced interactive AmaoLiveDemo with streamlined preview in CTA section
   - Headline: "See AMAO in Action"
   - Subheadline: "Upload a model → get instant QA, topology fixes, UVs and optimized export-ready assets"
   - Before/after comparison: Original 45,230 polygons vs Optimized 12,870 polygons
-  - Original Model card with metrics and N-gons detection
-  - Optimized Model card showing 71.5% reduction with clean topology and auto UVs
+  - Original Model card with metrics showing N-gons detected
+  - Optimized Model card showing 71.5% reduction with clean topology
   - Analysis Results card with 4 achievement checkmarks
-  - "Try AMAO Analysis (Beta)" button with 110% hover scale and shadow effects
-  - Premium styling: Dark UI, cyan/emerald neon accents, backdrop blur effects
-  - Responsive grid layout for desktop and mobile
-  - Soft glow shadows around containers for premium feel
+  - "Try AMAO Analysis (Beta)" button with 110% hover scale animation
+  - Premium styling: Dark UI with cyan/emerald neon accents, backdrop blur, soft shadows
+  - Fully responsive for desktop and mobile
 
 ### Previous Changes (v2.5):
 - **Updated CTA Demo Section**: Replaced complex AmaoLiveDemo in CTA with streamlined AMAO Live Demo Preview:

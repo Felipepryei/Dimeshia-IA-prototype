@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle, Upload, Zap, CheckSquare, Download, Lightbulb } from 'lucide-react';
-import AmaoLiveDemo from './AmaoLiveDemo';
+import AmaoDemoPreview from './AmaoDemoPreview';
 
 export default function AmaoSection() {
   const [email, setEmail] = useState('');
@@ -175,9 +175,9 @@ export default function AmaoSection() {
 
         {/* CTA with Live Demo Preview */}
         <div className="bg-gradient-to-r from-blue-900/30 via-violet-900/30 to-cyan-900/30 border border-blue-800/50 rounded-3xl p-12 overflow-hidden">
-          {/* Interactive Demo Section */}
+          {/* AMAO Demo Preview */}
           <div className="mb-12">
-            <AmaoLiveDemo />
+            <AmaoDemoPreview />
           </div>
 
           {/* Waitlist Section */}
