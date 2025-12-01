@@ -180,82 +180,96 @@ export default function AmaoSection() {
             <AmaoLiveDemo />
           </div>
 
-          {/* Streamlined Demo Preview Section */}
+          {/* New AMAO Live Demo Preview Section - Inside CTA */}
           <div className="mb-16 border-t border-gray-700/50 pt-12">
-            <h3 className="text-3xl font-bold text-white mb-8 text-center">AMAO Live Demo Preview</h3>
-            
-            {/* Before/After Comparison */}
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
-              {/* Original Model */}
-              <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-2xl p-8">
-                <div className="bg-gradient-to-br from-blue-950 to-gray-950 rounded-xl h-64 mb-6 flex items-center justify-center border border-blue-500/30">
-                  <div className="text-center">
-                    <div className="text-5xl mb-4">📦</div>
-                    <p className="text-gray-400 text-sm">Original Model</p>
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <h3 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">
+                See AMAO in Action
+              </h3>
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+                Upload a model → get instant QA, topology fixes, UVs and optimized export-ready assets
+              </p>
+            </div>
+
+            {/* Interactive 3D Preview with Soft Glow */}
+            <div className="bg-gradient-to-br from-cyan-950/30 via-blue-950/20 to-violet-950/30 border border-cyan-600/40 rounded-3xl p-12 mb-12 shadow-2xl shadow-cyan-500/20">
+              {/* 3D Viewer Container */}
+              <div className="grid md:grid-cols-2 gap-8 mb-8">
+                {/* Before */}
+                <div className="flex flex-col">
+                  <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl h-72 border border-gray-700/50 flex items-center justify-center mb-4 overflow-hidden">
+                    <div className="text-center">
+                      <div className="text-6xl mb-2">📦</div>
+                      <p className="text-gray-400 text-sm font-semibold">Original</p>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 rounded-xl p-4 border border-gray-700/30">
+                    <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2">Original Model</p>
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Polygons:</span>
+                        <span className="text-orange-400 font-bold">45,230</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Issues:</span>
+                        <span className="text-red-400 font-bold">N-gons detected</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Polygon Count:</span>
-                    <span className="text-orange-400 font-bold">45,230</span>
+
+                {/* After */}
+                <div className="flex flex-col">
+                  <div className="bg-gradient-to-br from-emerald-950 to-teal-950 rounded-2xl h-72 border border-emerald-500/40 flex items-center justify-center mb-4 overflow-hidden shadow-lg shadow-emerald-500/20">
+                    <div className="text-center">
+                      <div className="text-6xl mb-2">✨</div>
+                      <p className="text-emerald-300 text-sm font-semibold">Optimized by AMAO</p>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Issues Detected:</span>
-                    <span className="text-red-400 font-bold">N-gons Found</span>
+                  <div className="bg-gradient-to-br from-emerald-900/40 to-teal-900/30 rounded-xl p-4 border border-emerald-500/40">
+                    <p className="text-xs text-emerald-300 uppercase tracking-widest font-bold mb-2">Optimized by AMAO</p>
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Polygons:</span>
+                        <span className="text-emerald-400 font-bold">12,870</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Status:</span>
+                        <span className="text-emerald-400 font-bold">Clean & Ready</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Optimized Model */}
-              <div className="bg-gradient-to-br from-emerald-900/30 to-gray-800/30 border border-emerald-600/50 rounded-2xl p-8">
-                <div className="bg-gradient-to-br from-emerald-950 to-gray-950 rounded-xl h-64 mb-6 flex items-center justify-center border border-emerald-500/30">
-                  <div className="text-center">
-                    <div className="text-5xl mb-4">✨</div>
-                    <p className="text-gray-400 text-sm">Optimized by AMAO</p>
+              {/* Analysis Results Card */}
+              <div className="bg-gradient-to-br from-cyan-600/10 to-emerald-600/10 border border-cyan-500/30 rounded-2xl p-6">
+                <h4 className="text-sm uppercase tracking-widest font-bold text-cyan-400 mb-4">Analysis Results</h4>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">Polygon reduction preserved details</span>
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Polygon Count:</span>
-                    <span className="text-emerald-400 font-bold">12,870</span>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">N-gons fixed</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Status:</span>
-                    <span className="text-emerald-400 font-bold">Clean & Ready</span>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">UVs generated</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">Model optimized for texturing and engines</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Results Card */}
-            <div className="bg-gradient-to-br from-cyan-900/20 to-blue-900/20 border border-cyan-600/30 rounded-2xl p-8 mb-12">
-              <h4 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <Lightbulb className="w-5 h-5 text-cyan-400" />
-                Analysis Results
-              </h4>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                  <span className="text-gray-300">Polygon reduction preserved details</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                  <span className="text-gray-300">N-gons fixed</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                  <span className="text-gray-300">UVs generated</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                  <span className="text-gray-300">Export ready</span>
-                </div>
-              </div>
-            </div>
-
-            {/* CTA Button */}
+            {/* Main CTA Button */}
             <div className="text-center">
-              <button className="px-10 py-4 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-cyan-500/50">
+              <button className="px-12 py-4 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white font-bold text-lg rounded-xl transition-all transform hover:scale-105 shadow-xl hover:shadow-emerald-500/50">
                 Try AMAO Analysis (Beta)
               </button>
             </div>
