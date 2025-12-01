@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Mail, ArrowRight, CheckCircle, Upload, Zap, CheckSquare, Download } from 'lucide-react';
-import AmaoLiveDemo from './AmaoLiveDemo';
+import { Mail, ArrowRight, CheckCircle, Upload, Zap, CheckSquare, Download, Lightbulb } from 'lucide-react';
 
 export default function AmaoSection() {
   const [email, setEmail] = useState('');
@@ -173,19 +172,95 @@ export default function AmaoSection() {
           ))}
         </div>
 
-        {/* CTA Footer with Demo */}
+        {/* CTA with Live Demo Preview */}
         <div className="bg-gradient-to-r from-blue-900/30 via-violet-900/30 to-cyan-900/30 border border-blue-800/50 rounded-3xl p-12 overflow-hidden">
-          {/* Demo Section */}
-          <div className="mb-12">
-            <AmaoLiveDemo />
+          {/* Demo Preview Section */}
+          <div className="mb-16">
+            <h3 className="text-3xl font-bold text-white mb-8 text-center">AMAO Live Demo Preview</h3>
+            
+            {/* Before/After Comparison */}
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {/* Original Model */}
+              <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-2xl p-8">
+                <div className="bg-gradient-to-br from-blue-950 to-gray-950 rounded-xl h-64 mb-6 flex items-center justify-center border border-blue-500/30">
+                  <div className="text-center">
+                    <div className="text-5xl mb-4">📦</div>
+                    <p className="text-gray-400 text-sm">Original Model</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Polygon Count:</span>
+                    <span className="text-orange-400 font-bold">45,230</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Issues Detected:</span>
+                    <span className="text-red-400 font-bold">N-gons Found</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Optimized Model */}
+              <div className="bg-gradient-to-br from-emerald-900/30 to-gray-800/30 border border-emerald-600/50 rounded-2xl p-8">
+                <div className="bg-gradient-to-br from-emerald-950 to-gray-950 rounded-xl h-64 mb-6 flex items-center justify-center border border-emerald-500/30">
+                  <div className="text-center">
+                    <div className="text-5xl mb-4">✨</div>
+                    <p className="text-gray-400 text-sm">Optimized by AMAO</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Polygon Count:</span>
+                    <span className="text-emerald-400 font-bold">12,870</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Status:</span>
+                    <span className="text-emerald-400 font-bold">Clean & Ready</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Results Card */}
+            <div className="bg-gradient-to-br from-cyan-900/20 to-blue-900/20 border border-cyan-600/30 rounded-2xl p-8 mb-12">
+              <h4 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <Lightbulb className="w-5 h-5 text-cyan-400" />
+                Analysis Results
+              </h4>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                  <span className="text-gray-300">Polygon reduction preserved details</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                  <span className="text-gray-300">N-gons fixed</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                  <span className="text-gray-300">UVs generated</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                  <span className="text-gray-300">Export ready</span>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div className="text-center">
+              <button className="px-10 py-4 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-cyan-500/50">
+                Try AMAO Analysis (Beta)
+              </button>
+            </div>
           </div>
 
           {/* Waitlist Section */}
-          <div className="text-center">
-            <h3 className="text-4xl font-bold mb-4">
+          <div className="border-t border-gray-700/50 pt-12">
+            <h3 className="text-3xl font-bold mb-4 text-center">
               Launch AMAO Beta <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">— Join the Waitlist</span>
             </h3>
-            <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-400 mb-8 max-w-2xl mx-auto text-center">
               Be among the first to access AMAO's advanced model analysis and optimization capabilities. Early adopters get lifetime premium benefits.
             </p>
 
@@ -216,7 +291,7 @@ export default function AmaoSection() {
               </button>
             </form>
 
-            <p className="text-xs text-gray-500 mt-4">
+            <p className="text-xs text-gray-500 mt-4 text-center">
               We respect your privacy. Unsubscribe at any time.
             </p>
           </div>

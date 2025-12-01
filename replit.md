@@ -6,6 +6,7 @@ This project is a high-end brand identity showcase for DIMESHIA, an AI automatio
 ## User Preferences
 - Wants to showcase Buoy Model in Experience Our Technology section
 - Prefers to see real 3D models with optimization statistics displayed
+- Prefers streamlined demo previews in CTA sections
 
 ## System Architecture
 The application is a frontend-only, static showcase built with React 18.3.1, Vite 5.4.2, and TypeScript 5.5.3. Styling is managed with Tailwind CSS 3.4.1. 3D graphics are handled by Three.js, integrated via `@react-three/fiber` and `@react-three/drei`. The UI/UX features a high-tech, futuristic aesthetic with a clean, minimal interface, incorporating gradient overlays, blur effects, and animations.
@@ -17,6 +18,11 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
   - Real-time 3D viewer showing original high-poly models
   - Interactive AMAO Analysis Pipeline with 8-stage processing visualization
   - Live analysis results dashboard
+- **AMAO Live Demo Preview (CTA Section)**: Streamlined before/after comparison:
+  - Original vs Optimized model cards with metrics
+  - Analysis results card with key achievements
+  - "Try AMAO Analysis (Beta)" button with hover effects
+  - Professional SaaS styling with dark UI and neon accents
 - **AMAO Product Launch**: Premium hero section with clear headline + subheadline + main CTA ("Try AMAO Demo"), followed by How-It-Works 4-step workflow (Upload → AI Analysis → Optimize → Download/Export) with visual flow and production-ready indicators
 - **AI Automation Lab (R&D Section)**: Core R&D showcase with 3 experiment cards:
   - Intelligent Naming Engine (94% accuracy, 12 sec per scene)
@@ -32,20 +38,29 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 **Design Principles:**
 - High-tech aesthetic with AI/3D focus, futuristic workspace simulations.
 - Clean, minimal interface with gradient overlays and blur effects.
-- **Color Palette**: Primary Electric Blue (#3B82F6), Accent Violet (#8B5CF6), Neutral Black to White grayscale.
+- **Color Palette**: Primary Electric Blue (#3B82F6), Accent Violet (#8B5CF6), Neutral Black to White grayscale, Accent Emerald/Cyan for optimization results.
 - **Typography**: Inter (Google Fonts) with weights 400-900.
 
 ## Recent Updates (December 2025)
 
-### Latest Changes (v2.4):
+### Latest Changes (v2.5):
+- **Updated CTA Demo Section**: Replaced complex AmaoLiveDemo in CTA with streamlined AMAO Live Demo Preview:
+  - Removed duplicate demo rendering from App.tsx
+  - Simplified CTA section with before/after comparison cards
+  - Original vs Optimized model visualization with key metrics
+  - Analysis Results card with checkmarks for key achievements
+  - "Try AMAO Analysis (Beta)" button with cyan-emerald gradient
+  - Professional SaaS styling focused on credibility and visual proof
+  - Separated "Launch AMAO Beta — Join the Waitlist" email signup section
+
+### Previous Changes (v2.4):
 - **Restored "See AMAO in Action" Section**: Fully restored 3D live demonstration:
   - Section title and description: "See AMAO in Action - Watch AMAO analyze your 3D model step-by-step..."
   - Model selection interface with Presets/Upload toggle
   - 3 preset models: 3D Character Model (246K), Environment Scene (189K), Product Design (157K)
   - File upload functionality for custom 3D models
   - Original model viewer showing high-poly meshes
-  - AMAO Analysis Pipeline with 8-stage interactive visualization:
-    - Model Loaded → Topology Scan → Ngon Detection → UV Analysis → Normal Check → Density Analysis → Optimization Plan → AI Recommendation
+  - AMAO Analysis Pipeline with 8-stage interactive visualization
   - Live analysis progress tracking with status indicators
   - AI Analysis Results dashboard
   - Play/Stop and Reset controls for analysis pipeline
@@ -54,37 +69,7 @@ The application is a frontend-only, static showcase built with React 18.3.1, Vit
 - **Removed "See AMAO in Action" Section**: Cleaned up AmaoLiveDemo component (temporarily)
 
 ### Previous Changes (v2.2):
-- **AMAO Demo Integrated into CTA**: Interactive demo now embedded directly in "Launch AMAO Beta — Join the Waitlist" section:
-  - Before/after slider with draggable comparison (Original 45,230 → Optimized 12,870 polygons)
-  - "Run Analysis" button with 2.5-second animation state
-  - Professional SaaS styling with gradient backgrounds
-  - Seamless flow: Demo → Headline → Description → Email Signup
-  - Improved conversion experience with interactive proof
-
-### Previous Changes (v2.1):
-- **AMAO Live Demo Preview Section**: Premium demo visualization with interactive slider
-
-### Previous Changes:
-- **AI Automation Lab Enhanced**: Premium redesign with visual improvements:
-  - Color-coded experiment cards (Blue/Cyan, Purple/Pink, Emerald/Teal)
-  - Structured metric grids with gradient text for each experiment
-  - Enhanced hover effects, icon animations, and visual depth
-  - Premium beta results section with live badge and visual stats grid
-  - Improved CTA button with better animations and visibility
-  - Better typography hierarchy and spacing
-- **AI-Powered 3D Optimization Enhanced**: Real metrics based on uploaded model data:
-  - Real-time optimization metric calculation (88% polygon reduction, 85% file size reduction, 18x faster rendering)
-  - Live metrics display showing before/after comparison with gradient progress bars
-  - Mesh and material optimization metrics (40% mesh reduction, 65% material reduction)
-  - Memory savings and quality retention indicators (89% memory reduction, 96% quality retention)
-  - Enhanced Key Insights section with gradient backgrounds and proven stats
-  - Production-ready quality assurance badges
-  - **Export AI Analysis Report**: Download comprehensive JSON report with all optimization metrics and analysis details
-- **AI Automation Lab**: New R&D section with 3 experiment cards showcasing concrete automation results (removed futuristic studio v3.0)
-- **Professional Pricing Section**: 4-tier pricing model for different user types
-- **3D Model Upload System**: Fixed critical bug - real models now display with live statistics instead of default cube
-- **Multi-Format Support**: OBJ, GLB, GLTF, FBX files fully functional with geometry validation and NaN detection
-- **Before/After Visualization**: Original vs Optimized model comparison working correctly
+- **AMAO Demo Integrated into CTA**: Interactive demo now embedded directly in "Launch AMAO Beta — Join the Waitlist" section
 
 ## External Dependencies
 - **React**: Frontend framework.
