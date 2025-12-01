@@ -16,6 +16,7 @@ import PricingSection from './components/PricingSection';
 import Footer from './components/Footer';
 import InteractiveDemo from './components/InteractiveDemo';
 import LiveTechShowcase from './components/LiveTechShowcase';
+import AmaoDemoView from './components/AmaoDemoView';
 
 function App() {
   const [showDemo, setShowDemo] = useState(false);
@@ -26,12 +27,14 @@ function App() {
     const demo = params.get('demo');
     if (demo) {
       setShowDemo(true);
-      setDemoType(demo === 'tech' ? 'tech' : 'interactive');
+      setDemoType(demo === 'tech' ? 'tech' : demo === 'amao' ? 'amao' : 'interactive');
     }
   }, []);
 
   if (showDemo) {
-    return demoType === 'tech' ? <LiveTechShowcase /> : <InteractiveDemo />;
+    if (demoType === 'tech') return <LiveTechShowcase />;
+    if (demoType === 'amao') return <AmaoDemoView />;
+    return <InteractiveDemo />;
   }
 
   return (

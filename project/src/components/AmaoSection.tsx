@@ -101,7 +101,10 @@ export default function AmaoSection() {
           <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-12">
             From concept to optimization in seconds. Real-time analysis, smart recommendations, and clean exports.
           </p>
-          <button className="px-10 py-5 bg-gradient-to-r from-blue-600 via-violet-600 to-cyan-600 hover:from-blue-500 hover:via-violet-500 hover:to-cyan-500 text-white font-bold rounded-2xl transition-all transform hover:scale-105 shadow-2xl hover:shadow-violet-500/50 text-lg inline-flex items-center gap-3 group">
+          <button 
+            onClick={() => window.location.href = '?demo=amao'}
+            className="px-10 py-5 bg-gradient-to-r from-blue-600 via-violet-600 to-cyan-600 hover:from-blue-500 hover:via-violet-500 hover:to-cyan-500 text-white font-bold rounded-2xl transition-all transform hover:scale-105 shadow-2xl hover:shadow-violet-500/50 text-lg inline-flex items-center gap-3 group"
+          >
             Try AMAO Demo
             <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </button>
