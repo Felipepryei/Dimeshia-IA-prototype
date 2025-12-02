@@ -128,9 +128,6 @@ export default function AmaoLiveDemo() {
           <h2 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">
             See AMAO in Action
           </h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Watch AMAO analyze your 3D model step-by-step, detecting issues and recommending optimizations in real-time.
-          </p>
         </div>
 
         {/* 3D Model Selection & Analysis Section */}
